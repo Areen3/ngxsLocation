@@ -1,4 +1,4 @@
-import { Injectable, Injector, Optional, SkipSelf, Inject } from '@angular/core';
+import { Injectable, Injector, Optional, SkipSelf, Inject, isDevMode } from '@angular/core';
 import { forkJoin, from, Observable, of, throwError } from 'rxjs';
 import {
   catchError,
@@ -33,6 +33,9 @@ import { InternalDispatchedActionResults } from '../internal/dispatcher';
 import { StateContextFactory } from '../internal/state-context-factory';
 import { StoreValidators } from '../utils/store-validators';
 import { INITIAL_STATE_TOKEN, PlainObjectOf, memoize } from '@ngxs/store/internals';
+import { NgxsAction } from '../actions/base.action';
+import { ActionKind } from '../common/declaration';
+import { SelectLocation, ELocationKind } from '../common/selectLocation';
 
 /**
  * State factory class
@@ -74,13 +77,13 @@ export class StateFactory {
     return this._parentFactory ? this._parentFactory.statePaths : this._statePaths;
   }
 
-  public getRuntimeSelectorContext = memoize(() => {
+  public getRuntimeSelectorContext = memoize((location?: SelectLocation) => {
     const stateFactory = this;
     const context: RuntimeSelectorContext = this._parentFactory
-      ? this._parentFactory.getRuntimeSelectorContext()
+      ? this._parentFactory.getRuntimeSelectorContext(location)
       : {
           getStateGetter(key: string) {
-            const path = stateFactory.statePaths[key];
+            const path = location ? location.path : stateFactory.statePaths[key];
             return path ? propGetter(path.split('.'), stateFactory._config) : () => undefined;
           }
         };
@@ -134,7 +137,9 @@ export class StateFactory {
         isInitialised: false,
         actions: meta.actions,
         instance: this._injector.get(stateClass),
-        defaults: StateFactory.cloneDefaults(meta.defaults)
+        defaults: StateFactory.cloneDefaults(meta.defaults),
+        context: '',
+        selectors: meta.selectors
       };
 
       // ensure our store hasn't already been added
@@ -192,17 +197,22 @@ export class StateFactory {
    */
   invokeActions(actions$: InternalActions, action: any) {
     const results = [];
-
+    /** Variable to check if action was executed */
+    let actionExecuted = false;
     for (const metadata of this.states) {
       const type = getActionTypeFromInstance(action)!;
       const actionMetas = metadata.actions[type];
 
       if (actionMetas) {
+        /** Check if action implements NgxsAction and if store location equals to MappedStore location */
+        if (action instanceof NgxsAction && action.location) {
+          if (!this.checkLocationWithMappedStore(action.location, metadata)) continue;
+        }
         for (const actionMeta of actionMetas) {
           const stateContext = this._stateContextFactory.createStateContext(metadata);
           try {
             let result = metadata.instance[actionMeta.fn](stateContext, action);
-
+            actionExecuted = true; /** set action was executed */
             if (result instanceof Promise) {
               result = from(result);
             }
@@ -220,12 +230,23 @@ export class StateFactory {
 
             results.push(result);
           } catch (e) {
+            if (isDevMode()) {
+              throw e;
+            }
             results.push(throwError(e));
           }
         }
       }
     }
-
+    /** I action was not executed and is of command kind then log error */
+    if (
+      actionExecuted === false &&
+      action instanceof NgxsAction &&
+      action.kind === ActionKind.akCommand &&
+      isDevMode
+    ) {
+      console.error(`Action commnad ${action.constructor.name} was not executed`);
+    }
     if (!results.length) {
       results.push(of({}));
     }
@@ -270,5 +291,72 @@ export class StateFactory {
     const valueIsBootstrappedInInitialState: boolean =
       getValue(this._initialState, path) !== undefined;
     return this.statesByName[name] && valueIsBootstrappedInInitialState;
+  }
+  /** Function returns state data path based on SelectLocation and state metatadata */
+  getLocationPath(location: SelectLocation): string {
+    const tab: Array<MappedStore> = [];
+    switch (location.locationKind) {
+      case ELocationKind.byName:
+        tab.push(...this.states.filter(p => p.name === location.name));
+        break;
+      case ELocationKind.byLocation:
+        return location.path;
+      case ELocationKind.byContext:
+        tab.push(
+          ...this.states.filter(
+            p => p.context === location.context && p.name === location.name
+          )
+        );
+        break;
+      case ELocationKind.byContextInPath:
+        tab.push(
+          ...this.states
+            .filter(p => p.path.startsWith(location.path) && p.name === location.name)
+            .filter(p => p.context === location.context)
+        );
+        break;
+      case ELocationKind.byPathTree:
+        tab.push(
+          ...this.states.filter(
+            p => p.path.startsWith(location.path) && p.name === location.name
+          )
+        );
+        break;
+    }
+    this.checkProperLocationResult(tab, location);
+    return tab[0].path;
+  }
+  private checkProperLocationResult(tab: Array<MappedStore>, location: SelectLocation) {
+    if (isDevMode() && tab.length > 1) {
+      console.error(
+        `Location name: ${location.name} on context ${location.context} in path ${location.path} found more than one, take first`
+      );
+    }
+    if (isDevMode() && tab.length === 0)
+      throw new Error(`Location name: ${location.name} can't be found`);
+  }
+
+  /** Function checks is MappedStore and SelectLocation points to same state data */
+  private checkLocationWithMappedStore(
+    location: SelectLocation,
+    mappedStore: MappedStore
+  ): boolean {
+    if (location.path && location.path === mappedStore.path) {
+      return true;
+    }
+    if (location.name) {
+      if (
+        location.context &&
+        location.name === mappedStore.name &&
+        location.context === mappedStore.context
+      ) {
+        return true;
+      } else {
+        if (location.name === mappedStore.name) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 }

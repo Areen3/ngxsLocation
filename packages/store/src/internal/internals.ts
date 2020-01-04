@@ -11,6 +11,7 @@ import {
 } from '../symbols';
 import { ActionHandlerMetaData } from '../actions/symbols';
 import { getValue } from '../utils/utils';
+import { SelectLocation } from '../common/selectLocation';
 
 function asReadonly<T>(value: T): Readonly<T> {
   return value;
@@ -36,6 +37,7 @@ export interface StateOperations<T> {
 export interface MetaDataModel {
   name: string | null;
   actions: PlainObjectOf<ActionHandlerMetaData[]>;
+  selectors: PlainObjectOf<SelectorMetaDataModel>;
   defaults: any;
   path: string | null;
   selectFromAppState: SelectFromState | null;
@@ -58,6 +60,7 @@ export interface SelectorMetaDataModel {
   originalFn: Function | null;
   containerClass: any;
   selectorName: string | null;
+  localization: SelectLocation;
   getSelectorOptions: () => SharedSelectorOptions;
 }
 
@@ -65,9 +68,11 @@ export interface MappedStore {
   name: string;
   isInitialised: boolean;
   actions: PlainObjectOf<ActionHandlerMetaData[]>;
+  selectors: PlainObjectOf<SelectorMetaDataModel>;
   defaults: any;
   instance: any;
   path: string;
+  context: string;
 }
 
 export interface StatesAndDefaults {
@@ -92,6 +97,7 @@ export function ensureStoreMetadata(target: StateClassInternal): MetaDataModel {
     const defaultMetadata: MetaDataModel = {
       name: null,
       actions: {},
+      selectors: {},
       defaults: {},
       path: null,
       selectFromAppState(state: any, context: RuntimeSelectorContext) {
@@ -139,6 +145,7 @@ export function ensureSelectorMetadata(target: Function): SelectorMetaDataModel 
       originalFn: null,
       containerClass: null,
       selectorName: null,
+      localization: SelectLocation.filterByPath('.'),
       getSelectorOptions: () => ({})
     };
 
@@ -179,7 +186,7 @@ function compliantPropGetter(paths: string[]): (x: any) => any {
  *
  * @ignore
  */
-function fastPropGetter(paths: string[]): (x: any) => any {
+export function fastPropGetter(paths: string[]): (x: any) => any {
   const segments = paths;
   let seg = 'store.' + segments[0];
   let i = 0;

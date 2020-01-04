@@ -2,6 +2,7 @@ import { memoize } from '@ngxs/store/internals';
 
 import {
   ensureSelectorMetadata,
+  fastPropGetter,
   getSelectorMetadata,
   getStoreMetadata,
   globalSelectorOptions,
@@ -10,6 +11,7 @@ import {
   SharedSelectorOptions,
   RuntimeSelectorContext
 } from '../internal/internals';
+import { SelectLocation } from '../common/selectLocation';
 
 const SELECTOR_OPTIONS_META_KEY = 'NGXS_SELECTOR_OPTIONS_META';
 
@@ -26,6 +28,7 @@ export const selectorOptionsMetaAccessor = {
 interface CreationMetadata {
   containerClass: any;
   selectorName: string;
+  localization: SelectLocation;
   getSelectorOptions?: () => SharedSelectorOptions;
 }
 
@@ -101,6 +104,8 @@ function setupSelectorMetadata<T extends (...args: any[]) => any>(
   if (creationMetadata) {
     selectorMetaData.containerClass = creationMetadata.containerClass;
     selectorMetaData.selectorName = creationMetadata.selectorName;
+    selectorMetaData.localization =
+      creationMetadata.localization && creationMetadata.localization.copy();
     getExplicitSelectorOptions =
       creationMetadata.getSelectorOptions || getExplicitSelectorOptions;
   }
@@ -131,6 +136,7 @@ function getCustomSelectorOptions(
     ...globalSelectorOptions.get(),
     ...(selectorOptionsMetaAccessor.getOptions(selectorMetaData.containerClass) || {}),
     ...(selectorOptionsMetaAccessor.getOptions(selectorMetaData.originalFn) || {}),
+    ...(selectorOptionsMetaAccessor.getOptions(selectorMetaData.localization) || undefined),
     ...(selectorMetaData.getSelectorOptions() || {}),
     ...explicitOptions
   };
@@ -164,6 +170,10 @@ function getSelectorsToApply(
  * @ignore
  */
 export function getSelectorFn(selector: any): SelectFromState {
-  const metadata = getSelectorMetadata(selector) || getStoreMetadata(selector);
+  const metaDataSelector = getSelectorMetadata(selector);
+  if (metaDataSelector && metaDataSelector.localization) {
+    return fastPropGetter(metaDataSelector.localization.path.split('.'));
+  }
+  const metadata = metaDataSelector || getStoreMetadata(selector);
   return (metadata && metadata.selectFromAppState) || selector;
 }
