@@ -11,7 +11,7 @@ import {
 
 import { InternalNgxsExecutionStrategy } from './execution/internal-ngxs-execution-strategy';
 import { InternalStateOperations } from './internal/state-operations';
-import { getSelectorFn, createSelector } from './utils/selector-utils';
+import { createSelector, getRootSelectorFactory } from './utils/selector-utils';
 import { StateStream } from './internal/state-stream';
 import { leaveNgxs } from './operators/leave-ngxs';
 import { NgxsConfig, META_KEY } from './symbols';
@@ -125,11 +125,9 @@ export class Store {
   }
 
   private getStoreBoundSelectorFn(selector: any, location?: SelectLocation) {
-    const fn = getSelectorFn(selector);
+    const makeSelectorFn = getRootSelectorFactory(selector);
     const runtimeContext = this._stateFactory.getRuntimeSelectorContext(location);
-    return (state: any) => {
-      return fn(state, runtimeContext);
-    };
+    return makeSelectorFn(runtimeContext);
   }
 
   private initStateStream(initialStateValue: any): void {
@@ -337,7 +335,7 @@ export class Store {
     const stateDefaults = child[META_KEY]!.defaults;
     const path = `${currentPath}.${childName}`;
     child[META_KEY]!.path = path;
-    child[META_KEY]!.selectFromAppState = propGetter(path.split('.'), this._config);
+    child[META_KEY]!.makeRootSelector = propGetter(path.split('.'), this._config);
     const has = this._stateFactory.states.find(s => s.path === path);
     if (has && isDevMode()) {
       console.error(`State name: ${childName} already added in location ${path}`);
