@@ -11,7 +11,7 @@ import {
 } from '../symbols';
 import { ActionHandlerMetaData } from '../actions/symbols';
 import { getValue } from '../utils/utils';
-import { SelectLocation } from '../common/selectLocation';
+import { Location } from '../common';
 
 // inspired from https://stackoverflow.com/a/43674389
 export interface StateClassInternal<T = any, U = any> extends StateClass<T> {
@@ -58,7 +58,7 @@ export interface SelectorMetaDataModel {
   originalFn: Function | null;
   containerClass: any;
   selectorName: string | null;
-  localization: SelectLocation;
+  location: Location;
   getSelectorOptions: () => SharedSelectorOptions;
 }
 
@@ -130,7 +130,7 @@ export function ensureSelectorMetadata(target: Function): SelectorMetaDataModel 
       originalFn: null,
       containerClass: null,
       selectorName: null,
-      localization: <any>undefined,
+      location: undefined,
       getSelectorOptions: () => ({})
     };
 

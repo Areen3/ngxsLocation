@@ -10,13 +10,14 @@ import {
   takeUntil
 } from 'rxjs/operators';
 
-import { META_KEY, NgxsConfig } from '../symbols';
+import { META_KEY, NgxsConfig, SELECTOR_META_KEY } from '../symbols';
 import {
   buildGraph,
   findFullParentPath,
   isObject,
   MappedStore,
   MetaDataModel,
+  SelectorMetaDataModel,
   nameToState,
   propGetter,
   StateClassInternal,
@@ -36,7 +37,8 @@ import { StoreValidators } from '../utils/store-validators';
 import { INITIAL_STATE_TOKEN, PlainObjectOf, memoize } from '@ngxs/store/internals';
 import { NgxsAction } from '../actions/base.action';
 import { ActionKind } from '../common/declaration';
-import { SelectLocation, ELocationKind } from '../common/selectLocation';
+import { SelectLocation, Location, ELocationKind } from '../common';
+import { createSelector } from '../utils/selector-utils';
 
 /**
  * State factory class
@@ -78,7 +80,7 @@ export class StateFactory {
     return this._parentFactory ? this._parentFactory.statePaths : this._statePaths;
   }
 
-  public getRuntimeSelectorContext = memoize((location?: SelectLocation) => {
+  public getRuntimeSelectorContext = memoize((location?: Location) => {
     const stateFactory = this;
     const context: RuntimeSelectorContext = this._parentFactory
       ? this._parentFactory.getRuntimeSelectorContext(location)
@@ -135,20 +137,7 @@ export class StateFactory {
     for (const name of sortedStates) {
       const stateClass: StateClassInternal = nameGraph[name];
       const path: string = paths[name];
-      const meta: MetaDataModel = stateClass[META_KEY]!;
-
-      this.addRuntimeInfoToMeta(meta, path);
-
-      const stateMap: MappedStore = {
-        name,
-        path,
-        isInitialised: false,
-        actions: meta.actions,
-        instance: this._injector.get(stateClass),
-        defaults: StateFactory.cloneDefaults(meta.defaults),
-        context: '',
-        selectors: meta.selectors
-      };
+      const stateMap: MappedStore = this.createStateItem(name, path, stateClass);
 
       // ensure our store hasn't already been added
       // but don't throw since it could be lazy
@@ -161,6 +150,86 @@ export class StateFactory {
     }
 
     return bootstrappedStores;
+  }
+  /**
+   * Create state item
+   */
+  private createStateItem(
+    name: string,
+    path: string,
+    stateClass: StateClassInternal
+  ): MappedStore {
+    const meta: MetaDataModel = stateClass[META_KEY]!;
+    this.addRuntimeInfoToMeta(meta, path);
+    const stateMap: MappedStore = {
+      name,
+      path,
+      isInitialised: false,
+      actions: meta.actions,
+      instance: this._injector.get(stateClass),
+      defaults: StateFactory.cloneDefaults(meta.defaults),
+      context: '',
+      selectors: meta.selectors
+    };
+    return stateMap;
+  }
+  /**
+   * Create selector that return slice of state in location
+   */
+
+  private addSelectorItemToState(
+    stateClass: StateClassInternal,
+    selector: any,
+    location: Location
+  ): any {
+    return createSelector([], selector, {
+      containerClass: stateClass,
+      selectorName: selector.name,
+      location: location.copy(),
+      getSelectorOptions() {
+        return {};
+      }
+    });
+  }
+  /**
+   * Create or Get selector that return slice of state in location
+   */
+  getSelectorFromState(
+    stateClass: StateClassInternal,
+    selectorMethod: any,
+    location: Location
+  ) {
+    const stateMap: MappedStore = this.states.find(item => item.path === location.path);
+    // todo LOC make better error handling
+    const storedSelector = stateMap.selectors[selectorMethod.name];
+    return storedSelector
+      ? selectorMethod
+      : this.addSelectorItemToState(stateClass, selectorMethod, location);
+  }
+
+  /**
+   * Add child to specific location
+   */
+  addChild(
+    child: StateClassInternal,
+    childName: string,
+    location: Location,
+    params: { context: string }
+  ): MappedStore[] {
+    // todo LOC make better error handling
+    if (!child[META_KEY]) throw new Error('States must be decorated with @State() decorator');
+    const childPath = location.path + '.' + childName;
+    let mappedStore: MappedStore = this.states.find(s => s.path === childPath);
+    if (mappedStore && isDevMode()) {
+      console.error(`State name: ${childName} already added in location ${location}`);
+      return [];
+    }
+    mappedStore = this.createStateItem(childName, childPath, child);
+    mappedStore.context = params.context;
+
+    // todo LOC shoud call addToStatesMap but names of states don't have to be unique
+    this.states.push(mappedStore);
+    return [mappedStore];
   }
 
   /**
@@ -301,14 +370,14 @@ export class StateFactory {
     return this.statesByName[name] && valueIsBootstrappedInInitialState;
   }
   /** Function returns state data path based on SelectLocation and state metatadata */
-  getLocationPath(location: SelectLocation): string {
+  getLocationPaths(location: SelectLocation): Location[] {
     const tab: Array<MappedStore> = [];
     switch (location.locationKind) {
       case ELocationKind.byName:
         tab.push(...this.states.filter(p => p.name === location.name));
         break;
       case ELocationKind.byLocation:
-        return location.path;
+        return [Location.create(location.path)];
       case ELocationKind.byContext:
         tab.push(
           ...this.states.filter(
@@ -331,17 +400,7 @@ export class StateFactory {
         );
         break;
     }
-    this.checkProperLocationResult(tab, location);
-    return tab[0].path;
-  }
-  private checkProperLocationResult(tab: Array<MappedStore>, location: SelectLocation) {
-    if (isDevMode() && tab.length > 1) {
-      console.error(
-        `Location name: ${location.name} on context ${location.context} in path ${location.path} found more than one, take first`
-      );
-    }
-    if (isDevMode() && tab.length === 0)
-      throw new Error(`Location name: ${location.name} can't be found`);
+    return tab.map(item => Location.create(item.path));
   }
 
   /** Function checks is MappedStore and SelectLocation points to same state data */

@@ -11,7 +11,7 @@ import {
   SelectorFactory,
   SelectFromRootState
 } from '../internal/internals';
-import { SelectLocation } from '../common/selectLocation';
+import { Location } from '../common';
 
 const SELECTOR_OPTIONS_META_KEY = 'NGXS_SELECTOR_OPTIONS_META';
 
@@ -28,7 +28,7 @@ export const selectorOptionsMetaAccessor = {
 interface CreationMetadata {
   containerClass: any;
   selectorName: string;
-  localization: SelectLocation;
+  location: Location;
   getSelectorOptions?: () => SharedSelectorOptions;
 }
 
@@ -50,6 +50,9 @@ export function createSelector<T extends (...args: any[]) => any>(
 ) {
   const containerClass = creationMetadata && creationMetadata.containerClass;
   const wrappedFn = function wrappedSelectorFn(...args: any[]) {
+    if (containerClass && containerClass.name === 'StaffState') {
+      true === true;
+    }
     const returnValue = originalFn.apply(containerClass, args);
     if (returnValue instanceof Function) {
       const innerMemoizedFn = memoize.apply(null, [returnValue]);
@@ -61,6 +64,9 @@ export function createSelector<T extends (...args: any[]) => any>(
   const selectorMetaData = setupSelectorMetadata<T>(memoizedFn, originalFn, creationMetadata);
 
   const makeRootSelector: SelectorFactory = (context: RuntimeSelectorContext) => {
+    if (containerClass && containerClass.name === 'StaffState') {
+      true === true;
+    }
     const { argumentSelectorFunctions, selectorOptions } = getRuntimeSelectorInfo(
       context,
       selectorMetaData,
@@ -68,7 +74,11 @@ export function createSelector<T extends (...args: any[]) => any>(
     );
 
     return function selectFromRoot(rootState: any) {
+      if (containerClass && containerClass.name === 'StaffState') {
+        true === true;
+      }
       // Determine arguments from the app state using the selectors
+      // tutaj sie wywołuje ze storyga pobranie obiektu
       const results = argumentSelectorFunctions.map(argFn => argFn(rootState));
 
       // if the lambda tries to access a something on the
@@ -102,8 +112,7 @@ function setupSelectorMetadata<T extends (...args: any[]) => any>(
   if (creationMetadata) {
     selectorMetaData.containerClass = creationMetadata.containerClass;
     selectorMetaData.selectorName = creationMetadata.selectorName;
-    selectorMetaData.localization =
-      creationMetadata.localization && creationMetadata.localization.copy();
+    selectorMetaData.location = creationMetadata.location && creationMetadata.location.copy();
     getExplicitSelectorOptions =
       creationMetadata.getSelectorOptions || getExplicitSelectorOptions;
   }
@@ -143,7 +152,7 @@ function getLocalSelectorOptions(
   return {
     ...(selectorOptionsMetaAccessor.getOptions(selectorMetaData.containerClass) || {}),
     ...(selectorOptionsMetaAccessor.getOptions(selectorMetaData.originalFn) || {}),
-    ...(selectorOptionsMetaAccessor.getOptions(selectorMetaData.localization) || undefined),
+    ...(selectorOptionsMetaAccessor.getOptions(selectorMetaData.location) || undefined),
     ...(selectorMetaData.getSelectorOptions() || {}),
     ...explicitOptions
   };
@@ -175,10 +184,6 @@ function getSelectorsToApply(
  * @ignore
  */
 export function getRootSelectorFactory(selector: any): SelectFromRootState {
-  const metaDataSelector = getSelectorMetadata(selector);
-  if (metaDataSelector && metaDataSelector.localization) {
-    return fastPropGetter(metaDataSelector.localization.path.split('.'));
-  }
-  const metadata = metaDataSelector || getStoreMetadata(selector);
-  return (metadata && metadata.makeRootSelector) || selector;
+  const metadata = getSelectorMetadata(selector) || getStoreMetadata(selector);
+  return (metadata && metadata.makeRootSelector) || (() => selector);
 }

@@ -1,6 +1,6 @@
 /**
  * Class specifies location of element in state data tree
- * It allows to add one State class multiple times in Stata Data tree with different paths
+ * It allows to send action to many localizations
  */
 
 export enum ELocationKind {

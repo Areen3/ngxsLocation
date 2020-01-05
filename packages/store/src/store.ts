@@ -14,11 +14,11 @@ import { InternalStateOperations } from './internal/state-operations';
 import { createSelector, getRootSelectorFactory } from './utils/selector-utils';
 import { StateStream } from './internal/state-stream';
 import { leaveNgxs } from './operators/leave-ngxs';
-import { NgxsConfig, META_KEY } from './symbols';
+import { NgxsConfig, META_KEY, SELECTOR_META_KEY } from './symbols';
 import { StateToken } from './state-token/state-token';
 import { StateFactory } from './internal/state-factory';
 import { NgxsAction } from './actions/base.action';
-import { SelectLocation } from './common/selectLocation';
+import { SelectLocation, Location } from './common';
 import {
   propGetter,
   isObject,
@@ -29,7 +29,7 @@ import {
 } from './internal/internals';
 import { LifecycleStateManager } from './internal/lifecycle-state-manager';
 import { ActionHandlerMetaData } from './actions/symbols';
-import { getValue, setValue } from './utils/utils';
+import { getValue, setValue, removeLastValue } from './utils/utils';
 import { UpdateState } from './actions/actions';
 @Injectable()
 export class Store {
@@ -124,7 +124,11 @@ export class Store {
     return this._internalStateOperations.getRootStateOperations().setState(state);
   }
 
-  private getStoreBoundSelectorFn(selector: any, location?: SelectLocation) {
+  private getStoreBoundSelectorFn(selector: any) {
+    // todo chcek not empty
+    const seletorMDModel = <SelectorMetaDataModel>selector[SELECTOR_META_KEY];
+    const location: Location =
+      seletorMDModel !== undefined ? seletorMDModel.location : undefined;
     const makeSelectorFn = getRootSelectorFactory(selector);
     const runtimeContext = this._stateFactory.getRuntimeSelectorContext(location);
     return makeSelectorFn(runtimeContext);
@@ -155,45 +159,33 @@ export class Store {
     return this._internalStateOperations.getRootStateOperations().dispatch(event);
   }
 
-  /** Allows to select slice of data from the store from specified location */
-  selectInContext<T>(
-    selector: (state: any, ...states: any[]) => T,
-    filter: SelectLocation
-  ): Observable<T>;
-  selectInContext(selector: string | any, filter: SelectLocation): Observable<any>;
-  selectInContext(selector: any, filter: SelectLocation): Observable<any> {
-    const loc = typeof selector === 'string' ? SelectLocation.filterByPath(selector) : filter;
-    const selectorFn = createSelector([], selector, {
-      containerClass: undefined,
-      selectorName: '',
-      localization: loc
-    });
+  selectInContext(selector: any, location: Location): Observable<any> {
+    // todo chcek not empty
+    const seletorMDModel = <SelectorMetaDataModel>selector[SELECTOR_META_KEY];
+    const containerClass = seletorMDModel.containerClass;
+    const selectorFn = this._stateFactory.getSelectorFromState(
+      containerClass,
+      seletorMDModel.originalFn,
+      location
+    );
     return this.select(selectorFn);
   }
+
   /** Allows to select one slice of data from the store from specified location */
-  selectOnceInContext<T>(
-    selector: (state: any, ...states: any[]) => T,
-    filter: SelectLocation
-  ): Observable<T>;
-  selectOnceInContext(selector: string | any, filter: SelectLocation): Observable<any>;
-  selectOnceInContext(selector: any, filter: SelectLocation): Observable<any> {
+  selectOnceInContext(selector: any, filter: Location): Observable<any> {
     return this.selectInContext(selector, filter).pipe(take(1));
   }
 
-  /**
-   * Select a snapshot from the state  from specified location
-   */
-  selectSnapshotInContext<T>(
-    selector: (state: any, ...states: any[]) => T,
-    filter: SelectLocation
-  ): T;
-  selectSnapshotInContext(selector: string | any, location: SelectLocation): any;
-  selectSnapshotInContext(selector: any, location: SelectLocation): any {
-    const selectorFn = this.getStoreBoundSelectorFn(selector, location);
+  // /**
+  //  * Select a snapshot from the state  from specified location
+  //  */
+
+  selectSnapshotInContext(selector: any, location: Location): any {
+    const selectorFn = this.getStoreBoundSelectorFn(selector);
     return selectorFn(this._stateStream.getValue());
   }
 
-  getChildrenState(location: SelectLocation): any[] {
+  getChildrenState(location: Location): any[] {
     const parentLevel = location.path.split('.').length;
     const states = this._stateFactory.states
       .filter(p => p.path.startsWith(location.path))
@@ -230,7 +222,7 @@ export class Store {
       ? (params.childName = child[META_KEY]!.name!)
       : params.childName;
     params.context = !params.context ? (params.context = '') : params.context;
-    const loc = SelectLocation.filterByPath(params.parentName);
+    const loc = Location.create(params.parentName);
 
     mappedStores.push(
       ...this.addChildInternal(child, params.childName, stateOperations, loc, {
@@ -246,7 +238,7 @@ export class Store {
 
   addChildInLocalization(
     child: StateClassInternal,
-    localization: SelectLocation,
+    location: Location,
     params: { childName?: string; context?: string }
   ) {
     const stateOperations = this._internalStateOperations.getRootStateOperations();
@@ -256,7 +248,7 @@ export class Store {
       : params.childName;
     params.context = !params.context ? (params.context = '') : params.context;
     mappedStores.push(
-      ...this.addChildInternal(child, params.childName, stateOperations, localization, {
+      ...this.addChildInternal(child, params.childName, stateOperations, location, {
         context: params.context
       })
     );
@@ -272,7 +264,7 @@ export class Store {
   /**
    * Removes State from State Data tree and MappedStores in given location with all its children
    */
-  removeStateInPath(location: SelectLocation) {
+  removeStateInPath(location: Location) {
     this.removeChildInternal(location);
   }
 
@@ -283,7 +275,7 @@ export class Store {
     const has = this._stateFactory.states.find(s => s.name === childName);
     if (!has && isDevMode())
       console.error('State of name ' + childName + ' dont exists. Cannot delete state');
-    else this.removeChildInternal(SelectLocation.filterByPath(has!.path));
+    else this.removeChildInternal(Location.create(has!.path));
   }
   removeChild(child: StateClassInternal) {
     this.removeChildByName(child[META_KEY]!.name!);
@@ -292,18 +284,18 @@ export class Store {
   /**
    * Searches for state with given name added in root path and returns path to that state
    */
-  getStateLocationInPath(root: SelectLocation, stateName: string): SelectLocation {
+  getStateLocationInPath(root: Location, stateName: string): Location {
     const state = this._stateFactory.states.find(
       p => p.path.startsWith(root.path) && p.name === stateName
     );
     if (state === undefined) throw new Error(`State ${stateName} doesn't exist in location`);
-    return SelectLocation.filterByPath(state!.path);
+    return Location.create(state!.path);
   }
 
-  getStateLocationByStateClass(stateClass: StateClassInternal): SelectLocation {
-    return SelectLocation.filterByPath(stateClass[META_KEY]!.path!);
+  getStateLocationByStateClass(stateClass: StateClassInternal): Location {
+    return Location.create(stateClass[META_KEY]!.path!);
   }
-  getLocationByState(state: any): SelectLocation {
+  getLocationByState(state: any): Location {
     function findObject(obj: Object, path: string): string {
       for (const key of Object.keys(obj)) {
         if (typeof (<any>obj)[key] !== 'object') continue;
@@ -316,57 +308,29 @@ export class Store {
     const currState = this._internalStateOperations.getRootStateOperations().getState();
     const s = findObject(currState, '');
     if (s === '') throw new Error(`State ${state} doesn't exist in store`);
-    return SelectLocation.filterByPath(s);
+    return Location.create(s);
   }
 
   private addChildInternal(
     child: StateClassInternal,
     childName: string,
     stateOperations: StateOperations<StateClass>,
-    location: SelectLocation,
+    location: Location,
     params: { context: string }
   ): MappedStore[] {
     if (!child[META_KEY]) throw new Error('States must be decorated with @State() decorator');
     const currentState = stateOperations.getState();
-    const currentPath = this._stateFactory.getLocationPath(location);
+    const currentPath = location.path;
     const mappedStores: MappedStore[] = [];
-    const actions: PlainObjectOf<ActionHandlerMetaData[]> = child[META_KEY]!.actions;
-    const selectors: PlainObjectOf<SelectorMetaDataModel> = child[META_KEY]!.selectors;
-    const stateDefaults = child[META_KEY]!.defaults;
     const path = `${currentPath}.${childName}`;
-    child[META_KEY]!.path = path;
-    child[META_KEY]!.makeRootSelector = propGetter(path.split('.'), this._config);
-    const has = this._stateFactory.states.find(s => s.path === path);
-    if (has && isDevMode()) {
-      console.error(`State name: ${childName} already added in location ${path}`);
-      return mappedStores;
-    }
-    let defaults;
-    // create new instance of defaults
-    if (Array.isArray(stateDefaults)) {
-      defaults = [...stateDefaults];
-    } else if (isObject(stateDefaults)) {
-      defaults = { ...stateDefaults };
-    } else if (stateDefaults === undefined) {
-      defaults = {};
-    }
 
-    const instance = this._injector.get(child);
-    mappedStores.push({
-      actions,
-      selectors,
-      instance,
-      defaults,
-      name: childName,
-      path,
-      context: params.context,
-      isInitialised: false
+    const childState = this._stateFactory.addChild(child, childName, location, params);
+    mappedStores.push(...childState);
+    childState.forEach(child => {
+      const newState = setValue(currentState, path, child.defaults);
+      stateOperations.setState(newState);
     });
 
-    this._stateFactory.states.push(...mappedStores);
-
-    const newState = setValue(currentState, path, defaults);
-    stateOperations.setState(newState);
     const { children } = child[META_KEY]!;
     if (children)
       children.forEach((item: any) =>
@@ -375,7 +339,7 @@ export class Store {
             item,
             item[META_KEY].name,
             stateOperations,
-            SelectLocation.filterByPath(path),
+            Location.create(path),
             params
           )
         )
@@ -384,7 +348,7 @@ export class Store {
     return mappedStores;
   }
 
-  private removeChildInternal(location: SelectLocation) {
+  private removeChildInternal(location: Location) {
     const stateOperations = this._internalStateOperations.getRootStateOperations();
     const cur = stateOperations.getState();
 
@@ -401,28 +365,9 @@ export class Store {
         const index = this._stateFactory.states.indexOf(innerChild);
         this._stateFactory.states.splice(index, 1);
       }
-      const newState = this.clearValue(cur, has.path);
+      const newState = removeLastValue(cur, has.path);
       stateOperations.setState({ ...newState });
       stateOperations.dispatch(new UpdateState()).subscribe(() => {});
     }
   }
-
-  private clearValue = (obj: any, prop: string) => {
-    obj = { ...obj };
-
-    const split = prop.split('.');
-    const lastIndex = split.length - 1;
-
-    split.reduce((acc, part, index) => {
-      if (index === lastIndex) {
-        delete acc[part];
-      } else {
-        acc[part] = { ...acc[part] };
-      }
-
-      return acc && acc[part];
-    }, obj);
-
-    return obj;
-  };
 }
