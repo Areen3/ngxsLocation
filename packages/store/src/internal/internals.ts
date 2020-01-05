@@ -33,6 +33,7 @@ export interface StateOperations<T> {
 export interface MetaDataModel {
   name: string | null;
   actions: PlainObjectOf<ActionHandlerMetaData[]>;
+  // todo chceck is it needed ?
   selectors: PlainObjectOf<SelectorMetaDataModel>;
   defaults: any;
   path: string | null;

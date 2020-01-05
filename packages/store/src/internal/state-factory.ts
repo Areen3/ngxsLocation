@@ -369,6 +369,7 @@ export class StateFactory {
       getValue(this._initialState, path) !== undefined;
     return this.statesByName[name] && valueIsBootstrappedInInitialState;
   }
+  // todo check if is still  needed
   /** Function returns state data path based on SelectLocation and state metatadata */
   getLocationPaths(location: SelectLocation): Location[] {
     const tab: Array<MappedStore> = [];

@@ -50,9 +50,6 @@ export function createSelector<T extends (...args: any[]) => any>(
 ) {
   const containerClass = creationMetadata && creationMetadata.containerClass;
   const wrappedFn = function wrappedSelectorFn(...args: any[]) {
-    if (containerClass && containerClass.name === 'StaffState') {
-      true === true;
-    }
     const returnValue = originalFn.apply(containerClass, args);
     if (returnValue instanceof Function) {
       const innerMemoizedFn = memoize.apply(null, [returnValue]);
@@ -64,9 +61,6 @@ export function createSelector<T extends (...args: any[]) => any>(
   const selectorMetaData = setupSelectorMetadata<T>(memoizedFn, originalFn, creationMetadata);
 
   const makeRootSelector: SelectorFactory = (context: RuntimeSelectorContext) => {
-    if (containerClass && containerClass.name === 'StaffState') {
-      true === true;
-    }
     const { argumentSelectorFunctions, selectorOptions } = getRuntimeSelectorInfo(
       context,
       selectorMetaData,
@@ -74,9 +68,6 @@ export function createSelector<T extends (...args: any[]) => any>(
     );
 
     return function selectFromRoot(rootState: any) {
-      if (containerClass && containerClass.name === 'StaffState') {
-        true === true;
-      }
       // Determine arguments from the app state using the selectors
       // tutaj sie wywołuje ze storyga pobranie obiektu
       const results = argumentSelectorFunctions.map(argFn => argFn(rootState));

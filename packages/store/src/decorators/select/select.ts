@@ -5,8 +5,6 @@ import {
   PropertyType,
   SelectType
 } from './symbols';
-import { Observable } from 'rxjs';
-
 /**
  * Decorator for selecting a slice of state from the store.
  */

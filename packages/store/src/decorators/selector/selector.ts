@@ -1,7 +1,6 @@
 import { CONFIG_MESSAGES, VALIDATION_CODE } from '../../configs/messages.config';
 import { createSelector } from '../../utils/selector-utils';
 import { SelectorSpec, SelectorType } from './symbols';
-import { Location } from '../../common';
 
 /**
  * Decorator for memoizing a state selector.
@@ -29,7 +28,7 @@ export function Selector<T>(selectors?: T[]): SelectorType<T> {
           createSelector(selectors, originalFn as any, {
             containerClass: target,
             selectorName: key.toString(),
-            location: undefined,
+            location: <any>undefined,
             getSelectorOptions() {
               return {};
             }
