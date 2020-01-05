@@ -69,7 +69,6 @@ export function createSelector<T extends (...args: any[]) => any>(
 
     return function selectFromRoot(rootState: any) {
       // Determine arguments from the app state using the selectors
-      // tutaj sie wywołuje ze storyga pobranie obiektu
       const results = argumentSelectorFunctions.map(argFn => argFn(rootState));
 
       // if the lambda tries to access a something on the
