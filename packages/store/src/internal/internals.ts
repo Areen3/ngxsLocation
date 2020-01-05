@@ -130,7 +130,7 @@ export function ensureSelectorMetadata(target: Function): SelectorMetaDataModel 
       originalFn: null,
       containerClass: null,
       selectorName: null,
-      localization: SelectLocation.filterByPath('.'),
+      localization: <any>undefined,
       getSelectorOptions: () => ({})
     };
 

@@ -29,7 +29,7 @@ export function Selector<T>(selectors?: T[]): SelectorType<T> {
           createSelector(selectors, originalFn as any, {
             containerClass: target,
             selectorName: key.toString(),
-            localization: SelectLocation.filterByPath('.'),
+            localization: <any>undefined,
             getSelectorOptions() {
               return {};
             }
