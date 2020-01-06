@@ -172,7 +172,7 @@ function compliantPropGetter(paths: string[]): (x: any) => any {
  *
  * @ignore
  */
-export function fastPropGetter(paths: string[]): (x: any) => any {
+function fastPropGetter(paths: string[]): (x: any) => any {
   const segments = paths;
   let seg = 'store.' + segments[0];
   let i = 0;

@@ -151,28 +151,7 @@ export class StateFactory {
 
     return bootstrappedStores;
   }
-  /**
-   * Create new state slice
-   */
-  private createStateItem(
-    name: string,
-    path: string,
-    stateClass: StateClassInternal
-  ): MappedStore {
-    const meta: MetaDataModel = stateClass[META_KEY]!;
-    this.addRuntimeInfoToMeta(meta, path);
-    const stateMap: MappedStore = {
-      name,
-      path,
-      isInitialised: false,
-      actions: meta.actions,
-      instance: this._injector.get(stateClass),
-      defaults: StateFactory.cloneDefaults(meta.defaults),
-      context: '',
-      selectors: meta.selectors
-    };
-    return stateMap;
-  }
+
   /**
    * Create selector that return slice of state in given location
    */
@@ -191,6 +170,7 @@ export class StateFactory {
       }
     });
   }
+
   /**
    * Create and store or Get selector that return slice of state in given location
    */
@@ -220,7 +200,7 @@ export class StateFactory {
   ): MappedStore[] {
     StoreValidators.getValidStateMeta(child);
     const childPath = `${location.path}.${childName}`;
-    let mappedStore: MappedStore = this.states.find(s => s.path === childPath);
+    let mappedStore: MappedStore | undefined = this.states.find(s => s.path === childPath);
     if (mappedStore && isDevMode()) {
       console.error(`State name: ${childName} already added in location ${location}`);
       return [];
@@ -390,7 +370,28 @@ export class StateFactory {
     // We will need to come up with an alternative in v4 because this is used by many plugins
     meta.path = path;
   }
-
+  /**
+   * Create new state slice
+   */
+  private createStateItem(
+    name: string,
+    path: string,
+    stateClass: StateClassInternal
+  ): MappedStore {
+    const meta: MetaDataModel = stateClass[META_KEY]!;
+    this.addRuntimeInfoToMeta(meta, path);
+    const stateMap: MappedStore = {
+      name,
+      path,
+      isInitialised: false,
+      actions: meta.actions,
+      instance: this._injector.get(stateClass),
+      defaults: StateFactory.cloneDefaults(meta.defaults),
+      context: '',
+      selectors: meta.selectors
+    };
+    return stateMap;
+  }
   /**
    * @description
    * the method checks if the state has already been added to the tree
@@ -408,18 +409,4 @@ export class StateFactory {
   private checkLocationToSend(location: SingleLocation, mappedStore: MappedStore): boolean {
     return location.path && location.path === mappedStore.path ? true : false;
   }
-  //   if (location.path && location.path === mappedStore.path) {
-  //     return true;
-  //   }
-  //   if (location.name) {
-  //     if (location.context && location.name === mappedStore.name && location.context === mappedStore.context) {
-  //       return true;
-  //     } else {
-  //       if (location.name === mappedStore.name) {
-  //         return true;
-  //       }
-  //     }
-  //   }
-  //   return false;
-  // }
 }

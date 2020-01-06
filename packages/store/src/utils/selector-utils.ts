@@ -2,7 +2,6 @@ import { memoize } from '@ngxs/store/internals';
 
 import {
   ensureSelectorMetadata,
-  fastPropGetter,
   getSelectorMetadata,
   getStoreMetadata,
   SelectorMetaDataModel,
