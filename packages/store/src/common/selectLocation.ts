@@ -1,6 +1,3 @@
-import { MappedStore } from '../internal/internals';
-import { SingleLocation } from './location';
-
 /**
  * Class specifies location of element in state data tree
  * It allows to send action to many localizations

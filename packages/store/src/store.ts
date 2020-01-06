@@ -2,16 +2,11 @@
 import { Inject, Injectable, Optional, Type, isDevMode, Injector } from '@angular/core';
 import { Observable, of, Subscription, throwError } from 'rxjs';
 import { catchError, distinctUntilChanged, map, take, tap } from 'rxjs/operators';
-import {
-  INITIAL_STATE_TOKEN,
-  PlainObject,
-  StateClass,
-  PlainObjectOf
-} from '@ngxs/store/internals';
+import { INITIAL_STATE_TOKEN, PlainObject, StateClass } from '@ngxs/store/internals';
 
 import { InternalNgxsExecutionStrategy } from './execution/internal-ngxs-execution-strategy';
 import { InternalStateOperations } from './internal/state-operations';
-import { createSelector, getRootSelectorFactory } from './utils/selector-utils';
+import { getRootSelectorFactory } from './utils/selector-utils';
 import { StateStream } from './internal/state-stream';
 import { leaveNgxs } from './operators/leave-ngxs';
 import { NgxsConfig, META_KEY, SELECTOR_META_KEY } from './symbols';
@@ -20,15 +15,12 @@ import { StateFactory } from './internal/state-factory';
 import { NgxsAction } from './actions/base.action';
 import { RangeLocations, SingleLocation } from './common';
 import {
-  propGetter,
-  isObject,
   StateClassInternal,
   MappedStore,
   StateOperations,
   SelectorMetaDataModel
 } from './internal/internals';
 import { LifecycleStateManager } from './internal/lifecycle-state-manager';
-import { ActionHandlerMetaData } from './actions/symbols';
 import { getValue, setValue, removeLastValue } from './utils/utils';
 import { UpdateState } from './actions/actions';
 @Injectable()
@@ -127,7 +119,7 @@ export class Store {
   private getStoreBoundSelectorFn(selector: any) {
     // todo chcek not empty
     const seletorMDModel = <SelectorMetaDataModel>selector[SELECTOR_META_KEY];
-    const location: SingleLocation =
+    const location: SingleLocation | undefined =
       seletorMDModel !== undefined ? seletorMDModel.location : undefined;
     const makeSelectorFn = getRootSelectorFactory(selector);
     const runtimeContext = this._stateFactory.getRuntimeSelectorContext(location);
@@ -159,15 +151,15 @@ export class Store {
       location instanceof RangeLocations
         ? this._stateFactory.getLocations(
             this._stateFactory.states,
-            <RangeLocations>(<undefined>location)
+            <RangeLocations>(<unknown>location)
           )
-        : [<SingleLocation>(<undefined>location)];
+        : [<SingleLocation>(<unknown>location)];
     const eventArray = Array.isArray(event) ? [...event] : [event];
     const eventToSend: NgxsAction[] = eventArray
       .map((eventItem): NgxsAction[] =>
         locationsToSend.map(
-          (location): NgxsAction =>
-            Object.assign(Object.create(eventItem), { ...eventItem, location })
+          (locationItem): NgxsAction =>
+            Object.assign(Object.create(eventItem), { ...eventItem, location: locationItem })
         )
       )
       .reduce((acc, curr) => [...acc, ...curr], []);
@@ -348,8 +340,8 @@ export class Store {
 
     const childState = this._stateFactory.addChild(child, childName, location, params);
     mappedStores.push(...childState);
-    childState.forEach(child => {
-      const newState = setValue(currentState, path, child.defaults);
+    childState.forEach(childItem => {
+      const newState = setValue(currentState, path, childItem.defaults);
       stateOperations.setState(newState);
     });
 

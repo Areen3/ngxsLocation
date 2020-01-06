@@ -131,7 +131,7 @@ export function ensureSelectorMetadata(target: Function): SelectorMetaDataModel 
       originalFn: null,
       containerClass: null,
       selectorName: null,
-      location: undefined,
+      location: <any>undefined,
       getSelectorOptions: () => ({})
     };
 

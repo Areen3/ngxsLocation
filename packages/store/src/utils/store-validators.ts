@@ -49,7 +49,7 @@ export abstract class StoreValidators {
     return meta;
   }
   public static getStateFromMetaStore(states: MappedStore[], path: string): MappedStore {
-    const stateMap: MappedStore = states.find(item => item.path === path);
+    const stateMap: MappedStore | undefined = states.find(item => item.path === path);
     if (!stateMap) {
       throw new Error(MESSAGES[CODE.STATE_NOT_FOUND](path));
     }

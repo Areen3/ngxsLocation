@@ -10,14 +10,13 @@ import {
   takeUntil
 } from 'rxjs/operators';
 
-import { META_KEY, NgxsConfig, SELECTOR_META_KEY } from '../symbols';
+import { META_KEY, NgxsConfig } from '../symbols';
 import {
   buildGraph,
   findFullParentPath,
   isObject,
   MappedStore,
   MetaDataModel,
-  SelectorMetaDataModel,
   nameToState,
   propGetter,
   StateClassInternal,

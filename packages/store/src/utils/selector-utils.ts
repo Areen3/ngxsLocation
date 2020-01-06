@@ -142,6 +142,7 @@ function getLocalSelectorOptions(
   return {
     ...(selectorOptionsMetaAccessor.getOptions(selectorMetaData.containerClass) || {}),
     ...(selectorOptionsMetaAccessor.getOptions(selectorMetaData.originalFn) || {}),
+    // todo loc this is not neessery
     ...(selectorOptionsMetaAccessor.getOptions(selectorMetaData.location) || undefined),
     ...(selectorMetaData.getSelectorOptions() || {}),
     ...explicitOptions
