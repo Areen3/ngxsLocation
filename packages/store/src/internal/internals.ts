@@ -11,7 +11,7 @@ import {
 } from '../symbols';
 import { ActionHandlerMetaData } from '../actions/symbols';
 import { getValue } from '../utils/utils';
-import { Location } from '../common';
+import { SingleLocation } from '../common';
 
 // inspired from https://stackoverflow.com/a/43674389
 export interface StateClassInternal<T = any, U = any> extends StateClass<T> {
@@ -59,7 +59,7 @@ export interface SelectorMetaDataModel {
   originalFn: Function | null;
   containerClass: any;
   selectorName: string | null;
-  location: Location;
+  location: SingleLocation;
   getSelectorOptions: () => SharedSelectorOptions;
 }
 

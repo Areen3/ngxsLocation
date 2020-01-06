@@ -3,33 +3,33 @@
  * It allows to point specific location and do something with it
  */
 
-export class Location {
-  constructor(private _path: string) {
-    this._path = this.validate(this._path);
+export class SingleLocation {
+  private _path: string;
+  constructor(path: string) {
+    this._path = this.validate(path);
   }
   get path(): string {
     return this._path;
   }
-  set path(path: string) {
-    this._path = this.validate(path);
-  }
-  static create(path: string): Location {
-    return new Location(path);
+
+  static getLocation(path: string, childName?: string): SingleLocation {
+    const current = childName === undefined ? path : path + '.' + childName;
+    return new SingleLocation(current);
   }
   getParentName(): string {
     const tab: Array<string> = this._path.split('.');
     return tab.pop()!;
   }
-  getParentPath(): Location {
+  getParentPath(): SingleLocation {
     const tab: Array<string> = this._path.split('.');
     tab.pop();
-    return Location.create(tab.join('.'));
+    return SingleLocation.getLocation(tab.join('.'));
   }
-  getChildLocation(childName: string): Location {
-    return Location.create(`${this._path}.${childName}`);
+  getChildLocation(childName: string): SingleLocation {
+    return SingleLocation.getLocation(`${this._path}.${childName}`);
   }
-  copy() {
-    return Location.create(this._path);
+  getLocation(): SingleLocation {
+    return SingleLocation.getLocation(this._path);
   }
 
   private validate(p: string): string {

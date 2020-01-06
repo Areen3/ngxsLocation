@@ -18,7 +18,7 @@ import { NgxsConfig, META_KEY, SELECTOR_META_KEY } from './symbols';
 import { StateToken } from './state-token/state-token';
 import { StateFactory } from './internal/state-factory';
 import { NgxsAction } from './actions/base.action';
-import { SelectLocation, Location } from './common';
+import { RangeLocations, SingleLocation } from './common';
 import {
   propGetter,
   isObject,
@@ -127,7 +127,7 @@ export class Store {
   private getStoreBoundSelectorFn(selector: any) {
     // todo chcek not empty
     const seletorMDModel = <SelectorMetaDataModel>selector[SELECTOR_META_KEY];
-    const location: Location =
+    const location: SingleLocation =
       seletorMDModel !== undefined ? seletorMDModel.location : undefined;
     const makeSelectorFn = getRootSelectorFactory(selector);
     const runtimeContext = this._stateFactory.getRuntimeSelectorContext(location);
@@ -153,13 +153,28 @@ export class Store {
    */
   dispatchInLocation(
     event: NgxsAction | NgxsAction[],
-    location: SelectLocation
+    location: SingleLocation | RangeLocations
   ): Observable<any> {
-    (Array.isArray(event) ? [...event] : [event]).forEach(evnt => (evnt.location = location));
-    return this._internalStateOperations.getRootStateOperations().dispatch(event);
+    const locationsToSend: SingleLocation[] =
+      location instanceof RangeLocations
+        ? this._stateFactory.getLocations(
+            this._stateFactory.states,
+            <RangeLocations>(<undefined>location)
+          )
+        : [<SingleLocation>(<undefined>location)];
+    const eventArray = Array.isArray(event) ? [...event] : [event];
+    const eventToSend: NgxsAction[] = eventArray
+      .map((eventItem): NgxsAction[] =>
+        locationsToSend.map(
+          (location): NgxsAction =>
+            Object.assign(Object.create(eventItem), { ...eventItem, location })
+        )
+      )
+      .reduce((acc, curr) => [...acc, ...curr], []);
+    return this._internalStateOperations.getRootStateOperations().dispatch(eventToSend);
   }
 
-  selectInContext(selector: any, location: Location): Observable<any> {
+  selectInContext(selector: any, location: SingleLocation): Observable<any> {
     // todo chcek not empty
     const seletorMDModel = <SelectorMetaDataModel>selector[SELECTOR_META_KEY];
     const containerClass = seletorMDModel.containerClass;
@@ -172,7 +187,7 @@ export class Store {
   }
 
   /** Allows to select one slice of data from the store from specified location */
-  selectOnceInContext(selector: any, filter: Location): Observable<any> {
+  selectOnceInContext(selector: any, filter: SingleLocation): Observable<any> {
     return this.selectInContext(selector, filter).pipe(take(1));
   }
 
@@ -180,12 +195,19 @@ export class Store {
   //  * Select a snapshot from the state  from specified location
   //  */
 
-  selectSnapshotInContext(selector: any, location: Location): any {
-    const selectorFn = this.getStoreBoundSelectorFn(selector);
-    return selectorFn(this._stateStream.getValue());
+  selectSnapshotInContext(selector: any, location: SingleLocation): any {
+    const seletorMDModel = <SelectorMetaDataModel>selector[SELECTOR_META_KEY];
+    const containerClass = seletorMDModel.containerClass;
+    const selectorFn = this._stateFactory.getSelectorFromState(
+      containerClass,
+      seletorMDModel.originalFn,
+      location
+    );
+    const selectorFn2 = this.getStoreBoundSelectorFn(selectorFn);
+    return selectorFn2(this._stateStream.getValue());
   }
 
-  getChildrenState(location: Location): any[] {
+  getChildrenState(location: SingleLocation): any[] {
     const parentLevel = location.path.split('.').length;
     const states = this._stateFactory.states
       .filter(p => p.path.startsWith(location.path))
@@ -222,7 +244,7 @@ export class Store {
       ? (params.childName = child[META_KEY]!.name!)
       : params.childName;
     params.context = !params.context ? (params.context = '') : params.context;
-    const loc = Location.create(params.parentName);
+    const loc = SingleLocation.getLocation(params.parentName);
 
     mappedStores.push(
       ...this.addChildInternal(child, params.childName, stateOperations, loc, {
@@ -238,7 +260,7 @@ export class Store {
 
   addChildInLocalization(
     child: StateClassInternal,
-    location: Location,
+    location: SingleLocation,
     params: { childName?: string; context?: string }
   ) {
     const stateOperations = this._internalStateOperations.getRootStateOperations();
@@ -264,7 +286,7 @@ export class Store {
   /**
    * Removes State from State Data tree and MappedStores in given location with all its children
    */
-  removeStateInPath(location: Location) {
+  removeStateInPath(location: SingleLocation) {
     this.removeChildInternal(location);
   }
 
@@ -275,7 +297,7 @@ export class Store {
     const has = this._stateFactory.states.find(s => s.name === childName);
     if (!has && isDevMode())
       console.error('State of name ' + childName + ' dont exists. Cannot delete state');
-    else this.removeChildInternal(Location.create(has!.path));
+    else this.removeChildInternal(SingleLocation.getLocation(has!.path));
   }
   removeChild(child: StateClassInternal) {
     this.removeChildByName(child[META_KEY]!.name!);
@@ -284,18 +306,18 @@ export class Store {
   /**
    * Searches for state with given name added in root path and returns path to that state
    */
-  getStateLocationInPath(root: Location, stateName: string): Location {
+  getStateLocationInPath(root: SingleLocation, stateName: string): SingleLocation {
     const state = this._stateFactory.states.find(
       p => p.path.startsWith(root.path) && p.name === stateName
     );
     if (state === undefined) throw new Error(`State ${stateName} doesn't exist in location`);
-    return Location.create(state!.path);
+    return SingleLocation.getLocation(state!.path);
   }
 
-  getStateLocationByStateClass(stateClass: StateClassInternal): Location {
-    return Location.create(stateClass[META_KEY]!.path!);
+  getStateLocationByStateClass(stateClass: StateClassInternal): SingleLocation {
+    return SingleLocation.getLocation(stateClass[META_KEY]!.path!);
   }
-  getLocationByState(state: any): Location {
+  getLocationByState(state: any): SingleLocation {
     function findObject(obj: Object, path: string): string {
       for (const key of Object.keys(obj)) {
         if (typeof (<any>obj)[key] !== 'object') continue;
@@ -308,14 +330,14 @@ export class Store {
     const currState = this._internalStateOperations.getRootStateOperations().getState();
     const s = findObject(currState, '');
     if (s === '') throw new Error(`State ${state} doesn't exist in store`);
-    return Location.create(s);
+    return SingleLocation.getLocation(s);
   }
 
   private addChildInternal(
     child: StateClassInternal,
     childName: string,
     stateOperations: StateOperations<StateClass>,
-    location: Location,
+    location: SingleLocation,
     params: { context: string }
   ): MappedStore[] {
     if (!child[META_KEY]) throw new Error('States must be decorated with @State() decorator');
@@ -339,7 +361,7 @@ export class Store {
             item,
             item[META_KEY].name,
             stateOperations,
-            Location.create(path),
+            SingleLocation.getLocation(path),
             params
           )
         )
@@ -348,7 +370,7 @@ export class Store {
     return mappedStores;
   }
 
-  private removeChildInternal(location: Location) {
+  private removeChildInternal(location: SingleLocation) {
     const stateOperations = this._internalStateOperations.getRootStateOperations();
     const cur = stateOperations.getState();
 

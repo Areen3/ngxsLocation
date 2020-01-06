@@ -11,7 +11,8 @@ export enum VALIDATION_CODE {
   ZONE_WARNING = 'ZONE_WARNING',
   PATCHING_ARRAY = 'PATCHING_ARRAY',
   PATCHING_PRIMITIVE = 'PATCHING_PRIMITIVE',
-  UNDECORATED_STATE_IN_IVY = 'UNDECORATED_STATE_IN_IVY'
+  UNDECORATED_STATE_IN_IVY = 'UNDECORATED_STATE_IN_IVY',
+  STATE_NOT_FOUND = 'STATE_NOT_FOUND'
 }
 
 export const CONFIG_MESSAGES = {
@@ -40,5 +41,7 @@ export const CONFIG_MESSAGES = {
   [VALIDATION_CODE.PATCHING_ARRAY]: () => 'Patching arrays is not supported.',
   [VALIDATION_CODE.PATCHING_PRIMITIVE]: () => 'Patching primitives is not supported.',
   [VALIDATION_CODE.UNDECORATED_STATE_IN_IVY]: (name: string) =>
-    `'${name}' class should be decorated with @Injectable() right after the @State() decorator`
+    `'${name}' class should be decorated with @Injectable() right after the @State() decorator`,
+  [VALIDATION_CODE.STATE_NOT_FOUND]: (path: string) =>
+    `State in localization'${path}' doesn't exist`
 };

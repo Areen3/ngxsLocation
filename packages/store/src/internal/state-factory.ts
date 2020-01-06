@@ -37,7 +37,7 @@ import { StoreValidators } from '../utils/store-validators';
 import { INITIAL_STATE_TOKEN, PlainObjectOf, memoize } from '@ngxs/store/internals';
 import { NgxsAction } from '../actions/base.action';
 import { ActionKind } from '../common/declaration';
-import { SelectLocation, Location, ELocationKind } from '../common';
+import { RangeLocations, SingleLocation, ELocationKind } from '../common';
 import { createSelector } from '../utils/selector-utils';
 
 /**
@@ -80,7 +80,7 @@ export class StateFactory {
     return this._parentFactory ? this._parentFactory.statePaths : this._statePaths;
   }
 
-  public getRuntimeSelectorContext = memoize((location?: Location) => {
+  public getRuntimeSelectorContext = memoize((location?: SingleLocation) => {
     const stateFactory = this;
     const context: RuntimeSelectorContext = this._parentFactory
       ? this._parentFactory.getRuntimeSelectorContext(location)
@@ -152,7 +152,7 @@ export class StateFactory {
     return bootstrappedStores;
   }
   /**
-   * Create state item
+   * Create new state slice
    */
   private createStateItem(
     name: string,
@@ -174,51 +174,52 @@ export class StateFactory {
     return stateMap;
   }
   /**
-   * Create selector that return slice of state in location
+   * Create selector that return slice of state in given location
    */
 
   private addSelectorItemToState(
     stateClass: StateClassInternal,
     selector: any,
-    location: Location
+    location: SingleLocation
   ): any {
     return createSelector([], selector, {
       containerClass: stateClass,
       selectorName: selector.name,
-      location: location.copy(),
+      location: location.getLocation(),
       getSelectorOptions() {
         return {};
       }
     });
   }
   /**
-   * Create or Get selector that return slice of state in location
+   * Create and store or Get selector that return slice of state in given location
    */
   getSelectorFromState(
     stateClass: StateClassInternal,
-    selectorMethod: any,
-    location: Location
+    selector: any,
+    location: SingleLocation
   ) {
-    const stateMap: MappedStore = this.states.find(item => item.path === location.path);
-    // todo LOC make better error handling
-    const storedSelector = stateMap.selectors[selectorMethod.name];
+    const stateMap: MappedStore = StoreValidators.getStateFromMetaStore(
+      this.states,
+      location.path
+    );
+    const storedSelector = stateMap.selectors[selector.name];
     return storedSelector
-      ? selectorMethod
-      : this.addSelectorItemToState(stateClass, selectorMethod, location);
+      ? selector
+      : this.addSelectorItemToState(stateClass, selector, location);
   }
 
   /**
-   * Add child to specific location
+   * Add child to store in given location
    */
   addChild(
     child: StateClassInternal,
     childName: string,
-    location: Location,
+    location: SingleLocation,
     params: { context: string }
   ): MappedStore[] {
-    // todo LOC make better error handling
-    if (!child[META_KEY]) throw new Error('States must be decorated with @State() decorator');
-    const childPath = location.path + '.' + childName;
+    StoreValidators.getValidStateMeta(child);
+    const childPath = `${location.path}.${childName}`;
     let mappedStore: MappedStore = this.states.find(s => s.path === childPath);
     if (mappedStore && isDevMode()) {
       console.error(`State name: ${childName} already added in location ${location}`);
@@ -226,8 +227,7 @@ export class StateFactory {
     }
     mappedStore = this.createStateItem(childName, childPath, child);
     mappedStore.context = params.context;
-
-    // todo LOC shoud call addToStatesMap but names of states don't have to be unique
+    // todo LOC now you can have states with same name in different location, shoud we check something in this case ?
     this.states.push(mappedStore);
     return [mappedStore];
   }
@@ -282,9 +282,13 @@ export class StateFactory {
 
       if (actionMetas) {
         /** Check if action implements NgxsAction and if store location equals to MappedStore location */
-        if (action instanceof NgxsAction && action.location) {
-          if (!this.checkLocationWithMappedStore(action.location, metadata)) continue;
-        }
+        if (
+          action instanceof NgxsAction &&
+          action.location &&
+          !this.checkLocationToSend(action.location, metadata)
+        )
+          continue;
+
         for (const actionMeta of actionMetas) {
           const stateContext = this._stateContextFactory.createStateContext(metadata);
           try {
@@ -331,6 +335,36 @@ export class StateFactory {
     return forkJoin(results);
   }
 
+  /** Function returns state data path based on RangeLocations and state metatadata */
+  getLocations(states: MappedStore[], location: RangeLocations): SingleLocation[] {
+    const tab: MappedStore[] = [];
+    switch (location.locationKind) {
+      case ELocationKind.byName:
+        tab.push(...states.filter(p => p.name === location.name));
+        break;
+      case ELocationKind.byLocation:
+        return [SingleLocation.getLocation(location.path)];
+      case ELocationKind.byContext:
+        tab.push(
+          ...states.filter(p => p.context === location.context && p.name === location.name)
+        );
+        break;
+      case ELocationKind.byContextInPath:
+        tab.push(
+          ...states
+            .filter(p => p.path.startsWith(location.path) && p.name === location.name)
+            .filter(p => p.context === location.context)
+        );
+        break;
+      case ELocationKind.byPathTree:
+        tab.push(
+          ...states.filter(p => p.path.startsWith(location.path) && p.name === location.name)
+        );
+        break;
+    }
+    return tab.map(item => SingleLocation.getLocation(item.path));
+  }
+
   private addToStatesMap(
     stateClasses: StateClassInternal[]
   ): { newStates: StateClassInternal[] } {
@@ -369,62 +403,23 @@ export class StateFactory {
       getValue(this._initialState, path) !== undefined;
     return this.statesByName[name] && valueIsBootstrappedInInitialState;
   }
-  // todo check if is still  needed
-  /** Function returns state data path based on SelectLocation and state metatadata */
-  getLocationPaths(location: SelectLocation): Location[] {
-    const tab: Array<MappedStore> = [];
-    switch (location.locationKind) {
-      case ELocationKind.byName:
-        tab.push(...this.states.filter(p => p.name === location.name));
-        break;
-      case ELocationKind.byLocation:
-        return [Location.create(location.path)];
-      case ELocationKind.byContext:
-        tab.push(
-          ...this.states.filter(
-            p => p.context === location.context && p.name === location.name
-          )
-        );
-        break;
-      case ELocationKind.byContextInPath:
-        tab.push(
-          ...this.states
-            .filter(p => p.path.startsWith(location.path) && p.name === location.name)
-            .filter(p => p.context === location.context)
-        );
-        break;
-      case ELocationKind.byPathTree:
-        tab.push(
-          ...this.states.filter(
-            p => p.path.startsWith(location.path) && p.name === location.name
-          )
-        );
-        break;
-    }
-    return tab.map(item => Location.create(item.path));
-  }
 
-  /** Function checks is MappedStore and SelectLocation points to same state data */
-  private checkLocationWithMappedStore(
-    location: SelectLocation,
-    mappedStore: MappedStore
-  ): boolean {
-    if (location.path && location.path === mappedStore.path) {
-      return true;
-    }
-    if (location.name) {
-      if (
-        location.context &&
-        location.name === mappedStore.name &&
-        location.context === mappedStore.context
-      ) {
-        return true;
-      } else {
-        if (location.name === mappedStore.name) {
-          return true;
-        }
-      }
-    }
-    return false;
+  /** Function checks is MappedStore and RangeLocations points to same state data */
+  private checkLocationToSend(location: SingleLocation, mappedStore: MappedStore): boolean {
+    return location.path && location.path === mappedStore.path ? true : false;
   }
+  //   if (location.path && location.path === mappedStore.path) {
+  //     return true;
+  //   }
+  //   if (location.name) {
+  //     if (location.context && location.name === mappedStore.name && location.context === mappedStore.context) {
+  //       return true;
+  //     } else {
+  //       if (location.name === mappedStore.name) {
+  //         return true;
+  //       }
+  //     }
+  //   }
+  //   return false;
+  // }
 }

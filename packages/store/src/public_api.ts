@@ -6,7 +6,7 @@ export { Select } from './decorators/select/select';
 export { SelectorOptions } from './decorators/selector-options';
 export { Actions } from './actions-stream';
 export { NgxsAction } from './actions/base.action';
-export { SelectLocation, Location } from './common';
+export { RangeLocations, SingleLocation } from './common';
 export { NgxsOnDestroy, ActionKind } from './common/declaration';
 
 // TODO: v4 - We need to come up with an alternative api to exposing this metadata

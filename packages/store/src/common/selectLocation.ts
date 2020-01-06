@@ -1,3 +1,6 @@
+import { MappedStore } from '../internal/internals';
+import { SingleLocation } from './location';
+
 /**
  * Class specifies location of element in state data tree
  * It allows to send action to many localizations
@@ -11,7 +14,7 @@ export enum ELocationKind {
   byContextInPath = 'byContextInPath'
 }
 
-export class SelectLocation {
+export class RangeLocations {
   get locationKind(): ELocationKind {
     return this._locationKind;
   }
@@ -25,24 +28,24 @@ export class SelectLocation {
     this._locationKind = this.validate();
   }
 
-  static filterByName(name: string): SelectLocation {
-    return new SelectLocation('', name, '', false);
+  static filterByName(name: string): RangeLocations {
+    return new RangeLocations('', name, '', false);
   }
-  static filterByPath(path: string, name?: string): SelectLocation {
+  static filterByPath(path: string, name?: string): RangeLocations {
     const loc: string = name === undefined ? path : `${path}.${name}`;
-    return new SelectLocation('', '', loc, false);
+    return new RangeLocations('', '', loc, false);
   }
-  static filterByContext(context: string, name: string): SelectLocation {
-    return new SelectLocation(context, name, '', false);
+  static filterByContext(context: string, name: string): RangeLocations {
+    return new RangeLocations(context, name, '', false);
   }
-  static filterByPathTree(path: string, name: string): SelectLocation {
-    return new SelectLocation('', name, path, true);
+  static filterByPathTree(path: string, name: string): RangeLocations {
+    return new RangeLocations('', name, path, true);
   }
-  static filterByAll(context: string, path: string, name: string): SelectLocation {
-    return new SelectLocation(context, name, path, true);
+  static filterByAll(context: string, path: string, name: string): RangeLocations {
+    return new RangeLocations(context, name, path, true);
   }
   copy() {
-    return new SelectLocation(this.context, this.name, this.path, this.searchInTree);
+    return new RangeLocations(this.context, this.name, this.path, this.searchInTree);
   }
   getParentName(): string {
     this.checkLocation();
@@ -55,13 +58,14 @@ export class SelectLocation {
     tab.pop();
     return tab.join('.');
   }
-  getParentLocation(): SelectLocation {
-    return SelectLocation.filterByPath(this.getParentPath());
+  getParentLocation(): RangeLocations {
+    return RangeLocations.filterByPath(this.getParentPath());
   }
-  getChildLocation(childName: string): SelectLocation {
+  getChildLocation(childName: string): RangeLocations {
     this.checkLocation();
-    return SelectLocation.filterByPath(`${this.path}.${childName}`);
+    return RangeLocations.filterByPath(`${this.path}.${childName}`);
   }
+
   private checkLocation() {
     if (this.locationKind === ELocationKind.byLocation)
       throw new Error(
@@ -69,7 +73,7 @@ export class SelectLocation {
       );
   }
 
-  validate(): ELocationKind {
+  private validate(): ELocationKind {
     if (
       this.name !== '' &&
       this.path === '' &&
@@ -105,6 +109,6 @@ export class SelectLocation {
       this.searchInTree === true
     )
       return ELocationKind.byContextInPath;
-    throw new Error('Wrong combination of serarch parametres in SelectLocation');
+    throw new Error('Wrong combination of serarch parametres in RangeLocations');
   }
 }

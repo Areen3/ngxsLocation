@@ -11,7 +11,7 @@ import {
   SelectorFactory,
   SelectFromRootState
 } from '../internal/internals';
-import { Location } from '../common';
+import { SingleLocation } from '../common';
 
 const SELECTOR_OPTIONS_META_KEY = 'NGXS_SELECTOR_OPTIONS_META';
 
@@ -28,7 +28,7 @@ export const selectorOptionsMetaAccessor = {
 interface CreationMetadata {
   containerClass: any;
   selectorName: string;
-  location: Location;
+  location: SingleLocation;
   getSelectorOptions?: () => SharedSelectorOptions;
 }
 
@@ -102,7 +102,8 @@ function setupSelectorMetadata<T extends (...args: any[]) => any>(
   if (creationMetadata) {
     selectorMetaData.containerClass = creationMetadata.containerClass;
     selectorMetaData.selectorName = creationMetadata.selectorName;
-    selectorMetaData.location = creationMetadata.location && creationMetadata.location.copy();
+    selectorMetaData.location =
+      creationMetadata.location && creationMetadata.location.getLocation();
     getExplicitSelectorOptions =
       creationMetadata.getSelectorOptions || getExplicitSelectorOptions;
   }
