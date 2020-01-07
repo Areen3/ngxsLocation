@@ -27,7 +27,12 @@ import {
   RuntimeSelectorContext,
   SharedSelectorOptions
 } from './internals';
-import { getActionTypeFromInstance, getValue, setValue } from '../utils/utils';
+import {
+  getActionTypeFromInstance,
+  getValue,
+  setValue,
+  removeLastValue
+} from '../utils/utils';
 import { ofActionDispatched } from '../operators/of-action';
 import { ActionContext, ActionStatus, InternalActions } from '../actions-stream';
 import { InternalDispatchedActionResults } from '../internal/dispatcher';
@@ -210,6 +215,17 @@ export class StateFactory {
     this.states.push(mappedStore);
     return [mappedStore];
   }
+  /**
+   * Remove child to store in given location and retrun new state wihtout removed elements
+   */
+  removeChild(currentState: any, location: SingleLocation): any {
+    const statesToRemove = this.states.filter(p => p.path.startsWith(location.path));
+    for (const removeItem of statesToRemove) {
+      const index = this.states.indexOf(removeItem);
+      this.states.splice(index, 1);
+    }
+    return removeLastValue(currentState, location.path);
+  }
 
   /**
    * Add a set of states to the store and return the defaults
@@ -314,30 +330,37 @@ export class StateFactory {
     return forkJoin(results);
   }
 
-  /** Function returns state data path based on RangeLocations and state metatadata */
-  getLocations(states: MappedStore[], location: RangeLocations): SingleLocation[] {
+  /**
+   * Function returns array SingleLocation matched with RangeLocations
+   * array has all paths to slice of state thad dulfill all conditions results from RangeLocations
+   * */
+  getLocations(location: RangeLocations): SingleLocation[] {
     const tab: MappedStore[] = [];
     switch (location.locationKind) {
       case ELocationKind.byName:
-        tab.push(...states.filter(p => p.name === location.name));
+        tab.push(...this.states.filter(p => p.name === location.name));
         break;
       case ELocationKind.byLocation:
         return [SingleLocation.getLocation(location.path)];
       case ELocationKind.byContext:
         tab.push(
-          ...states.filter(p => p.context === location.context && p.name === location.name)
+          ...this.states.filter(
+            p => p.context === location.context && p.name === location.name
+          )
         );
         break;
       case ELocationKind.byContextInPath:
         tab.push(
-          ...states
+          ...this.states
             .filter(p => p.path.startsWith(location.path) && p.name === location.name)
             .filter(p => p.context === location.context)
         );
         break;
       case ELocationKind.byPathTree:
         tab.push(
-          ...states.filter(p => p.path.startsWith(location.path) && p.name === location.name)
+          ...this.states.filter(
+            p => p.path.startsWith(location.path) && p.name === location.name
+          )
         );
         break;
     }

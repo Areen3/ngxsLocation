@@ -16,12 +16,44 @@ export class RangeLocations {
     return this._locationKind;
   }
   private _locationKind: ELocationKind;
-  private constructor(
-    public context: string,
-    public name: string,
-    public path: string,
-    public searchInTree: boolean
-  ) {
+  private _context: string;
+  private _name: string;
+  private _path: string;
+  private _searchInTree: boolean;
+  private constructor(context: string, name: string, path: string, searchInTree: boolean) {
+    this._context = context;
+    this._name = name;
+    this._path = path;
+    this._searchInTree = searchInTree;
+    this._locationKind = this.validate();
+  }
+
+  get context(): string {
+    return this._context;
+  }
+  set context(context) {
+    this._context = context;
+    this._locationKind = this.validate();
+  }
+  get name(): string {
+    return this._name;
+  }
+  set name(name) {
+    this._name = name;
+    this._locationKind = this.validate();
+  }
+  get path(): string {
+    return this._path;
+  }
+  set path(path) {
+    this._path = path;
+    this._locationKind = this.validate();
+  }
+  get searchInTree(): boolean {
+    return this._searchInTree;
+  }
+  set searchInTree(searchInTree) {
+    this._searchInTree = searchInTree;
     this._locationKind = this.validate();
   }
 
@@ -42,16 +74,16 @@ export class RangeLocations {
     return new RangeLocations(context, name, path, true);
   }
   copy() {
-    return new RangeLocations(this.context, this.name, this.path, this.searchInTree);
+    return new RangeLocations(this._context, this._name, this._path, this._searchInTree);
   }
   getParentName(): string {
     this.checkLocation();
-    const tab: Array<string> = this.path.split('.');
+    const tab: Array<string> = this._path.split('.');
     return tab.pop()!;
   }
   getParentPath(): string {
     this.checkLocation();
-    const tab: Array<string> = this.path.split('.');
+    const tab: Array<string> = this._path.split('.');
     tab.pop();
     return tab.join('.');
   }
@@ -60,7 +92,7 @@ export class RangeLocations {
   }
   getChildLocation(childName: string): RangeLocations {
     this.checkLocation();
-    return RangeLocations.filterByPath(`${this.path}.${childName}`);
+    return RangeLocations.filterByPath(`${this._path}.${childName}`);
   }
 
   private checkLocation() {
@@ -72,38 +104,38 @@ export class RangeLocations {
 
   private validate(): ELocationKind {
     if (
-      this.name !== '' &&
-      this.path === '' &&
-      this.context === '' &&
-      this.searchInTree === false
+      this._name !== '' &&
+      this._path === '' &&
+      this._context === '' &&
+      this._searchInTree === false
     )
       return ELocationKind.byName;
     if (
-      this.name === '' &&
-      this.path !== '' &&
-      this.context === '' &&
-      this.searchInTree === false
+      this._name === '' &&
+      this._path !== '' &&
+      this._context === '' &&
+      this._searchInTree === false
     )
       return ELocationKind.byLocation;
     if (
-      this.name !== '' &&
-      this.path === '' &&
-      this.context !== '' &&
-      this.searchInTree === false
+      this._name !== '' &&
+      this._path === '' &&
+      this._context !== '' &&
+      this._searchInTree === false
     )
       return ELocationKind.byContext;
     if (
-      this.name !== '' &&
-      this.path !== '' &&
-      this.context === '' &&
-      this.searchInTree === true
+      this._name !== '' &&
+      this._path !== '' &&
+      this._context === '' &&
+      this._searchInTree === true
     )
       return ELocationKind.byPathTree;
     if (
-      this.name !== '' &&
-      this.path !== '' &&
-      this.context !== '' &&
-      this.searchInTree === true
+      this._name !== '' &&
+      this._path !== '' &&
+      this._context !== '' &&
+      this._searchInTree === true
     )
       return ELocationKind.byContextInPath;
     throw new Error('Wrong combination of serarch parametres in RangeLocations');

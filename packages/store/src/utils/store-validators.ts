@@ -3,7 +3,9 @@ import {
   MetaDataModel,
   StateClassInternal,
   StatesByName,
-  MappedStore
+  MappedStore,
+  getSelectorMetadata,
+  SelectorMetaDataModel
 } from '../internal/internals';
 import {
   CONFIG_MESSAGES as MESSAGES,
@@ -54,5 +56,13 @@ export abstract class StoreValidators {
       throw new Error(MESSAGES[CODE.STATE_NOT_FOUND](path));
     }
     return stateMap;
+  }
+  public static getValidSelectorMeta(selector: any): SelectorMetaDataModel {
+    const meta: SelectorMetaDataModel = getSelectorMetadata(selector);
+    if (!meta) {
+      throw new Error(MESSAGES[CODE.MISSING_SELECTOR_DECORATOR](selector.name));
+    }
+
+    return meta;
   }
 }

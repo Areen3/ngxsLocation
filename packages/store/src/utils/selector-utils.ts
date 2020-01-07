@@ -174,7 +174,7 @@ function getSelectorsToApply(
  * This function gets the factory function to create the selector to get the selected slice from the app state
  * @ignore
  */
-export function getRootSelectorFactory(selector: any): SelectFromRootState {
+export function getRootSelectorFactory(selector: any): SelectorFactory {
   const metadata = getSelectorMetadata(selector) || getStoreMetadata(selector);
   return (metadata && metadata.makeRootSelector) || (() => selector);
 }

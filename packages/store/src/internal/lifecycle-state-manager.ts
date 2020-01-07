@@ -6,6 +6,8 @@ import { StateContextFactory } from './state-context-factory';
 import { InternalStateOperations } from './state-operations';
 import { getStateDiffChanges, MappedStore, StatesAndDefaults } from './internals';
 import { NgxsLifeCycle, NgxsSimpleChange, StateContext } from '../symbols';
+import { UpdateState } from '../actions/actions';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class LifecycleStateManager {
@@ -67,6 +69,12 @@ export class LifecycleStateManager {
         instance.ngxsAfterBootstrap(this.getStateContext(mappedStore));
       }
     }
+  }
+  prepareNewStates(mappedStores: MappedStore[]): Observable<any> {
+    return this.internalStateOperations
+      .getRootStateOperations()
+      .dispatch(new UpdateState())
+      .pipe(tap(() => this.invokeInit(mappedStores)));
   }
 
   private getStateContext(mappedStore: MappedStore): StateContext<any> {

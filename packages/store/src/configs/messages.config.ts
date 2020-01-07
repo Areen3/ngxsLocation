@@ -12,7 +12,9 @@ export enum VALIDATION_CODE {
   PATCHING_ARRAY = 'PATCHING_ARRAY',
   PATCHING_PRIMITIVE = 'PATCHING_PRIMITIVE',
   UNDECORATED_STATE_IN_IVY = 'UNDECORATED_STATE_IN_IVY',
-  STATE_NOT_FOUND = 'STATE_NOT_FOUND'
+  STATE_NOT_FOUND = 'STATE_NOT_FOUND',
+  TO_MANY_STATES_FOUND = 'TO_MANY_STATES_FOUND',
+  MISSING_SELECTOR_DECORATOR = 'MISSING_SELECTOR_DECORATOR'
 }
 
 export const CONFIG_MESSAGES = {
@@ -43,5 +45,9 @@ export const CONFIG_MESSAGES = {
   [VALIDATION_CODE.UNDECORATED_STATE_IN_IVY]: (name: string) =>
     `'${name}' class should be decorated with @Injectable() right after the @State() decorator`,
   [VALIDATION_CODE.STATE_NOT_FOUND]: (path: string) =>
-    `State in localization'${path}' doesn't exist`
+    `State in localization'${path}' doesn't exist`,
+  [VALIDATION_CODE.TO_MANY_STATES_FOUND]: (parentName: string) =>
+    `State with name '${parentName}' found in many location`,
+  [VALIDATION_CODE.MISSING_SELECTOR_DECORATOR]: (selectorName: string) =>
+    `Method ${selectorName} is not decorated`
 };
