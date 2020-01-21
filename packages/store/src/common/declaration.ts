@@ -8,3 +8,7 @@ export enum ActionKind {
 export interface NgxsOnDestroy {
   ngxsOnDestory(): void;
 }
+
+export function onDestroyDefined(instance: any): instance is NgxsOnDestroy {
+  return (instance as NgxsOnDestroy).ngxsOnDestory !== undefined;
+}

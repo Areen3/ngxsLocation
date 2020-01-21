@@ -65,4 +65,9 @@ export abstract class StoreValidators {
 
     return meta;
   }
+  public static checkStateExists(state: any, path: string): void {
+    if (!state) {
+      throw new Error(MESSAGES[CODE.STATE_NOT_FOUND](path));
+    }
+  }
 }

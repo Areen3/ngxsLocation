@@ -205,15 +205,27 @@ export class Store {
   /**
    * like select snapshot but return all states that is specific location
    */
-  getChildrenState(location: SingleLocation): any[] {
+  getChildrensState(location: SingleLocation): { name: string; state: any }[] {
     const parentLevel = location.path.split('.').length;
     const states = this._stateFactory.states
       .filter(p => p.path.startsWith(location.path))
       .filter(p => p.path.split('.').length - 1 === parentLevel)
-      .map(item =>
-        getValue(this._internalStateOperations.getRootStateOperations().getState(), item.path)
-      );
+      .map(p => ({
+        name: SingleLocation.getLocation(p.path).getParentName(),
+        state: getValue(
+          this._internalStateOperations.getRootStateOperations().getState(),
+          p.path
+        )
+      }));
     return states;
+  }
+  /**
+   * like select snapshot but return all one state - children that is specific location
+   */
+  getChildrenStateByName(location: SingleLocation, childrenName: string): any {
+    const result = this.getChildrensState(location).find(item => item.name === childrenName);
+    StoreValidators.checkStateExists(result, location.getChildLocation(childrenName).path);
+    return this.getChildrensState(location).find(item => item.name === childrenName)!.state;
   }
   /**
    * return all child class from parent class using property childs (static child)
@@ -264,7 +276,7 @@ export class Store {
   /**
    * Removes State from State data tree and MappedStores in given location with all its children
    */
-  removeChildInLocalization(location: SingleLocation) {
+  removeChildInLocalization(location: SingleLocation): Observable<any> {
     const stateOperations = this._internalStateOperations.getRootStateOperations();
     const cur = stateOperations.getState();
     const newState = this._stateFactory.removeChild(cur, location);

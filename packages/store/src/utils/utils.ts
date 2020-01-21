@@ -65,8 +65,9 @@ export function removeLastValue(obj: any, prop: string) {
   obj = { ...obj };
   const split = prop.split('.');
   const lastIndex = split.length - 1;
-  return split.reduce((acc, part, index) => {
+  split.reduce((acc, part, index) => {
     index === lastIndex ? delete acc[part] : (acc[part] = { ...acc[part] });
     return acc && acc[part];
   }, obj);
+  return obj;
 }
