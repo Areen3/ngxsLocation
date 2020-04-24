@@ -48,6 +48,7 @@ The `key` option is used to determine what states should be persisted in the sto
   name: 'novels',
   defaults: []
 })
+@Injectable()
 export class NovelsState {}
 
 // detectives.state.ts
@@ -55,6 +56,7 @@ export class NovelsState {}
   name: 'detectives',
   defaults: []
 })
+@Injectable()
 export class DetectivesState {}
 ```
 
@@ -177,6 +179,36 @@ export class MyStorageEngine implements StorageEngine {
   ]
 })
 export class MyModule {}
+```
+
+### Serialization
+
+You can define your own logic in case you need to alter the state. For instance, you can
+use 'afterDeserialize' to instantiate a concrete class.
+
+```ts
+@NgModule({
+  imports: [
+    NgxsStoragePluginModule.forRoot({
+      key: 'counter',
+      beforeSerialize: (obj, key) => {
+        if (key === 'counter') {
+          return {
+            count: obj.count < 10 ? obj.count : 10
+          };
+        }
+        return obj;
+      },
+      afterDeserialize: (obj, key) => {
+        if (key === 'counter') {
+          return new CounterInfoStateModel(obj.count);
+        }
+        return obj;
+      }
+    })
+  ]
+})
+export class AppModule {}
 ```
 
 ### Migrations

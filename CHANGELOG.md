@@ -6,7 +6,13 @@
 $ npm install @ngxs/store@dev
 ```
 
-- ...
+- Feature: Storage Plugin - Add before and after serialize hooks [#1513](https://github.com/ngxs/store/pull/1513)
+- Performance: Logger Plugin - Plugin should lazy inject the store once [#1550](https://github.com/ngxs/store/pull/1550)
+
+# 3.6.2 2020-02-07
+
+- Fix: Handle empty array dispatch edge case [#1521](https://github.com/ngxs/store/pull/1521)
+- Fix: Fix regression after upgrade to angular.rc-11 [#1526](https://github.com/ngxs/store/pull/1526)
 
 # 3.6.1 2020-01-15
 
