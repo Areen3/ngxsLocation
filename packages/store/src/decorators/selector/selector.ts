@@ -18,17 +18,21 @@ export function Selector<T>(selectors?: T[]): SelectorType<T> {
     }
 
     const originalFn = descriptor.value;
-    const memoizedFn = createSelector(selectors, originalFn as any, {
-      containerClass: target,
-      selectorName: key.toString(),
-      location: <any>undefined,
-      getSelectorOptions() {
-        return {};
-      }
-    });
+    let memoizedFn: any = null;
     const newDescriptor = {
       configurable: true,
       get() {
+        // Selector initialisation deferred to here so that it is at runtime, not decorator parse time
+        memoizedFn =
+          memoizedFn ||
+          createSelector(selectors, originalFn as any, {
+            containerClass: target,
+            selectorName: key.toString(),
+            location: <any>undefined,
+            getSelectorOptions() {
+              return {};
+            }
+          });
         return memoizedFn;
       }
     };
