@@ -200,6 +200,7 @@ export class Store {
       location
     );
     const selectorFnWraped = this.getStoreBoundSelectorFn(selectorFn);
+    //  const selectorFnWraped = this.getStoreBoundSelectorFn(selector);
     return selectorFnWraped(this._stateStream.getValue());
   }
   /**
@@ -289,7 +290,13 @@ export class Store {
   removeChild(child: StateClassInternal) {
     this.removeChildInLocalization(this.getStateLocationByStateClass(child));
   }
-
+  /**
+   * Searches for state with given name added in root path and returns path to that state
+   */
+  existStateLocation(root: SingleLocation): boolean {
+    const state = this._stateFactory.states.find(p => p.path === root.path);
+    return state !== undefined;
+  }
   /**
    * Searches for state with given name added in root path and returns path to that state
    */
@@ -297,7 +304,9 @@ export class Store {
     const state = this._stateFactory.states.find(
       p => p.path.startsWith(root.path) && p.name === stateName
     );
-    if (!state) throw new Error(CONFIG_MESSAGES[VALIDATION_CODE.STATE_NOT_FOUND](stateName));
+    if (!state) {
+      throw new Error(CONFIG_MESSAGES[VALIDATION_CODE.STATE_NOT_FOUND](stateName));
+    }
     return SingleLocation.getLocation(state.path);
   }
   /**

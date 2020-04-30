@@ -183,6 +183,12 @@ export class StateFactory {
     selector: any,
     location: SingleLocation
   ) {
+    // const stateMap: MappedStore = StoreValidators.getStateFromMetaStore(this.states, location.path);
+    // if (stateMap.selectors[selector.name] === undefined) {
+    //   stateMap.selectors[selector.name] = this.addSelectorItemToState(stateClass, selector, location);
+    // }
+    // const storedSelector = stateMap.selectors[selector.name];
+    // return storedSelector ? selector : storedSelector;
     const stateMap: MappedStore = StoreValidators.getStateFromMetaStore(
       this.states,
       location.path
@@ -318,8 +324,7 @@ export class StateFactory {
     if (
       actionExecuted === false &&
       action instanceof NgxsAction &&
-      action.kind === ActionKind.akCommand &&
-      isDevMode
+      action.kind === ActionKind.akCommand // &&  isDevMode
     ) {
       console.error(`Action commnad ${action.constructor.name} was not executed`);
     }

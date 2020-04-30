@@ -247,7 +247,9 @@ describe('Store (isolation)', () => {
       loader.stubbedModules = {
         lazyModule: LazyModule
       };
-      router.resetConfig([{ path: 'lazy-path', loadChildren: 'lazyModule' }]);
+      router.resetConfig([
+        { path: 'lazy-path', loadChildren: () => import('lazyModule').then(m => m.default) }
+      ]);
       async function navigateToLazyRoute() {
         return await router.navigateByUrl('/lazy-path');
       }

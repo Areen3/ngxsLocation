@@ -21,16 +21,33 @@ export function State<T>(options: StoreOptions<T>) {
     return { ...inheritanceOptions, ...options } as StoreOptions<T>;
   }
 
-  function mutateMetaData(params: MutateMetaOptions<T>): void {
-    const { meta, inheritedStateClass, optionsWithInheritance } = params;
+  function mutateMetaData(params: MutateMetaOptions<T>, target: StateClass): void {
+    const { meta, optionsWithInheritance } = params;
     const { children, defaults, name } = optionsWithInheritance;
     const stateName: string | null =
       typeof name === 'string' ? name : (name && name.getName()) || null;
     StoreValidators.checkCorrectStateName(stateName);
 
-    if (inheritedStateClass.hasOwnProperty(META_KEY)) {
-      const inheritedMeta: Partial<MetaDataModel> = inheritedStateClass[META_KEY] || {};
-      meta.actions = { ...meta.actions, ...inheritedMeta.actions };
+    // if (inheritedStateClass.hasOwnProperty(META_KEY)) {
+    //   const inheritedMeta: Partial<MetaDataModel> = inheritedStateClass[META_KEY] || {};
+    //   meta.actions = { ...meta.actions, ...inheritedMeta.actions };
+    // }
+
+    if (Object.getPrototypeOf(target)) {
+      const stateClasses = getInheritanceTree(target);
+      for (const stateClass of stateClasses) {
+        if (stateClass.hasOwnProperty(META_KEY)) {
+          const parentMeta = stateClass[META_KEY];
+          meta.actions = {
+            ...meta.actions,
+            ...parentMeta.actions
+          };
+          meta.selectors = {
+            ...meta.selectors,
+            ...parentMeta.selectors
+          };
+        }
+      }
     }
 
     meta.children = children;
@@ -44,7 +61,17 @@ export function State<T>(options: StoreOptions<T>) {
     const meta: MetaDataModel = ensureStoreMetadata(stateClass);
     const inheritedStateClass: StateClassInternal = Object.getPrototypeOf(stateClass);
     const optionsWithInheritance: StoreOptions<T> = getStateOptions(inheritedStateClass);
-    mutateMetaData({ meta, inheritedStateClass, optionsWithInheritance });
+    mutateMetaData({ meta, inheritedStateClass, optionsWithInheritance }, target);
     stateClass[META_OPTIONS_KEY] = optionsWithInheritance;
   };
+}
+
+// return tree of states
+export function getInheritanceTree(target: any): any[] {
+  const tree = [];
+  if (Object.getPrototypeOf(target)) {
+    tree.push(Object.getPrototypeOf(target));
+    tree.push(...getInheritanceTree(Object.getPrototypeOf(target)));
+  }
+  return tree;
 }
