@@ -1,4 +1,4 @@
-import { ErrorHandler, Injectable } from '@angular/core';
+import { ErrorHandler, Injectable, Injector } from '@angular/core';
 import { EMPTY, forkJoin, Observable, of, Subject, throwError } from 'rxjs';
 import { exhaustMap, filter, shareReplay, take } from 'rxjs/operators';
 
@@ -8,6 +8,7 @@ import { StateStream } from './state-stream';
 import { PluginManager } from '../plugin-manager';
 import { InternalNgxsExecutionStrategy } from '../execution/internal-ngxs-execution-strategy';
 import { leaveNgxs } from '../operators/leave-ngxs';
+import { getActionTypeFromInstance } from '../utils/utils';
 
 /**
  * Internal Action result stream that is emitted when an action is completed.
@@ -20,8 +21,10 @@ export class InternalDispatchedActionResults extends Subject<ActionContext> {}
 
 @Injectable()
 export class InternalDispatcher {
+  private _errorHandler: ErrorHandler;
+
   constructor(
-    private _errorHandler: ErrorHandler,
+    private _injector: Injector,
     private _actions: InternalActions,
     private _actionResults: InternalDispatchedActionResults,
     private _pluginManager: PluginManager,
@@ -41,6 +44,8 @@ export class InternalDispatcher {
       error: error =>
         this._ngxsExecutionStrategy.leave(() => {
           try {
+            // Retrieve lazily to avoid cyclic dependency exception
+            this._errorHandler = this._errorHandler || this._injector.get(ErrorHandler);
             this._errorHandler.handleError(error);
           } catch {}
         })
@@ -59,6 +64,14 @@ export class InternalDispatcher {
   }
 
   private dispatchSingle(action: any): Observable<any> {
+    const type: string | undefined = getActionTypeFromInstance(action);
+    if (!type) {
+      const error = new Error(
+        `This action doesn't have a type property: ${action.constructor.name}`
+      );
+      return throwError(error);
+    }
+
     const prevState = this._stateStream.getValue();
     const plugins = this._pluginManager.plugins;
 

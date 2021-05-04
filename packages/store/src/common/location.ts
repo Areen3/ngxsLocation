@@ -17,11 +17,11 @@ export class SingleLocation {
     return new SingleLocation(current);
   }
   getParentName(): string {
-    const tab: Array<string> = this._path.split('.');
+    const tab: string[] = this._path.split('.');
     return tab.pop()!;
   }
   getParentPath(): SingleLocation {
-    const tab: Array<string> = this._path.split('.');
+    const tab: string[] = this._path.split('.');
     tab.pop();
     return SingleLocation.getLocation(tab.join('.'));
   }

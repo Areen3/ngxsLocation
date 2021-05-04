@@ -1,73 +1,55 @@
-import {
-  getStoreMetadata,
-  MetaDataModel,
-  StateClassInternal,
-  StatesByName,
-  MappedStore,
-  getSelectorMetadata,
-  SelectorMetaDataModel
-} from '../internal/internals';
-import {
-  CONFIG_MESSAGES as MESSAGES,
-  VALIDATION_CODE as CODE
-} from '../configs/messages.config';
-
+import
+  {
+    throwMissingSelectorDecoratorError,
+    throwStateDecoratorError,
+    throwStateNameError,
+    throwStateNamePropertyError,
+    throwStateNotFoundError,
+    throwStateUniqueError
+  } from '../configs/messages.config';
+import { getSelectorMetadata, getStoreMetadata, MappedStore, SelectorMetaDataModel, StateClassInternal, StatesByName } from '../internal/internals';
 export abstract class StoreValidators {
-  public static stateNameRegex: RegExp = new RegExp('^[a-zA-Z0-9_]+$');
+  private static stateNameRegex: RegExp = new RegExp('^[a-zA-Z0-9_]+$');
 
-  public static stateNameErrorMessage(name: string) {
-    return MESSAGES[CODE.STATE_NAME](name);
-  }
-
-  public static checkCorrectStateName(name: string | null) {
+  static checkThatStateIsNamedCorrectly(name: string | null): void | never {
     if (!name) {
-      throw new Error(MESSAGES[CODE.STATE_NAME_PROPERTY]());
-    }
-
-    if (!this.stateNameRegex.test(name)) {
-      throw new Error(this.stateNameErrorMessage(name));
+      throwStateNamePropertyError();
+    } else if (!this.stateNameRegex.test(name)) {
+      throwStateNameError(name);
     }
   }
 
-  public static checkStateNameIsUnique(
+  static checkThatStateNameIsUnique(
+    stateName: string,
     state: StateClassInternal,
     statesByName: StatesByName
-  ): string {
-    const meta: MetaDataModel = this.getValidStateMeta(state);
-    const stateName: string = meta!.name as string;
+  ): void | never {
     const existingState = statesByName[stateName];
     if (existingState && existingState !== state) {
-      throw new Error(MESSAGES[CODE.STATE_UNIQUE](stateName, state.name, existingState.name));
+      throwStateUniqueError(stateName, state.name, existingState.name);
     }
-    return stateName;
   }
 
-  public static getValidStateMeta(state: StateClassInternal): MetaDataModel {
-    const meta: MetaDataModel = getStoreMetadata(state);
-    if (!meta) {
-      throw new Error(MESSAGES[CODE.STATE_DECORATOR]());
-    }
-
-    return meta;
+  static checkThatStateClassesHaveBeenDecorated(
+    stateClasses: StateClassInternal[]
+  ): void | never {
+    stateClasses.forEach((stateClass: StateClassInternal) => {
+      if (!getStoreMetadata(stateClass)) {
+        throwStateDecoratorError(stateClass.name);
+      }
+    });
   }
   public static getStateFromMetaStore(states: MappedStore[], path: string): MappedStore {
     const stateMap: MappedStore | undefined = states.find(item => item.path === path);
-    if (!stateMap) {
-      throw new Error(MESSAGES[CODE.STATE_NOT_FOUND](path));
-    }
-    return stateMap;
+    if (!stateMap) throwStateNotFoundError(path);
+    return stateMap!;
   }
   public static getValidSelectorMeta(selector: any): SelectorMetaDataModel {
     const meta: SelectorMetaDataModel = getSelectorMetadata(selector);
-    if (!meta) {
-      throw new Error(MESSAGES[CODE.MISSING_SELECTOR_DECORATOR](selector.name));
-    }
-
-    return meta;
+    if (!meta) throwMissingSelectorDecoratorError(selector.name);
+    return meta!;
   }
   public static checkStateExists(state: any, path: string): void {
-    if (!state) {
-      throw new Error(MESSAGES[CODE.STATE_NOT_FOUND](path));
-    }
+    if (!state) throwStateNotFoundError(path);
   }
 }

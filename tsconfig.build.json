@@ -8,11 +8,13 @@
     "inlineSources": true,
     "importHelpers": true,
     "skipLibCheck": true,
+    "stripInternal": true,
     "paths": {
       "@ngxs/*": ["@ngxs/*"]
     }
   },
   "angularCompilerOptions": {
+    "enableIvy": false,
     "annotateForClosureCompiler": true,
     "skipTemplateCodegen": true,
     "fullTemplateTypeCheck": true,

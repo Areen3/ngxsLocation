@@ -1,4 +1,4 @@
-import 'jest-preset-angular';
+// import 'jest-preset-angular'; // commented out due to issue in latest jest-preset-angular
 
 const CI = process.env['CI'] === 'true';
 
@@ -47,3 +47,5 @@ if (CI) {
     jest.spyOn(global.console, methodName as any).mockImplementation(() => jest.fn());
   });
 }
+
+((global as unknown) as { ngDevMode: boolean }).ngDevMode = true;

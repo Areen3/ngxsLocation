@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { first, last } from 'rxjs/operators';
-import { Component } from '@angular/core';
+import { Component, Injectable } from '@angular/core';
 
 import { Store } from '../src/store';
 import { NgxsModule } from '../src/module';
@@ -11,7 +11,6 @@ import { Selector } from '../src/decorators/selector/selector';
 import { Select } from '../src/decorators/select/select';
 import { StateContext } from '../src/symbols';
 import { removeDollarAtTheEnd } from '../src/decorators/select/symbols';
-import { CONFIG_MESSAGES, VALIDATION_CODE } from '../src/configs/messages.config';
 
 describe('Select', () => {
   interface SubSubStateModel {
@@ -40,6 +39,7 @@ describe('Select', () => {
       name: 'Danny'
     }
   })
+  @Injectable()
   class MySubSubState {}
 
   @State<SubStateModel>({
@@ -50,6 +50,7 @@ describe('Select', () => {
     },
     children: [MySubSubState]
   })
+  @Injectable()
   class MySubState {}
 
   @State<StateModel>({
@@ -60,6 +61,7 @@ describe('Select', () => {
     },
     children: [MySubState]
   })
+  @Injectable()
   class MyState {
     @Action(FooIt)
     fooIt({ setState }: StateContext<StateModel>) {
@@ -76,10 +78,8 @@ describe('Select', () => {
       }
 
       new SelectComponent().state.subscribe();
-    } catch (e) {
-      expect(e.message).toEqual(
-        CONFIG_MESSAGES[VALIDATION_CODE.SELECT_FACTORY_NOT_CONNECTED]()
-      );
+    } catch ({ message }) {
+      expect(message).toEqual('You have forgotten to import the NGXS module!');
     }
   });
 
@@ -325,6 +325,7 @@ describe('Select', () => {
       foo: 'Hello'
     }
   })
+  @Injectable()
   class NullSelectorState {
     @Selector()
     static notHere(state: any) {
@@ -361,6 +362,7 @@ describe('Select', () => {
       name: 'count',
       defaults: { number: { value: 0 } }
     })
+    @Injectable()
     class CountState {
       @Action({ type: 'IncorrectClearState' })
       public incorrectClear({ setState }: StateContext<{ number: { value: number } }>): void {

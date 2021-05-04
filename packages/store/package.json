@@ -5,8 +5,8 @@
   "license": "MIT",
   "sideEffects": true,
   "peerDependencies": {
-    "@angular/core": ">=6.1.0 <10.0.0",
-    "rxjs": ">=6.5.4"
+    "@angular/core": ">=6.1.0 <12.0.0",
+    "rxjs": ">=6.5.5"
   },
   "ngPackage": {
     "lib": {

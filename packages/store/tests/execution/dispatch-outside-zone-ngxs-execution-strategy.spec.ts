@@ -15,7 +15,7 @@ import {
   Select,
   Actions
 } from '../../src/public_api';
-import { CONFIG_MESSAGES, VALIDATION_CODE } from '../..//src/configs/messages.config';
+import { getZoneWarningMessage } from '../../src/configs/messages.config';
 import { DispatchOutsideZoneNgxsExecutionStrategy } from '../../src/execution/dispatch-outside-zone-ngxs-execution-strategy';
 
 describe('DispatchOutsideZoneNgxsExecutionStrategy', () => {
@@ -85,9 +85,9 @@ describe('DispatchOutsideZoneNgxsExecutionStrategy', () => {
       ],
       declarations: [...(moduleDef.declarations || [])]
     });
-    const store: Store = TestBed.get(Store);
-    const zone: NgZone = TestBed.get(NgZone);
-    const get = <T>(classType: Type<T>) => <T>TestBed.get(classType);
+    const store: Store = TestBed.inject(Store);
+    const zone: NgZone = TestBed.inject(NgZone);
+    const get = <T>(classType: Type<T>) => <T>TestBed.inject(classType);
     return { zone, store, ticks, get };
   }
 
@@ -289,7 +289,10 @@ describe('DispatchOutsideZoneNgxsExecutionStrategy', () => {
     'should warn if zone is "nooped"',
     freshPlatform(async () => {
       // Arrange
-      @State({ name: 'foo' })
+      @State({
+        name: 'foo'
+      })
+      @Injectable()
       class FooState {}
 
       @Component({
@@ -317,8 +320,7 @@ describe('DispatchOutsideZoneNgxsExecutionStrategy', () => {
 
       try {
         // Assert
-        const ZONE_WARNING = CONFIG_MESSAGES[VALIDATION_CODE.ZONE_WARNING]();
-        expect(spy).toHaveBeenCalledWith(ZONE_WARNING);
+        expect(spy).toHaveBeenCalledWith(getZoneWarningMessage());
       } finally {
         spy.mockRestore();
       }

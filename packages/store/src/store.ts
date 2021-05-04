@@ -6,10 +6,11 @@ import { catchError, distinctUntilChanged, map, take } from 'rxjs/operators';
 import { UpdateState } from './actions/actions';
 import { NgxsAction } from './actions/base.action';
 import { RangeLocations, SingleLocation } from './common';
-import { CONFIG_MESSAGES, VALIDATION_CODE } from './configs/messages.config';
+import { throwStateNotFoundError} from './configs/messages.config';
 import { InternalNgxsExecutionStrategy } from './execution/internal-ngxs-execution-strategy';
 import {
   getSelectorMetadata,
+  getStoreMetadata,
   MappedStore,
   SelectorMetaDataModel,
   StateClassInternal,
@@ -45,8 +46,8 @@ export class Store {
   /**
    * Dispatches event(s).
    */
-  dispatch(event: any | any[]): Observable<any> {
-    return this._internalStateOperations.getRootStateOperations().dispatch(event);
+  dispatch(actionOrActions: any | any[]): Observable<any> {
+    return this._internalStateOperations.getRootStateOperations().dispatch(actionOrActions);
   }
 
   /**
@@ -233,7 +234,8 @@ export class Store {
    */
   getChildrenClass(stateClass: StateClassInternal): StateClassInternal[] {
     const stateClasses = [stateClass];
-    const { children } = StoreValidators.getValidStateMeta(stateClass);
+    StoreValidators.checkThatStateClassesHaveBeenDecorated(stateClasses);
+    const { children } = getStoreMetadata(stateClass);
     for (const child of children!) {
       stateClasses.push(...this.getChildrenClass(child));
     }
@@ -248,7 +250,8 @@ export class Store {
     child: StateClassInternal,
     params: { childName?: string; context?: string }
   ): Observable<any> {
-    const parentMeta = StoreValidators.getValidStateMeta(parent);
+    StoreValidators.checkThatStateClassesHaveBeenDecorated([parent]);
+    const parentMeta = getStoreMetadata(parent);
     const location = SingleLocation.getLocation(parentMeta.path!);
     return this.addChildInLocalization(child, location, params);
   }
@@ -261,7 +264,8 @@ export class Store {
     params: { childName?: string; context?: string }
   ): Observable<any> {
     const stateOperations = this._internalStateOperations.getRootStateOperations();
-    const childMeta = StoreValidators.getValidStateMeta(child);
+    StoreValidators.checkThatStateClassesHaveBeenDecorated([child]);
+    const childMeta = getStoreMetadata(child);
     const mappedStores: MappedStore[] = [];
     params.childName = !params.childName
       ? (params.childName = childMeta.name!)
@@ -304,23 +308,22 @@ export class Store {
     const state = this._stateFactory.states.find(
       p => p.path.startsWith(root.path) && p.name === stateName
     );
-    if (!state) {
-      throw new Error(CONFIG_MESSAGES[VALIDATION_CODE.STATE_NOT_FOUND](stateName));
-    }
-    return SingleLocation.getLocation(state.path);
+    if (!state) throwStateNotFoundError(stateName);
+    return SingleLocation.getLocation(state!.path);
   }
   /**
    * get location form state class
    */
   getStateLocationByStateClass(stateClass: StateClassInternal): SingleLocation {
-    const stateMetaData = StoreValidators.getValidStateMeta(stateClass);
+    StoreValidators.checkThatStateClassesHaveBeenDecorated([stateClass]);
+    const stateMetaData = getStoreMetadata(stateClass);
     return SingleLocation.getLocation(stateMetaData.path!);
   }
   /**
    * get location of given state (recursively searches the state tree by comparing objects)
    */
   getLocationByState(state: any): SingleLocation {
-    function findObject(obj: Object, path: string): string {
+    function findObject(obj: Record<string, any>, path: string): string {
       for (const key of Object.keys(obj)) {
         if (typeof (<any>obj)[key] !== 'object') continue;
         if ((<any>obj)[key] === state) return path === '' ? key : `${path}.${key}`;
@@ -342,7 +345,8 @@ export class Store {
     location: SingleLocation,
     params: { context: string }
   ): MappedStore[] {
-    const storeMetaData = StoreValidators.getValidStateMeta(child);
+    StoreValidators.checkThatStateClassesHaveBeenDecorated([child]);
+    const storeMetaData = getStoreMetadata(child);
     const currentState = stateOperations.getState();
     const mappedStores: MappedStore[] = [];
     const path = `${location.path}.${childName}`;

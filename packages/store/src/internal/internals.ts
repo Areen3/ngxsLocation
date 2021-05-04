@@ -27,7 +27,7 @@ export interface StateOperations<T> {
 
   setState(val: T): T;
 
-  dispatch(actions: any | any[]): Observable<void>;
+  dispatch(actionOrActions: any | any[]): Observable<void>;
 }
 
 export interface MetaDataModel {
@@ -224,13 +224,16 @@ export function propGetter(paths: string[], config: NgxsConfig) {
 export function buildGraph(stateClasses: StateClassInternal[]): StateKeyGraph {
   const findName = (stateClass: StateClassInternal) => {
     const meta = stateClasses.find(g => g === stateClass);
-    if (!meta) {
+
+    // Caretaker note: we have still left the `typeof` condition in order to avoid
+    // creating a breaking change for projects that still use the View Engine.
+    if ((typeof ngDevMode === 'undefined' || ngDevMode) && !meta) {
       throw new Error(
         `Child state not found: ${stateClass}. \r\nYou may have forgotten to add states to module`
       );
     }
 
-    return meta[META_KEY]!.name!;
+    return meta![META_KEY]!.name!;
   };
 
   return stateClasses.reduce<StateKeyGraph>(
@@ -340,7 +343,9 @@ export function topologicalSort(graph: StateKeyGraph): string[] {
     visited[name] = true;
 
     graph[name].forEach((dep: string) => {
-      if (ancestors.indexOf(dep) >= 0) {
+      // Caretaker note: we have still left the `typeof` condition in order to avoid
+      // creating a breaking change for projects that still use the View Engine.
+      if ((typeof ngDevMode === 'undefined' || ngDevMode) && ancestors.indexOf(dep) >= 0) {
         throw new Error(
           `Circular dependency '${dep}' is required by '${name}': ${ancestors.join(' -> ')}`
         );

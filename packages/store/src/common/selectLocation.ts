@@ -78,12 +78,12 @@ export class RangeLocations {
   }
   getParentName(): string {
     this.checkLocation();
-    const tab: Array<string> = this._path.split('.');
+    const tab: string[] = this._path.split('.');
     return tab.pop()!;
   }
   getParentPath(): string {
     this.checkLocation();
-    const tab: Array<string> = this._path.split('.');
+    const tab: string[] = this._path.split('.');
     tab.pop();
     return tab.join('.');
   }

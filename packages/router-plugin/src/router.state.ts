@@ -8,8 +8,7 @@ import {
   ResolveEnd,
   UrlSerializer,
   NavigationStart,
-  NavigationEnd,
-  GuardsCheckEnd
+  NavigationEnd
 } from '@angular/router';
 import { LocationStrategy, Location } from '@angular/common';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
@@ -33,6 +32,12 @@ export interface RouterStateModel<T = RouterStateSnapshot> {
 }
 
 export type RouterTrigger = 'none' | 'router' | 'store';
+
+/**
+ * @description Will be provided through Terser global definitions by Angular CLI
+ * during the production build. This is how Angular does tree-shaking internally.
+ */
+declare const ngDevMode: boolean;
 
 @State<RouterStateModel>({
   name: 'router',
@@ -121,8 +126,6 @@ export class RouterState {
         this.navigationStart();
       } else if (event instanceof RoutesRecognized) {
         this._lastRoutesRecognized = event;
-      } else if (event instanceof GuardsCheckEnd && event.shouldActivate) {
-        this.guardsCheckEnd(event);
       } else if (event instanceof ResolveEnd) {
         this.dispatchRouterDataResolved(event);
       } else if (event instanceof NavigationCancel) {
@@ -132,6 +135,7 @@ export class RouterState {
         this.dispatchRouterError(event);
         this.reset();
       } else if (event instanceof NavigationEnd) {
+        this.navigationEnd();
         this.reset();
       }
     });
@@ -142,6 +146,12 @@ export class RouterState {
 
     if (this._trigger !== 'none') {
       this._storeState = this._store.selectSnapshot(RouterState);
+    }
+  }
+
+  private navigationEnd(): void {
+    if (this.shouldDispatchRouterNavigation()) {
+      this.dispatchRouterNavigation();
     }
   }
 
@@ -189,7 +199,6 @@ export class RouterState {
     this.dispatchRouterAction(
       new RouterCancel(this._routerState!, this._storeState, event, this._trigger)
     );
-    this.reset();
   }
 
   private dispatchRouterError(event: NavigationError): void {
@@ -213,14 +222,6 @@ export class RouterState {
     }
   }
 
-  private guardsCheckEnd(event: GuardsCheckEnd) {
-    this._routerState = this._serializer.serialize(event.state);
-
-    if (this.shouldDispatchRouterNavigation()) {
-      this.dispatchRouterNavigation();
-    }
-  }
-
   private dispatchRouterDataResolved(event: ResolveEnd): void {
     const routerState = this._serializer.serialize(event.state);
     this.dispatchRouterAction(new RouterDataResolved(routerState, event, this._trigger));
@@ -238,7 +239,14 @@ export class RouterState {
    * is triggered
    */
   private checkInitialNavigationOnce(): void {
-    if (isAngularInTestMode()) {
+    // Caretaker note: we have still left the `typeof` condition in order to avoid
+    // creating a breaking change for projects that still use the View Engine.
+    if (
+      (typeof ngDevMode === 'undefined' || ngDevMode) &&
+      // Angular is running tests in development mode thus we can be sure that this method will be
+      // skipped in tests.
+      isAngularInTestMode()
+    ) {
       return;
     }
 

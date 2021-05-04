@@ -1,19 +1,27 @@
 import { Observable } from 'rxjs';
 
-import { CONFIG_MESSAGES, VALIDATION_CODE } from '../../configs/messages.config';
+import { Store } from '../../store';
 import { propGetter } from '../../internal/internals';
 import { SelectFactory } from './select-factory';
 import { StateToken } from '../../state-token/state-token';
 import { ExtractTokenType } from '../../state-token/symbols';
+import { throwSelectFactoryNotConnectedError } from '../../configs/messages.config';
 
 const DOLLAR_CHAR_CODE = 36;
 
-export function createSelectObservable<T = any>(selector: any): Observable<T> {
-  if (!SelectFactory.store) {
-    throw new Error(CONFIG_MESSAGES[VALIDATION_CODE.SELECT_FACTORY_NOT_CONNECTED]());
+export function createSelectObservable<T = any>(
+  selector: any,
+  store: Store | null
+): Observable<T> {
+  // Caretaker note: we have still left the `typeof` condition in order to avoid
+  // creating a breaking change for projects that still use the View Engine.
+  if (typeof ngDevMode === 'undefined' || ngDevMode) {
+    if (!SelectFactory.store && !store) {
+      throwSelectFactoryNotConnectedError();
+    }
   }
 
-  return SelectFactory.store.select(selector);
+  return (store || SelectFactory.store)!.select(selector);
 }
 
 export function createSelectorFn(name: string, rawSelector?: any, paths: string[] = []): any {
@@ -43,15 +51,3 @@ export type PropertyType<T> = T extends StateToken<any>
   : T extends (...args: any[]) => any
   ? Observable<ReturnType<T>>
   : any;
-
-export type ComponentClass<T> = {
-  [P in keyof T]: T[P];
-};
-
-export type SelectType<T> = <
-  U extends ComponentClass<any> & Record<K, PropertyType<T>>,
-  K extends string
->(
-  target: U,
-  key: K
-) => void;

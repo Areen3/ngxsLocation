@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { Subscription, throwError } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
-describe('Dispatching an empty array with errors', () => {
+describe('Dispatching an empty array with errors (https://github.com/ngxs/store/issues/759)', () => {
   let subscription: Subscription;
   let events: string[] = [];
   let store: Store;
@@ -46,7 +46,7 @@ describe('Dispatching an empty array with errors', () => {
       imports: [NgxsModule.forRoot([AppState])]
     });
 
-    store = TestBed.get(Store);
+    store = TestBed.inject(Store);
   });
 
   it('dispatch([ ])', () => {
