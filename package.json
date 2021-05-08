@@ -148,7 +148,7 @@
     "jest-preset-angular": "^7.1.1",
     "lint-staged": "^9.5.0",
     "mock-socket": "^8.1.0",
-    "ng-packagr": "^5.7.1",
+    "ng-packagr": "^10.1.1",
     "prettier": "1.19.1",
     "rxjs": "^6.5.4",
     "start-server-and-test": "^1.10.8",
