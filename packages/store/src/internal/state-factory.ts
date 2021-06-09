@@ -1,7 +1,15 @@
 import { ELocationKind, RangeLocations } from './../common/selectLocation';
 import { ActionKind } from './../common/declaration';
 import { SingleLocation } from './../common/location';
-import { Inject, Injectable, Injector, isDevMode, OnDestroy, Optional, SkipSelf } from '@angular/core';
+import {
+  Inject,
+  Injectable,
+  Injector,
+  isDevMode,
+  OnDestroy,
+  Optional,
+  SkipSelf
+} from '@angular/core';
 import { forkJoin, from, Observable, of, Subscription, throwError } from 'rxjs';
 import {
   catchError,
@@ -13,31 +21,37 @@ import {
   takeUntil
 } from 'rxjs/operators';
 
-  import { META_KEY, NgxsConfig } from '../symbols';
-  import {
-    buildGraph,
-    findFullParentPath,
-    isObject,
-    MappedStore,
-    MetaDataModel,
-    nameToState,
-    propGetter,
-    StateClassInternal,
-    StateKeyGraph,
-    StatesAndDefaults,
-    StatesByName,
-    topologicalSort,
-    RuntimeSelectorContext,
-    SharedSelectorOptions,
-    getStoreMetadata
-  } from './internals';
-  import { getActionTypeFromInstance, getValue, removeLastValue, setValue } from '../utils/utils';
-  import { ofActionDispatched } from '../operators/of-action';
-  import { ActionContext, ActionStatus, InternalActions } from '../actions-stream';
-  import { InternalDispatchedActionResults } from '../internal/dispatcher';
-  import { StateContextFactory } from '../internal/state-context-factory';
-  import { StoreValidators } from '../utils/store-validators';
-  import { INITIAL_STATE_TOKEN, PlainObjectOf, memoize } from '@ngxs/store/internals';
+import { META_KEY, NgxsConfig } from '../symbols';
+import {
+  buildGraph,
+  findFullParentPath,
+  isObject,
+  MappedStore,
+  MetaDataModel,
+  nameToState,
+  propGetter,
+  StateClassInternal,
+  StateKeyGraph,
+  StatesAndDefaults,
+  StatesByName,
+  topologicalSort,
+  RuntimeSelectorContext,
+  SharedSelectorOptions,
+  getStoreMetadata
+} from './internals';
+import {
+  getActionTypeFromInstance,
+  getValue,
+  removeLastSegment,
+  removeLastValue,
+  setValue
+} from '../utils/utils';
+import { ofActionDispatched } from '../operators/of-action';
+import { ActionContext, ActionStatus, InternalActions } from '../actions-stream';
+import { InternalDispatchedActionResults } from '../internal/dispatcher';
+import { StateContextFactory } from '../internal/state-context-factory';
+import { StoreValidators } from '../utils/store-validators';
+import { INITIAL_STATE_TOKEN, PlainObjectOf, memoize } from '@ngxs/store/internals';
 import { NgxsAction } from '../actions/base.action';
 import { createSelector } from '../utils/selector-utils';
 
@@ -415,7 +429,7 @@ export class StateFactory implements OnDestroy {
       if (typeof ngDevMode === 'undefined' || ngDevMode) {
         StoreValidators.checkThatStateNameIsUnique(stateName, stateClass, statesMap);
       }
-      const unmountedState = !statesMap[stateName];
+      const unmountedState = getStoreMetadata(stateClass).newInstance || !statesMap[stateName];
       if (unmountedState) {
         newStates.push(stateClass);
         statesMap[stateName] = stateClass;
@@ -432,6 +446,20 @@ export class StateFactory implements OnDestroy {
     // We will need to come up with an alternative in v4 because this is used by many plugins
     meta.path = path;
   }
+
+  private getParentState(meta: MetaDataModel): MappedStore | undefined {
+    const parentPath = removeLastSegment(meta.path!);
+    return this.states.find(item => item.path === parentPath);
+  }
+
+  private createCustomInjector(meta: MetaDataModel): Injector {
+    const parentState = this.getParentState(meta);
+    const parent = parentState ? parentState.injector : this._injector;
+    return meta.providers.length
+      ? Injector.create({ providers: meta.providers, parent })
+      : parent;
+  }
+
   /**
    * Create new state slice
    */
@@ -442,12 +470,14 @@ export class StateFactory implements OnDestroy {
   ): MappedStore {
     const meta: MetaDataModel = stateClass[META_KEY]!;
     this.addRuntimeInfoToMeta(meta, path);
+    const injector = this.createCustomInjector(meta);
     const stateMap: MappedStore = {
       name,
       path,
       isInitialised: false,
       actions: meta.actions,
-      instance: this._injector.get(stateClass),
+      injector,
+      instance: injector.get(stateClass),
       defaults: StateFactory.cloneDefaults(meta.defaults),
       context: '',
       selectors: meta.selectors

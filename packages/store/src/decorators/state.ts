@@ -23,7 +23,7 @@ export function State<T>(options: StoreOptions<T>) {
 
   function mutateMetaData(params: MutateMetaOptions<T>, target: StateClass): void {
     const { meta, optionsWithInheritance } = params;
-    const { children, defaults, name } = optionsWithInheritance;
+    const { children, defaults, name, creationMode } = optionsWithInheritance;
     const stateName: string | null =
       typeof name === 'string' ? name : (name && name.getName()) || null;
 
@@ -58,6 +58,12 @@ export function State<T>(options: StoreOptions<T>) {
     meta.children = children;
     meta.defaults = defaults;
     meta.name = stateName;
+    const creationModeEmpty = creationMode ? creationMode : {};
+    meta.providers = creationModeEmpty.providers ? creationModeEmpty.providers : [];
+    meta.newInstance =
+      meta.providers.length !== 0 || creationModeEmpty.newInstance
+        ? creationModeEmpty.newInstance!
+        : false;
   }
 
   return (target: StateClass): void => {

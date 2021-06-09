@@ -3,6 +3,8 @@
  * It allows to send action to many localizations
  */
 
+import { removeLastSegment } from '../utils/utils';
+
 export enum ELocationKind {
   byName = 'byName',
   byLocation = 'byLocation',
@@ -83,9 +85,7 @@ export class RangeLocations {
   }
   getParentPath(): string {
     this.checkLocation();
-    const tab: string[] = this._path.split('.');
-    tab.pop();
-    return tab.join('.');
+    return removeLastSegment(this._path);
   }
   getParentLocation(): RangeLocations {
     return RangeLocations.filterByPath(this.getParentPath());

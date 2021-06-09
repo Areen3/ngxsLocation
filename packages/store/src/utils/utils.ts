@@ -98,7 +98,6 @@ export const mergeDeep = (base: any, ...sources: any[]): any => {
   return mergeDeep(base, ...sources);
 };
 
-
 export function removeLastValue(obj: any, prop: string) {
   obj = { ...obj };
   const split = prop.split('.');
@@ -108,4 +107,10 @@ export function removeLastValue(obj: any, prop: string) {
     return acc && acc[part];
   }, obj);
   return obj;
+}
+
+export function removeLastSegment(path: string): string {
+  const tab = path.split('.');
+  tab.pop();
+  return tab.join('.');
 }
