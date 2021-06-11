@@ -1,4 +1,4 @@
-import { Injectable, InjectionToken, Type } from '@angular/core';
+import { Injectable, InjectionToken, Type, StaticProvider } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { PlainObject, StateClass } from '@ngxs/store/internals';
@@ -134,6 +134,14 @@ export interface StoreOptions<T> {
    * Sub states for the given state.
    */
   children?: StateClass[];
+
+  /**
+   * Create inner Injector and provide tokens
+   */
+  creationMode?: {
+    providers?: StaticProvider[];
+    newInstance?: boolean;
+  };
 }
 
 /**

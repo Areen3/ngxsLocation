@@ -12,6 +12,7 @@ import {
 import { ActionHandlerMetaData } from '../actions/symbols';
 import { getValue } from '../utils/utils';
 import { SingleLocation } from '../common';
+import { Injector, StaticProvider } from '@angular/core';
 
 // inspired from https://stackoverflow.com/a/43674389
 export interface StateClassInternal<T = any, U = any> extends StateClass<T> {
@@ -39,6 +40,9 @@ export interface MetaDataModel {
   path: string | null;
   makeRootSelector: SelectorFactory | null;
   children?: StateClassInternal[];
+  providers: StaticProvider[];
+  newInstance: boolean;
+  injector: Injector | null;
 }
 
 export interface RuntimeSelectorContext {
@@ -72,6 +76,7 @@ export interface MappedStore {
   instance: any;
   path: string;
   context: string;
+  injector: Injector;
 }
 
 export interface StatesAndDefaults {
@@ -98,6 +103,9 @@ export function ensureStoreMetadata(target: StateClassInternal): MetaDataModel {
       actions: {},
       selectors: {},
       defaults: {},
+      providers: [],
+      newInstance: false,
+      injector: null,
       path: null,
       makeRootSelector(context: RuntimeSelectorContext) {
         return context.getStateGetter(defaultMetadata.name);
