@@ -7,7 +7,7 @@ import { InternalStateOperations } from './state-operations';
 import { getStateDiffChanges, MappedStore, StatesAndDefaults } from './internals';
 import { NgxsLifeCycle, NgxsSimpleChange, StateContext } from '../symbols';
 import { UpdateState } from '../actions/actions';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 @Injectable()
 export class LifecycleStateManager {
@@ -60,6 +60,18 @@ export class LifecycleStateManager {
   }
 
   /**
+   * Invoke the init function on the states.
+   */
+  invokeDelete(mappedStores: MappedStore[]): void {
+    for (const mappedStore of mappedStores) {
+      const instance: NgxsLifeCycle = mappedStore.instance;
+      if (instance && instance.ngxsOnDelete) {
+        instance.ngxsOnDelete(this.getStateContext(mappedStore));
+      }
+    }
+  }
+
+  /**
    * Invoke the bootstrap function on the states.
    */
   invokeBootstrap(mappedStores: MappedStore[]) {
@@ -75,6 +87,12 @@ export class LifecycleStateManager {
       .getRootStateOperations()
       .dispatch(new UpdateState())
       .pipe(tap(() => this.invokeInit(mappedStores)));
+  }
+
+  prepareDeleteStates(mappedStores: MappedStore[]): Observable<any> {
+    return of(this.internalStateOperations.getRootStateOperations()).pipe(
+      tap(() => this.invokeDelete(mappedStores))
+    );
   }
 
   private getStateContext(mappedStore: MappedStore): StateContext<any> {

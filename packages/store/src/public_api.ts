@@ -37,6 +37,7 @@ export {
   StateContext,
   StateOperator,
   NgxsOnInit,
+  NgxsOnDelete,
   NgxsAfterBootstrap,
   NgxsOnChanges,
   NgxsModuleOptions,

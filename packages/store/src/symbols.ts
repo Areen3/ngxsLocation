@@ -19,7 +19,8 @@ export const SELECTOR_META_KEY = 'NGXS_SELECTOR_META';
 
 export type NgxsLifeCycle = Partial<NgxsOnChanges> &
   Partial<NgxsOnInit> &
-  Partial<NgxsAfterBootstrap>;
+  Partial<NgxsAfterBootstrap> &
+  Partial<NgxsOnDelete>;
 
 export type NgxsPluginFn = (state: any, mutation: any, next: NgxsNextPluginFn) => any;
 
@@ -161,6 +162,13 @@ export class NgxsSimpleChange<T = any> {
  */
 export interface NgxsOnInit {
   ngxsOnInit(ctx?: StateContext<any>): void | any;
+}
+
+/**
+ * On delete interface
+ */
+export interface NgxsOnDelete {
+  ngxsOnDelete(ctx?: StateContext<any>): void | any;
 }
 
 /**

@@ -2,11 +2,11 @@
 import { Inject, Injectable, Optional, Type } from '@angular/core';
 import { INITIAL_STATE_TOKEN, PlainObject, StateClass } from '@ngxs/store/internals';
 import { Observable, of, Subscription, throwError } from 'rxjs';
-import { catchError, distinctUntilChanged, map, take } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, map, switchMap, take } from 'rxjs/operators';
 import { UpdateState } from './actions/actions';
 import { NgxsAction } from './actions/base.action';
 import { RangeLocations, SingleLocation } from './common';
-import { throwStateNotFoundError} from './configs/messages.config';
+import { throwStateNotFoundError } from './configs/messages.config';
 import { InternalNgxsExecutionStrategy } from './execution/internal-ngxs-execution-strategy';
 import {
   getSelectorMetadata,
@@ -165,6 +165,7 @@ export class Store {
       .reduce((acc, curr) => [...acc, ...curr], []);
     return this._internalStateOperations.getRootStateOperations().dispatch(eventToSend);
   }
+
   /**
    * Select a observable slice of store from specified location
    */
@@ -204,6 +205,7 @@ export class Store {
     //  const selectorFnWraped = this.getStoreBoundSelectorFn(selector);
     return selectorFnWraped(this._stateStream.getValue());
   }
+
   /**
    * like select snapshot but return all states that is specific location
    */
@@ -221,6 +223,7 @@ export class Store {
       }));
     return states;
   }
+
   /**
    * like select snapshot but return all one state - children that is specific location
    */
@@ -229,6 +232,7 @@ export class Store {
     StoreValidators.checkStateExists(result, location.getChildLocation(childrenName).path);
     return this.getChildrensState(location).find(item => item.name === childrenName)!.state;
   }
+
   /**
    * return all child class from parent class using property childs (static child)
    */
@@ -255,6 +259,7 @@ export class Store {
     const location = SingleLocation.getLocation(parentMeta.path!);
     return this.addChildInLocalization(child, location, params);
   }
+
   /**
    * Adds child state with all his children in specific localization
    */
@@ -278,22 +283,36 @@ export class Store {
     );
     return this._lifecycleStateManager.prepareNewStates(mappedStores);
   }
+
   /**
    * Removes State from State data tree and MappedStores in given location with all its children
    */
   removeChildInLocalization(location: SingleLocation): Observable<any> {
-    const stateOperations = this._internalStateOperations.getRootStateOperations();
-    const cur = stateOperations.getState();
-    const newState = this._stateFactory.removeChild(cur, location);
-    stateOperations.setState({ ...newState });
-    return stateOperations.dispatch(new UpdateState());
+    return of(true).pipe(
+      switchMap(() => {
+        const mappedStore: MappedStore[] = this._stateFactory.states
+          .filter(s => s.path.startsWith(location.path))
+          .sort((first, second) => second.path.length - first.path.length);
+        return this._lifecycleStateManager.prepareDeleteStates(mappedStore);
+      }),
+      map(() => {
+        const stateOperations = this._internalStateOperations.getRootStateOperations();
+        const cur = stateOperations.getState();
+        const newState = this._stateFactory.removeChild(cur, location);
+        stateOperations.setState({ ...newState });
+        return stateOperations;
+      }),
+      switchMap(stateOperations => stateOperations.dispatch(new UpdateState()))
+    );
   }
+
   /**
    * Removes child state from State data tree and MappedStores in given location with all its children
    */
-  removeChild(child: StateClassInternal) {
-    this.removeChildInLocalization(this.getStateLocationByStateClass(child));
+  removeChild(child: StateClassInternal): Observable<any> {
+    return this.removeChildInLocalization(this.getStateLocationByStateClass(child));
   }
+
   /**
    * Searches for state with given name added in root path and returns path to that state
    */
@@ -301,6 +320,7 @@ export class Store {
     const state = this._stateFactory.states.find(p => p.path === root.path);
     return state !== undefined;
   }
+
   /**
    * Searches for state with given name added in root path and returns path to that state
    */
@@ -311,6 +331,7 @@ export class Store {
     if (!state) throwStateNotFoundError(stateName);
     return SingleLocation.getLocation(state!.path);
   }
+
   /**
    * get location form state class
    */
@@ -319,6 +340,7 @@ export class Store {
     const stateMetaData = getStoreMetadata(stateClass);
     return SingleLocation.getLocation(stateMetaData.path!);
   }
+
   /**
    * get location of given state (recursively searches the state tree by comparing objects)
    */
@@ -332,6 +354,7 @@ export class Store {
       }
       return '';
     }
+
     const currState = this._internalStateOperations.getRootStateOperations().getState();
     const s = findObject(currState, '');
     if (s === '') throw new Error(`State ${state} doesn't exist in store`);
