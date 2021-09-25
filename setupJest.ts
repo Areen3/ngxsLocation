@@ -1,4 +1,5 @@
 // import 'jest-preset-angular'; // commented out due to issue in latest jest-preset-angular
+import { ɵglobal } from '@angular/core';
 
 const CI = process.env['CI'] === 'true';
 
@@ -48,4 +49,6 @@ if (CI) {
   });
 }
 
-((global as unknown) as { ngDevMode: boolean }).ngDevMode = true;
+if (typeof ɵglobal.ngDevMode === 'undefined') {
+  ɵglobal.ngDevMode = true;
+}

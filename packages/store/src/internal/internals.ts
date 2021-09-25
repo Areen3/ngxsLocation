@@ -84,8 +84,6 @@ export interface StatesAndDefaults {
   states: MappedStore[];
 }
 
-export type Callback<T = any, V = any> = (...args: V[]) => T;
-
 export interface RootStateDiff<T> {
   currentAppState: T;
   newAppState: T;

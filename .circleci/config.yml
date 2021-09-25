@@ -4,7 +4,7 @@ version: 2
 job_defaults_var: &job_defaults
   working_directory: ~/workspace/app
   docker:
-    - image: circleci/node:12.0.0-browsers
+    - image: circleci/node:14.16.1-browsers
 
 # Yarn cache key
 cache_var: &cache_key yarn-packages-v2-{{ .Branch }}-{{ checksum "yarn.lock" }}
@@ -214,6 +214,14 @@ jobs:
           name: Run integration tests for ng11 (Ivy) application
           command: yarn integration:ng11:ivy
 
+  integration_ng12_ivy_tests:
+    <<: *job_defaults
+    steps:
+      - *attach_workspace
+      - run:
+          name: Run integration tests for ng12 (Ivy) application
+          command: yarn integration:ng12:ivy
+
   integration_test_types:
     <<: *job_defaults
     steps:
@@ -290,17 +298,17 @@ workflows:
           requires:
             - build
 
-      - integration_tests:
-          requires:
-            - build
-
-      - cypress:
-          requires:
-            - integration_tests
-
-      - integration_ssr_tests:
-          requires:
-            - build
+      ### - integration_tests:
+      ###     requires:
+      ###       - build
+      ###
+      ### - cypress:
+      ###     requires:
+      ###       - integration_tests
+      ###
+      ### - integration_ssr_tests:
+      ###     requires:
+      ###       - build
 
       - integration_ng6_tests:
           requires:
@@ -334,6 +342,10 @@ workflows:
           requires:
             - build
 
+      - integration_ng12_ivy_tests:
+          requires:
+            - build
+
       - integration_test_types:
           requires:
             - build
@@ -345,8 +357,8 @@ workflows:
       - upload_coverage:
           requires:
             - unit_tests
-            - integration_tests
-            - integration_ssr_tests
+            ### - integration_tests
+            ### - integration_ssr_tests
             - integration_ng6_tests
             - integration_ng8_tests
             - integration_test_types
@@ -362,8 +374,8 @@ workflows:
               ignore: /.*/
           requires:
             - unit_tests
-            - integration_tests
-            - integration_ssr_tests
+            ### - integration_tests
+            ### - integration_ssr_tests
             - integration_ng6_tests
             - integration_ng8_tests
             - integration_test_types
@@ -378,8 +390,8 @@ workflows:
               only: /^v.*/
           requires:
             - unit_tests
-            - integration_tests
-            - integration_ssr_tests
+            ### - integration_tests
+            ### - integration_ssr_tests
             - integration_ng6_tests
             - integration_ng8_tests
             - integration_test_types
