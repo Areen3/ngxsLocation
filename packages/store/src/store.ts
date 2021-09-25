@@ -314,11 +314,18 @@ export class Store {
   }
 
   /**
-   * Searches for state with given name added in root path and returns path to that state
+   * Searches for state with given name added in root path and returns that state exist
    */
   existStateLocation(root: SingleLocation): boolean {
     const state = this._stateFactory.states.find(p => p.path === root.path);
     return state !== undefined;
+  }
+
+  /**
+   * Searches for state with given name added in root path and returns mappedStates info
+   */
+  getMappedStateInLocation(root: SingleLocation): MappedStore | undefined {
+    return this._stateFactory.states.find(p => p.path === root.path);
   }
 
   /**
