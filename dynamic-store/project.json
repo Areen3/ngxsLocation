@@ -1,0 +1,113 @@
+{
+  "name": "dynamic-store",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "root": "dynamic-store/",
+  "sourceRoot": "dynamic-store",
+  "projectType": "application",
+  "prefix": "app",
+  "implicitDependencies": ["*-plugin", "store"],
+  "targets": {
+    "build-app": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/dynamic-store/",
+        "index": "./dynamic-store/index.html",
+        "main": "./dynamic-store/main.browser.ts",
+        "tsConfig": "./dynamic-store/tsconfig.app.json",
+        "polyfills": "./dynamic-store/polyfills.ts",
+        "assets": [
+          {
+            "glob": "favicon.ico",
+            "input": "./dynamic-store",
+            "output": "./"
+          }
+        ],
+        "styles": ["./dynamic-store/styles.scss"],
+        "aot": false,
+        "vendorChunk": true,
+        "extractLicenses": false,
+        "buildOptimizer": false,
+        "sourceMap": true,
+        "optimization": false,
+        "namedChunks": true
+      },
+      "configurations": {
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        },
+        "production": {
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "aot": true,
+          "extractLicenses": true,
+          "vendorChunk": false,
+          "buildOptimizer": true,
+          "fileReplacements": [
+            {
+              "replace": "/dynamic-store/environments/environment.ts",
+              "with": "/dynamic-store/environments/environment.prod.ts"
+            }
+          ]
+        }
+      },
+      "defaultConfiguration": "production",
+      "dependsOn": ["^build"]
+    },
+    "server": {
+      "executor": "@angular-devkit/build-angular:server",
+      "options": {
+        "outputPath": "dist-dynamic-store-server",
+        "main": "./dynamic-store/server.ts",
+        "tsConfig": "./dynamic-store/tsconfig.server.json",
+        "sourceMap": true,
+        "optimization": false
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "outputHashing": "none",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "fileReplacements": [
+            {
+              "replace": "/dynamic-store/environments/environment.ts",
+              "with": "/dynamic-store/environments/environment.prod.ts"
+            }
+          ]
+        }
+      },
+      "defaultConfiguration": "production",
+      "dependsOn": ["^build"]
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "development": {
+          "browserTarget": "dynamic-store:build-app:development"
+        },
+        "production": {
+          "browserTarget": "dynamic-store:build-app:production"
+        }
+      },
+      "defaultConfiguration": "development",
+      "dependsOn": ["^build"]
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "dynamic-store/jest.config.js",
+        "passWithNoTests": true
+      },
+      "dependsOn": ["^build"]
+    }
+  }
+}

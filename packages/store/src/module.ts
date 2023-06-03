@@ -23,7 +23,6 @@ import { StateContextFactory } from './internal/state-context-factory';
 import { PluginManager } from './plugin-manager';
 import { NgxsRootModule } from './modules/ngxs-root.module';
 import { NgxsFeatureModule } from './modules/ngxs-feature.module';
-import { LifecycleStateManager } from './internal/lifecycle-state-manager';
 
 /**
  * Ngxs Module

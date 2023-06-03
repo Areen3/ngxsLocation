@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@ngxs/*": ["../@ngxs/*"],
+      "@integration/*": ["./app/*"]
+    },
+    "module": "commonjs",
+    "target": "es5",
+    "types": ["jest", "node"]
+  },
+  "files": ["polyfills.ts"],
+  "include": ["**/*.spec.ts"]
+}

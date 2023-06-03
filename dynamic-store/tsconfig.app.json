@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@ngxs/*": ["../@ngxs/*"],
+      "@integration/*": ["./app/*"]
+    },
+    "outDir": "./out-tsc/app",
+    "module": "es2020",
+    "target": "es5",
+    "types": ["node"]
+  },
+  "files": ["main.browser.ts", "polyfills.ts"],
+  "angularCompilerOptions": {
+    "disableTypeScriptVersionCheck": true
+  }
+}
