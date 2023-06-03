@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { SingleLocation, Store } from '@ngxs/store';
 import { DashBoardState } from '../dash-board/dash-board.state';
@@ -7,7 +7,11 @@ import { VehicleContainerState } from '../container/vehicle-container.state';
 import { StateNamesEnum } from '../../model/store/state-names.enum';
 import { StateBuildersUtils } from '../utils/state-builders.utils';
 import { AddVehicleContainerAction } from '../container/state.actions';
-import { AddDashboardItemAction } from '../dash-board/state.actions';
+import {
+  AddDashboardItemAction,
+  RemoveDashboardItemAction
+} from '../dash-board/state.actions';
+import { DashBoardItemModel } from '../dash-board/dash-board-state.model';
 
 @Injectable()
 export class VehicleContainerManagerService {
@@ -17,41 +21,50 @@ export class VehicleContainerManagerService {
     this.addVehicleContainer()
       .pipe(take(1))
       .subscribe(() => {
-        console.log('kliknięte');
+        console.log('added');
       });
   }
 
-  removeContainer(element: number): void {
-    of(element)
-      .pipe(take(1))
+  removeContainer(element: DashBoardItemModel): void {
+    const loc: SingleLocation = SingleLocation.getLocation(
+      StateNamesEnum.dashBoard,
+      element.name
+    );
+    this.store
+      .removeChildInLocalization(loc)
+      .pipe(switchMap(() => this.store.dispatch(new RemoveDashboardItemAction(element.id))))
       .subscribe(() => {
-        console.log('usunięte');
+        console.log('removed');
       });
   }
 
   private addVehicleContainer(): Observable<any> {
-    return this.store.selectOnce(DashBoardState.count$).pipe(
-      switchMap((count: number) => {
+    return this.store.selectOnce(DashBoardState.lastId$).pipe(
+      switchMap((lastId: number) => {
         const loc: SingleLocation = SingleLocation.getLocation(StateNamesEnum.dashBoard);
-        const newCount = count + 1;
+        const newLastId = lastId + 1;
         const childName = this.storeBuilder.buildStateName(
           StateNamesEnum.vehicleContainer,
-          newCount
+          newLastId
         );
-        return this.store
-          .addChildInLocalization(VehicleContainerState, loc, { childName })
-          .pipe(
-            switchMap(() =>
-              this.store.dispatchInLocation(new AddDashboardItemAction(newCount), loc)
-            ),
-            switchMap(() =>
-              this.store.dispatchInLocation(
-                new AddVehicleContainerAction(newCount),
-                loc.getChildLocation(childName)
-              )
-            )
-          );
+        return this.innerAddStore(loc, newLastId, childName);
       })
+    );
+  }
+
+  private innerAddStore(
+    loc: SingleLocation,
+    count: number,
+    childName: string
+  ): Observable<any> {
+    return this.store.addChildInLocalization(VehicleContainerState, loc, { childName }).pipe(
+      switchMap(() => this.store.dispatchInLocation(new AddDashboardItemAction(count), loc)),
+      switchMap(() =>
+        this.store.dispatchInLocation(
+          new AddVehicleContainerAction(count),
+          loc.getChildLocation(childName)
+        )
+      )
     );
   }
 }

@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
     BrowserModule,
     CommonModule,
     LibModule,
-    NgxsLoggerPluginModule.forRoot({ logger: console, collapsed: true }),
+    NgxsLoggerPluginModule.forRoot({ logger: console, collapsed: false }),
     NgxsReduxDevtoolsPluginModule.forRoot({ disabled: env.production }),
     NgxsModule.forRoot([])
   ],

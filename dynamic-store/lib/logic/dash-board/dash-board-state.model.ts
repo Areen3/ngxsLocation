@@ -1,5 +1,11 @@
 import { IEmptyObject } from '../../model/base/base';
 
+export interface DashBoardItemModel {
+  name: string;
+  id: number;
+}
+
 export interface DashBoardStateModel extends IEmptyObject {
-  count: number;
+  items: Array<DashBoardItemModel>;
+  lastId: number;
 }

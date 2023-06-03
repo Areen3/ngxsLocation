@@ -10,7 +10,8 @@ import { StateNamesEnum } from '../../model/store/state-names.enum';
   defaults: {
     data: {
       containers: []
-    }
+    },
+    itemNumber: 0
   }
 })
 @Injectable()
@@ -25,8 +26,7 @@ export class VehicleContainerState {
     ctx: StateContext<VehicleContainerStateModel>,
     action: AddVehicleContainerAction
   ) {
-    const state: VehicleContainerStateModel = ctx.getState();
-    console.log(state, action);
+    ctx.patchState({ itemNumber: action.payload });
   }
 
   @Action(RemoveVehicleContainerAction)

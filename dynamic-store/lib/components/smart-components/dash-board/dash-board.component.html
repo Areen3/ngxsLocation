@@ -1,2 +1,5 @@
 <div>Dynamic store dashboard, count: {{ this.count$ | async }}</div>
 <button (click)="AddContainer()">Add container</button>
+<ng-container *ngFor="let item of items$ | async">
+  <vehicle-container [data]="item"> </vehicle-container>
+</ng-container>
