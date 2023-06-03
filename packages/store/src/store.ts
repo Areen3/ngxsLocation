@@ -1,8 +1,15 @@
 // tslint:disable:unified-signatures
-import { Inject, Injectable, Optional, Type } from '@angular/core';
-import { INITIAL_STATE_TOKEN, PlainObject, StateClass } from '@ngxs/store/internals';
+import { Inject, Injectable, Injector, Optional, Type } from '@angular/core';
 import { Observable, of, Subscription, throwError } from 'rxjs';
-import { catchError, distinctUntilChanged, map, switchMap, take } from 'rxjs/operators';
+import {
+  catchError,
+  distinctUntilChanged,
+  map,
+  switchMap,
+  shareReplay,
+  take
+} from 'rxjs/operators';
+import { INITIAL_STATE_TOKEN, PlainObject, StateClass } from '@ngxs/store/internals';
 import { UpdateState } from './actions/actions';
 import { NgxsAction } from './actions/base.action';
 import { RangeLocations, SingleLocation } from './common';
@@ -19,23 +26,33 @@ import {
 import { LifecycleStateManager } from './internal/lifecycle-state-manager';
 import { StateFactory } from './internal/state-factory';
 import { InternalStateOperations } from './internal/state-operations';
+import { getRootSelectorFactory } from './selectors/selector-utils';
 import { StateStream } from './internal/state-stream';
 import { leaveNgxs } from './operators/leave-ngxs';
 import { StateToken } from './state-token/state-token';
 import { META_KEY, NgxsConfig } from './symbols';
-import { getRootSelectorFactory } from './utils/selector-utils';
 import { StoreValidators } from './utils/store-validators';
 import { getValue, setValue } from './utils/utils';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class Store {
+  /**
+   * This is a derived state stream that leaves NGXS execution strategy to emit state changes within the Angular zone,
+   * because state is being changed actually within the `<root>` zone, see `InternalDispatcher#dispatchSingle`.
+   * All selects would use this stream, and it would call leave only once for any state change across all active selectors.
+   */
+  private _selectableStateStream = this._stateStream.pipe(
+    leaveNgxs(this._internalExecutionStrategy),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
   constructor(
     private _stateStream: StateStream,
     private _internalStateOperations: InternalStateOperations,
     private _config: NgxsConfig,
     private _internalExecutionStrategy: InternalNgxsExecutionStrategy,
     private _stateFactory: StateFactory,
-    private _lifecycleStateManager: LifecycleStateManager,
+    private _injector: Injector,
     @Optional()
     @Inject(INITIAL_STATE_TOKEN)
     initialStateValue: any
@@ -58,7 +75,7 @@ export class Store {
   select<T>(selector: StateToken<T>): Observable<T>;
   select(selector: any): Observable<any> {
     const selectorFn = this.getStoreBoundSelectorFn(selector);
-    return this._stateStream.pipe(
+    return this._selectableStateStream.pipe(
       map(selectorFn),
       catchError((err: Error): Observable<never> | Observable<undefined> => {
         // if error is TypeError we swallow it to prevent usual errors with property access
@@ -102,7 +119,9 @@ export class Store {
    * Allow the user to subscribe to the root of the state
    */
   subscribe(fn?: (value: any) => void): Subscription {
-    return this._stateStream.pipe(leaveNgxs(this._internalExecutionStrategy)).subscribe(fn);
+    return this._selectableStateStream
+      .pipe(leaveNgxs(this._internalExecutionStrategy))
+      .subscribe(fn);
   }
 
   /**
@@ -170,9 +189,8 @@ export class Store {
    * Select a observable slice of store from specified location
    */
   selectInContext(selector: any, location: SingleLocation): Observable<any> {
-    const seletorMDModel: SelectorMetaDataModel = StoreValidators.getValidSelectorMeta(
-      selector
-    );
+    const seletorMDModel: SelectorMetaDataModel =
+      StoreValidators.getValidSelectorMeta(selector);
     const containerClass = seletorMDModel.containerClass;
     const selectorFn = this._stateFactory.getSelectorFromState(
       containerClass,
@@ -192,9 +210,8 @@ export class Store {
    */
 
   selectSnapshotInContext(selector: any, location: SingleLocation): any {
-    const seletorMDModel: SelectorMetaDataModel = StoreValidators.getValidSelectorMeta(
-      selector
-    );
+    const seletorMDModel: SelectorMetaDataModel =
+      StoreValidators.getValidSelectorMeta(selector);
     const containerClass = seletorMDModel.containerClass;
     const selectorFn = this._stateFactory.getSelectorFromState(
       containerClass,
@@ -268,6 +285,7 @@ export class Store {
     location: SingleLocation,
     params: { childName?: string; context?: string }
   ): Observable<any> {
+    const lifecycle: LifecycleStateManager = this._injector.get(LifecycleStateManager);
     const stateOperations = this._internalStateOperations.getRootStateOperations();
     StoreValidators.checkThatStateClassesHaveBeenDecorated([child]);
     const childMeta = getStoreMetadata(child);
@@ -281,19 +299,20 @@ export class Store {
         context: params.context
       })
     );
-    return this._lifecycleStateManager.prepareNewStates(mappedStores);
+    return lifecycle.prepareNewStates(mappedStores);
   }
 
   /**
    * Removes State from State data tree and MappedStores in given location with all its children
    */
   removeChildInLocalization(location: SingleLocation): Observable<any> {
+    const lifecycle: LifecycleStateManager = this._injector.get(LifecycleStateManager);
     return of(true).pipe(
       switchMap(() => {
         const mappedStore: MappedStore[] = this._stateFactory.states
           .filter(s => s.path.startsWith(location.path))
           .sort((first, second) => second.path.length - first.path.length);
-        return this._lifecycleStateManager.prepareDeleteStates(mappedStore);
+        return lifecycle.prepareDeleteStates(mappedStore);
       }),
       map(() => {
         const stateOperations = this._internalStateOperations.getRootStateOperations();

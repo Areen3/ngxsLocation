@@ -18,21 +18,26 @@ export class FormDirective implements OnInit, OnDestroy {
   path: string = null!;
 
   @Input('ngxsFormDebounce')
-  debounce = 100;
+  set debounce(debounce: string | number) {
+    this._debounce = Number(debounce);
+  }
+  get debounce() {
+    return this._debounce;
+  }
+  private _debounce = 100;
 
   @Input('ngxsFormClearOnDestroy')
   set clearDestroy(val: boolean) {
     this._clearDestroy = val != null && `${val}` !== 'false';
   }
-
   get clearDestroy(): boolean {
     return this._clearDestroy;
   }
+  private _clearDestroy = false;
 
-  _clearDestroy = false;
+  private _updating = false;
 
   private readonly _destroy$ = new Subject<void>();
-  private _updating = false;
 
   constructor(
     private _actions$: Actions,
@@ -111,9 +116,14 @@ export class FormDirective implements OnInit, OnDestroy {
       this._cd.markForCheck();
     });
 
-    this._formGroupDirective.valueChanges!.pipe(this.debounceChange()).subscribe(() => {
-      this.updateFormStateWithRawValue();
-    });
+    this._formGroupDirective
+      .valueChanges!.pipe(
+        distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
+        this.debounceChange()
+      )
+      .subscribe(() => {
+        this.updateFormStateWithRawValue();
+      });
 
     this._formGroupDirective
       .statusChanges!.pipe(distinctUntilChanged(), this.debounceChange())
@@ -162,9 +172,9 @@ export class FormDirective implements OnInit, OnDestroy {
       complete: () => (this._updating = false)
     });
   }
+
   ngOnDestroy() {
     this._destroy$.next();
-    this._destroy$.complete();
 
     if (this.clearDestroy) {
       this._store.dispatch(
@@ -181,12 +191,12 @@ export class FormDirective implements OnInit, OnDestroy {
 
   private debounceChange() {
     const skipDebounceTime =
-      this._formGroupDirective.control.updateOn !== 'change' || this.debounce < 0;
+      this._formGroupDirective.control.updateOn !== 'change' || this._debounce < 0;
 
     return skipDebounceTime
       ? (change: Observable<any>) => change.pipe(takeUntil(this._destroy$))
       : (change: Observable<any>) =>
-          change.pipe(debounceTime(this.debounce), takeUntil(this._destroy$));
+          change.pipe(debounceTime(this._debounce), takeUntil(this._destroy$));
   }
 
   private get form(): FormGroup {

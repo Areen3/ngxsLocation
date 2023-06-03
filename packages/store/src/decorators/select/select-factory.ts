@@ -9,8 +9,8 @@ import { NgxsConfig } from '../../symbols';
  */
 @Injectable({ providedIn: 'root' })
 export class SelectFactory implements OnDestroy {
-  public static store: Store | null = null;
-  public static config: NgxsConfig | null = null;
+  static store: Store | null = null;
+  static config: NgxsConfig | null = null;
 
   constructor(store: Store, config: NgxsConfig) {
     SelectFactory.store = store;

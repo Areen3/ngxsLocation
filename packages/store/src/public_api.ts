@@ -45,8 +45,20 @@ export {
 } from './symbols';
 export { Selector } from './decorators/selector/selector';
 export { getActionTypeFromInstance, actionMatcher } from './utils/utils';
-export { createSelector } from './utils/selector-utils';
 export { NgxsExecutionStrategy } from './execution/symbols';
 export { ActionType, ActionOptions } from './actions/symbols';
 export { NoopNgxsExecutionStrategy } from './execution/noop-ngxs-execution-strategy';
 export { StateToken } from './state-token/state-token';
+
+export { NgxsDevelopmentOptions } from './dev-features/symbols';
+export { NgxsDevelopmentModule } from './dev-features/ngxs-development.module';
+export { NgxsUnhandledActionsLogger } from './dev-features/ngxs-unhandled-actions-logger';
+
+export {
+  createModelSelector,
+  createPickSelector,
+  createPropertySelectors,
+  createSelector,
+  PropertySelectors,
+  TypedSelector
+} from './selectors';

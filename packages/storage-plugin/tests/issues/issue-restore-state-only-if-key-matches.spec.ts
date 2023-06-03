@@ -1,9 +1,9 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
-import { Component, NgModule, NgZone } from '@angular/core';
+import { Component, NgModule, NgZone, Injectable } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { freshPlatform } from '@ngxs/store/internals/testing';
+import { freshPlatform, skipConsoleLogging } from '@ngxs/store/internals/testing';
 import { State, NgxsModule, Store, StateToken } from '@ngxs/store';
 
 import { NgxsStoragePluginModule } from '../../';
@@ -12,7 +12,7 @@ describe('Restore state only if key matches', () => {
   beforeEach(() => {
     // Caretaker note: it somehow sets `/@angular-cli-builders` as a default URL, thus when running `initialNavigation()`
     // it errors that there's no route definition for the `/@angular-cli-builders`.
-    spyOn(Router.prototype, 'initialNavigation').and.returnValue(undefined);
+    jest.spyOn(Router.prototype, 'initialNavigation').mockReturnValue(undefined);
   });
 
   afterEach(() => {
@@ -40,12 +40,14 @@ describe('Restore state only if key matches', () => {
         name: AUTH_STATE_TOKEN,
         defaults: null
       })
+      @Injectable()
       class AuthState {}
 
       @State({
         name: 'user',
         defaults: {}
       })
+      @Injectable()
       class UserState {}
 
       @Component({ template: '' })
@@ -89,7 +91,9 @@ describe('Restore state only if key matches', () => {
       class TestModule {}
 
       // Act
-      const { injector } = await platformBrowserDynamic().bootstrapModule(TestModule);
+      const { injector } = await skipConsoleLogging(() =>
+        platformBrowserDynamic().bootstrapModule(TestModule)
+      );
       const ngZone = injector.get(NgZone);
       const router = injector.get(Router);
       const store = injector.get(Store);

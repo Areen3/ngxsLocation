@@ -1,13 +1,4 @@
 {
-  "typescript.format.placeOpenBraceOnNewLineForControlBlocks": true,
-  "typescriptHero.imports.insertSemicolons": true,
-  "typescriptHero.imports.multiLineTrailingComma": false,
-  "typescript.format.placeOpenBraceOnNewLineForFunctions": true,
-  "javascript.format.insertSpaceAfterSemicolonInForStatements": false,
-  "scss.completion.completePropertyWithSemicolon": false,
-  "typescript.format.insertSpaceAfterSemicolonInForStatements": false,
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true,
-    "source.organizeImports": false
-  },
+  "editor.formatOnSave": true,
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

@@ -1,4 +1,12 @@
-import { ApplicationRef, NgZone, Component, Type } from '@angular/core';
+import {
+  ApplicationRef,
+  NgZone,
+  Component,
+  Type,
+  NgModule,
+  ɵglobal,
+  Injectable
+} from '@angular/core';
 import { TestBed, TestModuleMetadata } from '@angular/core/testing';
 import { Observable } from 'rxjs';
 import {
@@ -11,6 +19,11 @@ import {
   Actions,
   NoopNgxsExecutionStrategy
 } from '@ngxs/store';
+import { freshPlatform } from '@ngxs/store/internals/testing';
+import { BrowserModule } from '@angular/platform-browser';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+
+import { NGXS_EXECUTION_STRATEGY } from '../../src/execution/symbols';
 
 describe('NoopNgxsExecutionStrategy', () => {
   class ZoneCounter {
@@ -38,6 +51,7 @@ describe('NoopNgxsExecutionStrategy', () => {
     name: 'counter',
     defaults: 0
   })
+  @Injectable()
   class CounterState {
     public zoneCounter = new ZoneCounter();
 
@@ -85,6 +99,42 @@ describe('NoopNgxsExecutionStrategy', () => {
     const get = <T>(classType: Type<T>) => <T>TestBed.inject(classType);
     return { zone, store, ticks, get };
   }
+
+  it(
+    'should provide NoopNgxsExecutionStrategy as an execution strategy if it is not specified explicitly',
+    freshPlatform(async () => {
+      // Arrange
+      const Zone = ɵglobal.Zone;
+      ɵglobal.Zone = undefined;
+
+      @Component({
+        selector: 'app-root',
+        template: ''
+      })
+      class TestComponent {}
+
+      @NgModule({
+        imports: [BrowserModule, NgxsModule.forRoot()],
+        declarations: [TestComponent],
+        bootstrap: [TestComponent]
+      })
+      class TestModule {}
+
+      // Act
+      const { injector } = await platformBrowserDynamic().bootstrapModule(TestModule, {
+        ngZone: 'noop'
+      });
+
+      // Assert
+      try {
+        expect(injector.get(NGXS_EXECUTION_STRATEGY)).toBeInstanceOf(
+          NoopNgxsExecutionStrategy
+        );
+      } finally {
+        ɵglobal.Zone = Zone;
+      }
+    })
+  );
 
   describe('[store.select]', () => {
     it('should be performed outside Angular zone, when dispatched from outside zones', () => {

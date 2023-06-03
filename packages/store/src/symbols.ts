@@ -2,11 +2,15 @@ import { Injectable, InjectionToken, Type, StaticProvider } from '@angular/core'
 import { Observable } from 'rxjs';
 
 import { PlainObject, StateClass } from '@ngxs/store/internals';
-import { SharedSelectorOptions } from './internal/internals';
-import { NgxsExecutionStrategy } from './execution/symbols';
+import { StateOperator } from '@ngxs/store/operators';
+
+import { mergeDeep } from './utils/utils';
 import { DispatchOutsideZoneNgxsExecutionStrategy } from './execution/dispatch-outside-zone-ngxs-execution-strategy';
+import { NgxsExecutionStrategy } from './execution/symbols';
+import { SharedSelectorOptions } from './internal/internals';
 import { StateToken } from './state-token/state-token';
 
+export const ROOT_OPTIONS = new InjectionToken<NgxsModuleOptions>('ROOT_OPTIONS');
 export const ROOT_STATE_TOKEN = new InjectionToken<any>('ROOT_STATE_TOKEN');
 export const FEATURE_STATE_TOKEN = new InjectionToken<any>('FEATURE_STATE_TOKEN');
 export const NGXS_PLUGINS = new InjectionToken('NGXS_PLUGINS');
@@ -25,12 +29,20 @@ export type NgxsPluginFn = (state: any, mutation: any, next: NgxsNextPluginFn) =
 /**
  * The NGXS config settings.
  */
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+  useFactory: (options: NgxsModuleOptions) => mergeDeep(new NgxsConfig(), options),
+  deps: [ROOT_OPTIONS]
+})
 export class NgxsConfig {
   /**
    * Run in development mode. This will add additional debugging features:
    * - Object.freeze on the state and actions to guarantee immutability
    * (default: false)
+   *
+   * Note: this property will be accounted only in development mode when using the Ivy compiler.
+   * It makes sense to use it only during development to ensure there're no state mutations.
+   * When building for production, the Object.freeze will be tree-shaken away.
    */
   developmentMode: boolean;
   compatibility: {
@@ -76,7 +88,7 @@ export class NgxsConfig {
   }
 }
 
-export type StateOperator<T> = (existing: Readonly<T>) => T;
+export { StateOperator };
 
 /**
  * State context provided to the actions in the state.
@@ -159,7 +171,7 @@ export class NgxsSimpleChange<T = any> {
  * On init interface
  */
 export interface NgxsOnInit {
-  ngxsOnInit(ctx?: StateContext<any>): void | any;
+  ngxsOnInit(ctx: StateContext<any>): void;
 }
 
 /**
@@ -180,7 +192,7 @@ export interface NgxsOnChanges {
  * After bootstrap interface
  */
 export interface NgxsAfterBootstrap {
-  ngxsAfterBootstrap(ctx?: StateContext<any>): void;
+  ngxsAfterBootstrap(ctx: StateContext<any>): void;
 }
 
 export type NgxsModuleOptions = Partial<NgxsConfig>;
