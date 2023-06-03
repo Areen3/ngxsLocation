@@ -1,4 +1,4 @@
-import { VehicleModel } from './vehicle.model';
+import { VehicleModel } from '../domain/vehicle.model';
 
 export abstract class AbstractVehicleSpeedService {
   abstract getSpeed(): number;

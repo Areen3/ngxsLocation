@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { VehicleContainerStateModel } from './vehicle-container-state.model';
 import { AddVehicleContainerAction, RemoveVehicleContainerAction } from './state.actions';
-import { VehicleContainersModel } from '../../model/vehicle-containers.model';
+import { VehicleContainersModel } from '../../model/store/vehicle-containers.model';
+import { StateNamesEnum } from '../../model/store/state-names.enum';
 
 @State<VehicleContainerStateModel>({
-  name: 'current',
+  name: StateNamesEnum.vehicleContainer,
   defaults: {
     data: {
       containers: []
@@ -20,7 +21,7 @@ export class VehicleContainerState {
   }
 
   @Action(AddVehicleContainerAction)
-  profileExist(
+  AddVehicleContainer(
     ctx: StateContext<VehicleContainerStateModel>,
     action: AddVehicleContainerAction
   ) {
@@ -29,7 +30,7 @@ export class VehicleContainerState {
   }
 
   @Action(RemoveVehicleContainerAction)
-  updateProfile(
+  RemoveVehicleContainer(
     ctx: StateContext<VehicleContainerStateModel>,
     action: RemoveVehicleContainerAction
   ) {

@@ -1,4 +1,4 @@
-import { VehicleContainersModel } from '../../model/vehicle-containers.model';
+import { VehicleContainersModel } from '../../model/store/vehicle-containers.model';
 
 export interface VehicleContainerStateModel {
   data: VehicleContainersModel;
