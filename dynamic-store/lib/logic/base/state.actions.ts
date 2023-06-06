@@ -12,6 +12,6 @@ export class UpdateVehicleAction extends BaseActionWithPayload<
   static readonly type = VehicleActionType.update;
 }
 
-export class changeSpeedVehicleAction extends BaseActionWithPayload<number> {
+export class ChangeSpeedVehicleAction extends BaseActionWithPayload<number> {
   static readonly type = VehicleActionType.changeSpeed;
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Action, NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
 import { VehicleStateModel } from './vehicle-state.model';
 import { StateNamesEnum } from '../../model/store/state-names.enum';
-import { changeSpeedVehicleAction, UpdateVehicleAction } from './state.actions';
+import { ChangeSpeedVehicleAction, UpdateVehicleAction } from './state.actions';
 import { AbstractVehicleSpeedService } from '../../model/abstract/abstract-vehicle-speed.service';
 import { VehicleEnum } from '../../model/domain/vehicle.enum';
 import { VehicleModel } from '../../model/domain/vehicle.model';
@@ -43,10 +43,10 @@ export class VehicleState<T extends VehicleModel = VehicleModel> implements Ngxs
     });
   }
 
-  @Action(changeSpeedVehicleAction)
+  @Action(ChangeSpeedVehicleAction)
   changeSpeedVehicleAction(
     ctx: StateContext<VehicleStateModel>,
-    action: changeSpeedVehicleAction
+    action: ChangeSpeedVehicleAction
   ) {
     const state: VehicleStateModel = ctx.getState();
     ctx.patchState({

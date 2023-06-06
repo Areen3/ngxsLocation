@@ -1,4 +1,4 @@
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Action, Selector, SingleLocation, State, StateContext } from '@ngxs/store';
 import { Injectable } from '@angular/core';
 import { DashBoardStateModel } from './dash-board-state.model';
 import { StateNamesEnum } from '../../model/store/state-names.enum';
@@ -41,8 +41,11 @@ export class DashBoardState {
       StateNamesEnum.vehicleContainer,
       action.payload
     );
+    const locContainer = SingleLocation.getLocation(StateNamesEnum.dashBoard).getChildLocation(
+      name
+    );
     ctx.patchState({
-      items: [...state.items, { name, id: action.payload }],
+      items: [...state.items, { name, id: action.payload, location: locContainer.path }],
       lastId: action.payload
     });
   }

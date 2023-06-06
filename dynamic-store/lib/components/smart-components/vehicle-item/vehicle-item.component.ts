@@ -1,23 +1,32 @@
-import { Component, Input } from '@angular/core';
-import { VehicleContainerManagerService } from '../../../logic/services/vehicle-container-manager.service';
-import { DashBoardItemModel } from '../../../logic/dash-board/dash-board-state.model';
-import { VehicleEnum } from '../../../model/domain/vehicle.enum';
+import { Component, Input, OnInit } from '@angular/core';
+import { VehicleItemModel } from '../../../model/store/vehicle-item.model';
+import { SingleLocation, Store } from '@ngxs/store';
+import { ChangeSpeedVehicleAction } from '../../../logic/base/state.actions';
+import { Observable } from 'rxjs';
+import { VehicleModel } from '../../../model/domain/vehicle.model';
+import { VehicleState } from '../../../logic/base/vehicle.state';
 
 @Component({
   selector: 'vehicle-item',
   templateUrl: './vehicle-item.component.html'
 })
-export class VehicleItemComponent {
+export class VehicleItemComponent implements OnInit {
   @Input()
-  data: DashBoardItemModel;
-  dropDownData: Array<string> = Object.values(VehicleEnum);
+  data: VehicleItemModel;
+  vehicle$: Observable<VehicleModel>;
 
-  constructor(private container: VehicleContainerManagerService) {}
+  constructor(private readonly store: Store) {}
 
-  RemoveContainer() {
-    this.container.removeContainer(this.data);
+  ChangeSpeed(): void {
+    const newSpeed = Math.floor(Math.random() * 100);
+    this.store.dispatchInLocation(
+      new ChangeSpeedVehicleAction(newSpeed),
+      SingleLocation.getLocation(this.data.location)
+    );
   }
-  AddVehicle(vehicle: string): void {
-    console.log(vehicle);
+
+  ngOnInit(): void {
+    const loc = SingleLocation.getLocation(this.data.location);
+    this.vehicle$ = this.store.selectInContext(VehicleState.vehicle$, loc);
   }
 }

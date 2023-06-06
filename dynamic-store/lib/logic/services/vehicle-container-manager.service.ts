@@ -1,6 +1,6 @@
 import { Injectable, Type } from '@angular/core';
 import { Observable } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { SingleLocation, Store } from '@ngxs/store';
 import { DashBoardState } from '../dash-board/dash-board.state';
 import { StateNamesEnum } from '../../model/store/state-names.enum';
@@ -24,11 +24,9 @@ export class VehicleContainerManagerService {
   constructor(private store: Store, private storeBuilder: StateBuildersUtils) {}
 
   addContainer(): void {
-    this.addVehicleContainer()
-      .pipe(take(1))
-      .subscribe(() => {
-        console.log('added');
-      });
+    this.addVehicleContainer().subscribe(() => {
+      console.log('added');
+    });
   }
 
   removeContainer(element: DashBoardItemModel): void {
@@ -50,11 +48,9 @@ export class VehicleContainerManagerService {
       this.store.selectSnapshotInContext(VehicleContainerState.lastId$, loc) + 1;
     const childName = this.storeBuilder.buildStateName(StateNamesEnum.vehicle, newLastId);
     const type = getRegisterState(vehicle);
-    this.innerAddStoreVehicle(loc, newLastId, childName, type, vehicle)
-      .pipe(take(1))
-      .subscribe(() => {
-        console.log('added vehicle');
-      });
+    this.innerAddStoreVehicle(loc, newLastId, childName, type, vehicle).subscribe(() => {
+      console.log('added vehicle');
+    });
   }
 
   private addVehicleContainer(): Observable<any> {

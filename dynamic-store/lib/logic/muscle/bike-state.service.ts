@@ -8,6 +8,8 @@ import { VehicleState } from '../base/vehicle.state';
 import { VehicleStateModel } from '../base/vehicle-state.model';
 import { BikeModel } from '../../model/domain/bike.model';
 import { registerState } from '../../model/decorators/register-state.decorator';
+import { AbstractSpeedMultiplierService } from '../../model/abstract/abstract-speed-multiplier-.service';
+import { MuscleMultiplierService } from '../services/muscle-multiplier.service';
 
 @State<VehicleStateModel<BikeModel>>({
   name: StateNamesEnum.vehicle,
@@ -20,7 +22,12 @@ import { registerState } from '../../model/decorators/register-state.decorator';
     }
   },
   creationMode: {
-    providers: [{ provide: AbstractVehicleSpeedService, useClass: BikeVehicleSpeedService }]
+    providers: [
+      { provide: BikeStateService },
+      { provide: AbstractVehicleSpeedService, useClass: BikeVehicleSpeedService },
+      { provide: AbstractSpeedMultiplierService, useClass: MuscleMultiplierService }
+    ],
+    newInstance: true
   }
 })
 @Injectable()

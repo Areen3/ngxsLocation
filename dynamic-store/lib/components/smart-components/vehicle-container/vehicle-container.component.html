@@ -8,4 +8,9 @@
     </ng-container>
   </select>
   <button (click)="AddVehicle(teams.value)">add</button>
+  <ng-container *ngIf="vehicles$">
+    <ng-container *ngFor="let item of vehicles$ | async">
+      <vehicle-item [data]="item"></vehicle-item>
+    </ng-container>
+  </ng-container>
 </div>

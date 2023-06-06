@@ -17,7 +17,7 @@ export function registerState<T>(stateName: string): (target: Type<any>) => void
 export function getRegisterState<T>(stateName: string): Type<T> {
   if (!MapDecorator.has(stateName)) {
     throw new Error(
-      `You should first decorate state using decorator : @${registerState.name}`
+      `You should first decorate state: ${stateName} using decorator : @${registerState.name}`
     );
   }
   const item = MapDecorator.get(stateName)!;
