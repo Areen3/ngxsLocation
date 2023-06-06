@@ -1,5 +1,5 @@
-import { VehicleContainerItemModel } from './vehicle-container-item.model';
+import { VehicleItemModel } from './vehicle-item.model';
 
 export interface VehicleContainersModel {
-  containers: Array<VehicleContainerItemModel>;
+  vehicles: Array<VehicleItemModel>;
 }

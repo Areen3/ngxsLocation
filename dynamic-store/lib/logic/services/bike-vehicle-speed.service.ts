@@ -1,13 +1,17 @@
-import { AbstractVehicleSpeedService } from '../../model/abstract-vehicle-speed.service';
 import { Injectable } from '@angular/core';
-import { VehicleModel } from '../../model/vehicle.model';
-import { VehicleEnum } from '../../model/vehicle.enum';
-import { BikeModel } from '../../model/bike.model';
+import { AbstractVehicleSpeedService } from '../../model/abstract/abstract-vehicle-speed.service';
+import { VehicleModel } from '../../model/domain/vehicle.model';
+import { BikeModel } from '../../model/domain/bike.model';
+import { VehicleEnum } from '../../model/domain/vehicle.enum';
+import { AbstractSpeedMultiplierService } from '../../model/abstract/abstract-speed-multiplier-.service';
 
 @Injectable()
-export class BikeVehicleSpeedService implements AbstractVehicleSpeedService {
+export class BikeVehicleSpeedService<T extends BikeModel = BikeModel>
+  implements AbstractVehicleSpeedService<T>
+{
+  constructor(private readonly multiplier: AbstractSpeedMultiplierService) {}
   getSpeed(): number {
-    return 20;
+    return this.multiplier.getSpeed(20);
   }
 
   getEmptyData<T extends VehicleModel>(): T {

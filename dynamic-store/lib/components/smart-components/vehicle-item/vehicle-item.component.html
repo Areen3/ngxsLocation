@@ -1,0 +1,11 @@
+<div>
+  {{ data.name }}
+  {{ data.id }}
+  <button (click)="RemoveContainer()">remove container</button>
+  <select #teams>
+    <ng-container *ngFor="let item of dropDownData">
+      <option value="{{ item }}">{{ item }}</option>
+    </ng-container>
+  </select>
+  <button (click)="AddVehicle(teams.value)">add</button>
+</div>

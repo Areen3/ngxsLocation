@@ -3,4 +3,5 @@ import { VehicleContainersModel } from '../../model/store/vehicle-containers.mod
 export interface VehicleContainerStateModel {
   data: VehicleContainersModel;
   itemNumber: number;
+  lastId: number;
 }
