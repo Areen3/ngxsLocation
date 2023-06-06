@@ -1,6 +1,6 @@
 import { Injectable, Type } from '@angular/core';
 import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, take } from 'rxjs/operators';
 import { SingleLocation, Store } from '@ngxs/store';
 import { DashBoardState } from '../dash-board/dash-board.state';
 import { StateNamesEnum } from '../../model/store/state-names.enum';
@@ -13,11 +13,13 @@ import { DashBoardItemModel } from '../dash-board/dash-board-state.model';
 import { VehicleContainerState } from '../vehicle-container/vehicle-container.state';
 import {
   AddVehicleAction,
-  AddVehicleContainerAction
+  AddVehicleContainerAction,
+  RemoveVehicleAction
 } from '../vehicle-container/state.actions';
 import { VehicleEnum } from '../../model/domain/vehicle.enum';
 import { UpdateVehicleAction } from '../base/state.actions';
 import { getRegisterState } from '../../model/decorators/register-state.decorator';
+import { VehicleItemModel } from '../../model/store/vehicle-item.model';
 
 @Injectable()
 export class VehicleContainerManagerService {
@@ -51,6 +53,21 @@ export class VehicleContainerManagerService {
     this.innerAddStoreVehicle(loc, newLastId, childName, type, vehicle).subscribe(() => {
       console.log('added vehicle');
     });
+  }
+
+  removeVehicle(vehicle: VehicleItemModel): void {
+    const parentLoc = SingleLocation.getLocation(vehicle.location).getParentPath();
+    this.store
+      .dispatchInLocation(new RemoveVehicleAction(vehicle.id), parentLoc)
+      .pipe(
+        switchMap(() =>
+          this.store.removeChildInLocalization(SingleLocation.getLocation(vehicle.location))
+        ),
+        take(1)
+      )
+      .subscribe(() => {
+        console.log('removed vehicle');
+      });
   }
 
   private addVehicleContainer(): Observable<any> {

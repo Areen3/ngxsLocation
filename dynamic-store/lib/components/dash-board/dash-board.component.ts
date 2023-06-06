@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { VehicleContainerManagerService } from '../../../logic/services/vehicle-container-manager.service';
+import { VehicleContainerManagerService } from '../../logic/services/vehicle-container-manager.service';
 import { Observable } from 'rxjs';
 import { Store } from '@ngxs/store';
-import { DashBoardState } from '../../../logic/dash-board/dash-board.state';
-import { DashBoardStateModel } from '../../../logic/dash-board/dash-board-state.model';
+import { DashBoardState } from '../../logic/dash-board/dash-board.state';
+import { DashBoardStateModel } from '../../logic/dash-board/dash-board-state.model';
 
 @Component({
   selector: 'dashboard',

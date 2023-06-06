@@ -1,10 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { VehicleItemModel } from '../../../model/store/vehicle-item.model';
+import { VehicleItemModel } from '../../model/store/vehicle-item.model';
 import { SingleLocation, Store } from '@ngxs/store';
-import { ChangeSpeedVehicleAction } from '../../../logic/base/state.actions';
+import { ChangeSpeedVehicleAction } from '../../logic/base/state.actions';
 import { Observable } from 'rxjs';
-import { VehicleModel } from '../../../model/domain/vehicle.model';
-import { VehicleState } from '../../../logic/base/vehicle.state';
+import { VehicleModel } from '../../model/domain/vehicle.model';
+import { VehicleState } from '../../logic/base/vehicle.state';
+import { VehicleContainerManagerService } from '../../logic/services/vehicle-container-manager.service';
 
 @Component({
   selector: 'vehicle-item',
@@ -15,7 +16,10 @@ export class VehicleItemComponent implements OnInit {
   data: VehicleItemModel;
   vehicle$: Observable<VehicleModel>;
 
-  constructor(private readonly store: Store) {}
+  constructor(
+    private readonly store: Store,
+    private container: VehicleContainerManagerService
+  ) {}
 
   ChangeSpeed(): void {
     const newSpeed = Math.floor(Math.random() * 100);
@@ -23,6 +27,10 @@ export class VehicleItemComponent implements OnInit {
       new ChangeSpeedVehicleAction(newSpeed),
       SingleLocation.getLocation(this.data.location)
     );
+  }
+
+  RemoveVehicle(): void {
+    this.container.removeVehicle(this.data);
   }
 
   ngOnInit(): void {

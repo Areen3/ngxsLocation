@@ -1,11 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { VehicleContainerManagerService } from '../../../logic/services/vehicle-container-manager.service';
-import { DashBoardItemModel } from '../../../logic/dash-board/dash-board-state.model';
-import { VehicleEnum } from '../../../model/domain/vehicle.enum';
+import { VehicleContainerManagerService } from '../../logic/services/vehicle-container-manager.service';
+import { DashBoardItemModel } from '../../logic/dash-board/dash-board-state.model';
+import { VehicleEnum } from '../../model/domain/vehicle.enum';
 import { Observable } from 'rxjs';
-import { VehicleContainersModel } from '../../../model/store/vehicle-containers.model';
+import { VehicleContainersModel } from '../../model/store/vehicle-containers.model';
 import { SingleLocation, Store } from '@ngxs/store';
-import { VehicleContainerState } from '../../../logic/vehicle-container/vehicle-container.state';
+import { VehicleContainerState } from '../../logic/vehicle-container/vehicle-container.state';
 
 @Component({
   selector: 'vehicle-container',
