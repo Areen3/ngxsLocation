@@ -9,7 +9,10 @@ import {
   AddDashboardItemAction,
   RemoveDashboardItemAction
 } from '../dash-board/state.actions';
-import { DashBoardItemModel } from '../dash-board/dash-board-state.model';
+import {
+  DashBoardContextItemModel,
+  DashBoardStateModel
+} from '../dash-board/dash-board-state.model';
 import { VehicleContainerState } from '../vehicle-container/vehicle-container.state';
 import {
   AddVehicleAction,
@@ -31,7 +34,7 @@ export class VehicleContainerManagerService {
     });
   }
 
-  removeContainer(element: DashBoardItemModel): void {
+  removeContainer(element: DashBoardContextItemModel): void {
     const loc: SingleLocation = SingleLocation.getLocation(
       StateNamesEnum.dashBoard,
       element.name
@@ -44,7 +47,7 @@ export class VehicleContainerManagerService {
       });
   }
 
-  addVehicle(container: DashBoardItemModel, vehicle: VehicleEnum): void {
+  addVehicle(container: DashBoardContextItemModel, vehicle: VehicleEnum): void {
     const loc: SingleLocation = this.getContainerLocalization(container.name);
     const newLastId =
       this.store.selectSnapshotInContext(VehicleContainerState.lastId$, loc) + 1;
@@ -71,10 +74,10 @@ export class VehicleContainerManagerService {
   }
 
   private addVehicleContainer(): Observable<any> {
-    return this.store.selectOnce(DashBoardState.lastId$).pipe(
-      switchMap((lastId: number) => {
+    return this.store.selectOnce(DashBoardState.state$).pipe(
+      switchMap((data: DashBoardStateModel) => {
         const loc: SingleLocation = SingleLocation.getLocation(StateNamesEnum.dashBoard);
-        const newLastId = lastId + 1;
+        const newLastId = data.data.lastId + 1;
         const childName = this.storeBuilder.buildStateName(
           StateNamesEnum.vehicleContainer,
           newLastId

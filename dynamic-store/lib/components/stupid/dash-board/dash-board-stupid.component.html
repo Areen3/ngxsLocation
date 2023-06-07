@@ -1,0 +1,7 @@
+<div>Dynamic store dashboard, count: {{ this.data.count }}</div>
+<select #teams>
+  <ng-container *ngFor="let item of this.metaData.dropDown">
+    <option value="{{ item }}">{{ item }}</option>
+  </ng-container>
+</select>
+<button (click)="AddContainer(teams.value)">Add container</button>

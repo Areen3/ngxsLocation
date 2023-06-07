@@ -1,0 +1,9 @@
+<dashboard-stupid
+  [data]="(data$ | async)!"
+  [metaData]="(metaData$ | async)!"
+  (eventEmitter)="outputEvents($event)"
+>
+</dashboard-stupid>
+<ng-container *ngFor="let item of (this.context$ | async).items">
+  <vehicle-container [context]="item"> </vehicle-container>
+</ng-container>

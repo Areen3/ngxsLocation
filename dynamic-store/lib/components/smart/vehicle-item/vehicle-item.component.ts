@@ -1,11 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { VehicleItemModel } from '../../model/store/vehicle-item.model';
+
 import { SingleLocation, Store } from '@ngxs/store';
-import { ChangeSpeedVehicleAction } from '../../logic/base/state.actions';
+
 import { Observable } from 'rxjs';
-import { VehicleModel } from '../../model/domain/vehicle.model';
-import { VehicleState } from '../../logic/base/vehicle.state';
-import { VehicleContainerManagerService } from '../../logic/services/vehicle-container-manager.service';
+import { VehicleItemModel } from '../../../model/store/vehicle-item.model';
+import { VehicleModel } from '../../../model/domain/vehicle.model';
+import { VehicleContainerManagerService } from '../../../logic/services/vehicle-container-manager.service';
+import { ChangeSpeedVehicleAction } from '../../../logic/base/state.actions';
+import { VehicleState } from '../../../logic/base/vehicle.state';
 
 @Component({
   selector: 'vehicle-item',

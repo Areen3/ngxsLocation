@@ -3,13 +3,13 @@
   {{ data.id }}
   <button (click)="RemoveContainer()">remove container</button>
   <select #teams>
-    <ng-container *ngFor="let item of dropDownData">
+    <ng-container *ngFor="let item of metaData.dropDown">
       <option value="{{ item }}">{{ item }}</option>
     </ng-container>
   </select>
   <button (click)="AddVehicle(teams.value)">add</button>
-  <ng-container *ngIf="vehicles$">
-    <ng-container *ngFor="let item of vehicles$ | async">
+  <ng-container *ngIf="data.items">
+    <ng-container *ngFor="let item of data.items">
       <vehicle-item [data]="item"></vehicle-item>
     </ng-container>
   </ng-container>

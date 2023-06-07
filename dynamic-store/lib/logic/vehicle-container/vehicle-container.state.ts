@@ -9,6 +9,12 @@ import {
 } from './state.actions';
 import { VehicleContainersModel } from '../../model/store/vehicle-containers.model';
 import { StateNamesEnum } from '../../model/store/state-names.enum';
+import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
+import {
+  VehicleContainerStupidDataModel,
+  VehicleContainerStupidMetaDataModel
+} from '../../model/stupid/vehicle-container-stupid.model';
+import { VehicleEnum } from '../../model/domain/vehicle.enum';
 
 @State<VehicleContainerStateModel>({
   name: StateNamesEnum.vehicleContainer,
@@ -16,6 +22,8 @@ import { StateNamesEnum } from '../../model/store/state-names.enum';
     data: {
       vehicles: []
     },
+    name: '',
+    type: VehicleContainerEnum.dynamicStore,
     itemNumber: 0,
     lastId: 0
   }
@@ -23,9 +31,27 @@ import { StateNamesEnum } from '../../model/store/state-names.enum';
 @Injectable()
 export class VehicleContainerState {
   @Selector()
+  static Data$(state: VehicleContainerStateModel): VehicleContainerStupidDataModel {
+    return {
+      items: state.data.vehicles,
+      name: state.type.toString(),
+      id: state.lastId
+    };
+  }
+
+  @Selector()
+  static MetaData$(state: VehicleContainerStateModel): VehicleContainerStupidMetaDataModel {
+    return {
+      dropDown: Object.values(VehicleEnum),
+      remove: state.data.vehicles.length > 0
+    };
+  }
+
+  @Selector()
   static containers$(state: VehicleContainerStateModel): VehicleContainersModel['vehicles'] {
     return state.data.vehicles;
   }
+
   @Selector()
   static lastId$(state: VehicleContainerStateModel): VehicleContainerStateModel['lastId'] {
     return state.lastId;

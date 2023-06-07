@@ -1,15 +1,21 @@
 import { Action, Selector, SingleLocation, State, StateContext } from '@ngxs/store';
 import { Injectable } from '@angular/core';
-import { DashBoardStateModel } from './dash-board-state.model';
+import { DashBoardContextModel, DashBoardStateModel } from './dash-board-state.model';
 import { StateNamesEnum } from '../../model/store/state-names.enum';
 import { AddDashboardItemAction, RemoveDashboardItemAction } from './state.actions';
 import { StateBuildersUtils } from '../utils/state-builders.utils';
+import {
+  DashBoardStupidDataModel,
+  DashBoardStupidMetaDataModel
+} from '../../model/stupid/dash-board-stupid.model';
+import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
 
 @State<DashBoardStateModel>({
   name: StateNamesEnum.dashBoard,
   defaults: {
-    items: [],
-    lastId: 0
+    data: { lastId: 0, id: 0 },
+    context: { items: [] },
+    metaData: { dropDown: Object.values(VehicleContainerEnum), remove: false }
   }
 })
 @Injectable()
@@ -17,18 +23,29 @@ export class DashBoardState {
   constructor(private storeBuilder: StateBuildersUtils) {}
 
   @Selector()
-  static count$(state: DashBoardStateModel): number {
-    return state.items.length;
+  static formData$(state: DashBoardStateModel): DashBoardStupidDataModel {
+    return {
+      items: state.context.items,
+      count: state.context.items.length
+    };
   }
 
   @Selector()
-  static lastId$(state: DashBoardStateModel): number {
-    return state.lastId;
+  static formMetaData$(state: DashBoardStateModel): DashBoardStupidMetaDataModel {
+    return {
+      remove: state.context.items.length > 0,
+      dropDown: state.metaData.dropDown
+    };
   }
 
   @Selector()
-  static items$(state: DashBoardStateModel): DashBoardStateModel['items'] {
-    return state.items;
+  static formContext$(state: DashBoardStateModel): DashBoardContextModel {
+    return state.context;
+  }
+
+  @Selector()
+  static state$(state: DashBoardStateModel): DashBoardStateModel {
+    return state;
   }
 
   @Action(AddDashboardItemAction)
@@ -45,8 +62,17 @@ export class DashBoardState {
       name
     );
     ctx.patchState({
-      items: [...state.items, { name, id: action.payload, location: locContainer.path }],
-      lastId: action.payload
+      context: {
+        ...state.context,
+        items: [
+          ...state.context.items,
+          { name, id: action.payload, location: locContainer.path }
+        ]
+      },
+      data: {
+        ...state.data,
+        lastId: action.payload
+      }
     });
   }
 
@@ -56,7 +82,7 @@ export class DashBoardState {
     action: RemoveDashboardItemAction
   ) {
     const state = ctx.getState();
-    const items = state.items.filter(item => item.id !== action.payload);
-    ctx.patchState({ items });
+    const items = state.context.items.filter(item => item.id !== action.payload);
+    ctx.patchState({ context: { ...state.context, items } });
   }
 }
