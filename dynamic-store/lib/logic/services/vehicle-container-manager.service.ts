@@ -23,6 +23,7 @@ import { VehicleEnum } from '../../model/domain/vehicle.enum';
 import { UpdateVehicleAction } from '../base/state.actions';
 import { getRegisterState } from '../../model/decorators/register-state.decorator';
 import { VehicleItemModel } from '../../model/store/vehicle-item.model';
+import { VehicleContainerStateModel } from '../vehicle-container/vehicle-container-state.model';
 
 @Injectable()
 export class VehicleContainerManagerService {
@@ -49,8 +50,11 @@ export class VehicleContainerManagerService {
 
   addVehicle(container: DashBoardContextItemModel, vehicle: VehicleEnum): void {
     const loc: SingleLocation = this.getContainerLocalization(container.name);
-    const newLastId =
-      this.store.selectSnapshotInContext(VehicleContainerState.lastId$, loc) + 1;
+    const state: VehicleContainerStateModel = this.store.selectSnapshotInContext(
+      VehicleContainerState.state$,
+      loc
+    );
+    const newLastId = state.data.lastId + 1;
     const childName = this.storeBuilder.buildStateName(StateNamesEnum.vehicle, newLastId);
     const type = getRegisterState(vehicle);
     this.innerAddStoreVehicle(loc, newLastId, childName, type, vehicle).subscribe(() => {

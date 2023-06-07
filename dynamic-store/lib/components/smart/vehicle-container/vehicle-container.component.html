@@ -5,3 +5,8 @@
   (eventEmitter)="outputEvents($event)"
 >
 </vehicle-container-stupid>
+<ng-container *ngIf="(context$ | async).vehicles">
+  <ng-container *ngFor="let item of (context$ | async).vehicles">
+    <vehicle-item [context]="item"></vehicle-item>
+  </ng-container>
+</ng-container>

@@ -14,6 +14,7 @@ import {
   VehicleContainerEventType,
   VehicleContainerRemoveContainerEvent
 } from '../../stupid/vehicle-container/vehicle-container.event';
+import { VehicleContainerContextModel } from '../../../logic/vehicle-container/vehicle-container-state.model';
 
 @Component({
   selector: 'vehicle-container',
@@ -24,6 +25,7 @@ export class VehicleContainerComponent implements OnInit {
   context: DashBoardContextItemModel;
   data$: Observable<VehicleContainerStupidDataModel>;
   metaData$: Observable<VehicleContainerStupidMetaDataModel>;
+  context$: Observable<VehicleContainerContextModel>;
 
   constructor(
     private readonly container: VehicleContainerManagerService,
@@ -32,8 +34,9 @@ export class VehicleContainerComponent implements OnInit {
 
   ngOnInit(): void {
     const loc = SingleLocation.getLocation(this.context.location);
-    this.data$ = this.store.selectInContext(VehicleContainerState.Data$, loc);
-    this.metaData$ = this.store.selectInContext(VehicleContainerState.MetaData$, loc);
+    this.data$ = this.store.selectInContext(VehicleContainerState.formData$, loc);
+    this.metaData$ = this.store.selectInContext(VehicleContainerState.formMetaData$, loc);
+    this.context$ = this.store.selectInContext(VehicleContainerState.context$, loc);
   }
 
   outputEvents(event: VehicleContainerEvents): void {

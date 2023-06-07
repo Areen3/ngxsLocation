@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { VehicleContainerStateModel } from './vehicle-container-state.model';
+import {
+  VehicleContainerContextModel,
+  VehicleContainerStateModel
+} from './vehicle-container-state.model';
 import {
   AddVehicleAction,
   AddVehicleContainerAction,
   RemoveVehicleAction,
   RemoveVehicleContainerAction
 } from './state.actions';
-import { VehicleContainersModel } from '../../model/store/vehicle-containers.model';
 import { StateNamesEnum } from '../../model/store/state-names.enum';
 import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
 import {
@@ -19,42 +21,40 @@ import { VehicleEnum } from '../../model/domain/vehicle.enum';
 @State<VehicleContainerStateModel>({
   name: StateNamesEnum.vehicleContainer,
   defaults: {
-    data: {
-      vehicles: []
-    },
-    name: '',
-    type: VehicleContainerEnum.dynamicStore,
-    itemNumber: 0,
-    lastId: 0
+    data: { lastId: 0, type: VehicleContainerEnum.dynamicStore, itemNumber: 0 },
+    metaData: { dropDown: Object.values(VehicleEnum), remove: false },
+    context: { name: '', vehicles: [] }
   }
 })
 @Injectable()
 export class VehicleContainerState {
   @Selector()
-  static Data$(state: VehicleContainerStateModel): VehicleContainerStupidDataModel {
+  static formData$(state: VehicleContainerStateModel): VehicleContainerStupidDataModel {
     return {
-      items: state.data.vehicles,
-      name: state.type.toString(),
-      id: state.lastId
+      items: state.context.vehicles,
+      name: state.data.type.toString(),
+      id: state.data.lastId
     };
   }
 
   @Selector()
-  static MetaData$(state: VehicleContainerStateModel): VehicleContainerStupidMetaDataModel {
+  static formMetaData$(
+    state: VehicleContainerStateModel
+  ): VehicleContainerStupidMetaDataModel {
     return {
-      dropDown: Object.values(VehicleEnum),
-      remove: state.data.vehicles.length > 0
+      dropDown: state.metaData.dropDown,
+      remove: state.context.vehicles.length > 0
     };
   }
 
   @Selector()
-  static containers$(state: VehicleContainerStateModel): VehicleContainersModel['vehicles'] {
-    return state.data.vehicles;
+  static context$(state: VehicleContainerStateModel): VehicleContainerContextModel {
+    return state.context;
   }
 
   @Selector()
-  static lastId$(state: VehicleContainerStateModel): VehicleContainerStateModel['lastId'] {
-    return state.lastId;
+  static state$(state: VehicleContainerStateModel): VehicleContainerStateModel {
+    return state;
   }
 
   @Action(AddVehicleContainerAction)
@@ -62,7 +62,8 @@ export class VehicleContainerState {
     ctx: StateContext<VehicleContainerStateModel>,
     action: AddVehicleContainerAction
   ) {
-    ctx.patchState({ itemNumber: action.payload });
+    const state = ctx.getState();
+    ctx.patchState({ data: { ...state.data, itemNumber: action.payload } });
   }
 
   @Action(RemoveVehicleContainerAction)
@@ -80,16 +81,19 @@ export class VehicleContainerState {
     ctx.patchState({
       data: {
         ...state.data,
+        lastId: action.payload.id
+      },
+      context: {
+        ...state.context,
         vehicles: [
-          ...state.data.vehicles,
+          ...state.context.vehicles,
           {
             id: action.payload.id,
             name: action.payload.vehicle,
             location: action.payload.location
           }
         ]
-      },
-      lastId: action.payload.id
+      }
     });
   }
 
@@ -100,9 +104,9 @@ export class VehicleContainerState {
   ) {
     const state: VehicleContainerStateModel = ctx.getState();
     ctx.patchState({
-      data: {
-        ...state.data,
-        vehicles: state.data.vehicles.filter(item => item.id !== action.payload)
+      context: {
+        ...state.context,
+        vehicles: state.context.vehicles.filter(item => item.id !== action.payload)
       }
     });
   }

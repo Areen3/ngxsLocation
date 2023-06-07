@@ -8,9 +8,4 @@
     </ng-container>
   </select>
   <button (click)="AddVehicle(teams.value)">add</button>
-  <ng-container *ngIf="data.items">
-    <ng-container *ngFor="let item of data.items">
-      <vehicle-item [data]="item"></vehicle-item>
-    </ng-container>
-  </ng-container>
 </div>

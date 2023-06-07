@@ -15,7 +15,7 @@ import { VehicleState } from '../../../logic/base/vehicle.state';
 })
 export class VehicleItemComponent implements OnInit {
   @Input()
-  data: VehicleItemModel;
+  context: VehicleItemModel;
   vehicle$: Observable<VehicleModel>;
 
   constructor(
@@ -27,16 +27,16 @@ export class VehicleItemComponent implements OnInit {
     const newSpeed = Math.floor(Math.random() * 100);
     this.store.dispatchInLocation(
       new ChangeSpeedVehicleAction(newSpeed),
-      SingleLocation.getLocation(this.data.location)
+      SingleLocation.getLocation(this.context.location)
     );
   }
 
   RemoveVehicle(): void {
-    this.container.removeVehicle(this.data);
+    this.container.removeVehicle(this.context);
   }
 
   ngOnInit(): void {
-    const loc = SingleLocation.getLocation(this.data.location);
+    const loc = SingleLocation.getLocation(this.context.location);
     this.vehicle$ = this.store.selectInContext(VehicleState.vehicle$, loc);
   }
 }
