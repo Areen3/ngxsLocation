@@ -10,11 +10,9 @@ import { VehicleModel } from '../../model/domain/vehicle.model';
 @State<VehicleStateModel>({
   name: StateNamesEnum.vehicle,
   defaults: {
-    data: {
-      name: '',
-      type: VehicleEnum.bike,
-      speed: 0
-    }
+    data: { name: '', type: VehicleEnum.bike, speed: 0 },
+    context: { name: '', location: '', id: 0 },
+    metaData: { remove: false }
   },
   creationMode: {
     providers: [
@@ -59,6 +57,6 @@ export class VehicleState<T extends VehicleModel = VehicleModel> implements Ngxs
 
   ngxsOnInit(ctx: StateContext<VehicleStateModel>) {
     const data = this.speedSrv.getEmptyData();
-    ctx.setState({ data });
+    ctx.patchState({ data });
   }
 }

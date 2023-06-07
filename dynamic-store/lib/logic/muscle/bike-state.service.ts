@@ -14,12 +14,9 @@ import { MuscleMultiplierService } from '../services/muscle-multiplier.service';
 @State<VehicleStateModel<BikeModel>>({
   name: StateNamesEnum.vehicle,
   defaults: {
-    data: {
-      name: '',
-      type: VehicleEnum.bike,
-      speed: 0,
-      seats: 1
-    }
+    data: { name: '', type: VehicleEnum.motorBike, speed: 0, seats: 1 },
+    context: { name: '', id: 0, location: '' },
+    metaData: { remove: false }
   },
   creationMode: {
     providers: [

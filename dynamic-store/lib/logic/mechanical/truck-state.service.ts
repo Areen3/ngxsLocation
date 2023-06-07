@@ -14,11 +14,9 @@ import { MechanicalMultiplierService } from '../services/mechanical-multiplier.s
 @State<VehicleStateModel<VehicleModel>>({
   name: StateNamesEnum.vehicle,
   defaults: {
-    data: {
-      name: '',
-      type: VehicleEnum.truck,
-      speed: 0
-    }
+    data: { name: '', type: VehicleEnum.truck, speed: 0 },
+    context: { name: '', id: 0, location: '' },
+    metaData: { remove: false }
   },
   creationMode: {
     providers: [

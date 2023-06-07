@@ -17,6 +17,7 @@ import { VehicleItemComponent } from './components/smart/vehicle-item/vehicle-it
 import { DashBoardComponent } from './components/smart/dash-board/dash-board.component';
 import { DashBoardStupidComponent } from './components/stupid/dash-board/dash-board-stupid.component';
 import { VehicleContainerStupidComponent } from './components/stupid/vehicle-container/vehicle-container-stupid.component';
+import { VehicleItemStupidComponent } from './components/stupid/vehicle-item/vehicle-item-stupid.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { VehicleContainerStupidComponent } from './components/stupid/vehicle-con
     VehicleItemComponent,
     DashBoardComponent,
     DashBoardStupidComponent,
-    VehicleContainerStupidComponent
+    VehicleContainerStupidComponent,
+    VehicleItemStupidComponent
   ],
   imports: [CommonModule, NgxsModule.forFeature([DashBoardState])],
   exports: [
@@ -32,7 +34,8 @@ import { VehicleContainerStupidComponent } from './components/stupid/vehicle-con
     VehicleItemComponent,
     DashBoardComponent,
     DashBoardStupidComponent,
-    VehicleContainerStupidComponent
+    VehicleContainerStupidComponent,
+    VehicleItemStupidComponent
   ],
   providers: [
     StateBuildersUtils,
