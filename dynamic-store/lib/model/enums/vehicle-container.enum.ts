@@ -1,5 +1,6 @@
 export enum VehicleContainerEnum {
-  dynamicStore = 'dynamic store',
-  dependencyInjectedStore = 'dependency injected store',
-  singleResponsibilityStore = 'singleResponsibilityStore'
+  selectStoreType = 'Select store type',
+  dynamicStore = 'Dynamic store',
+  dependencyInjectedStore = 'Dependency injected store',
+  singleResponsibilityStore = 'Single responsibility store'
 }

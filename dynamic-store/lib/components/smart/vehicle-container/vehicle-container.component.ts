@@ -18,7 +18,8 @@ import { VehicleContainerContextModel } from '../../../logic/vehicle-container/v
 
 @Component({
   selector: 'vehicle-container',
-  templateUrl: './vehicle-container.component.html'
+  templateUrl: './vehicle-container.component.html',
+  styleUrls: ['./vehicle-container.component.scss']
 })
 export class VehicleContainerComponent implements OnInit {
   @Input()
@@ -48,7 +49,6 @@ export class VehicleContainerComponent implements OnInit {
       case VehicleContainerEventType.removeContainer:
         const removeEvent = <VehicleContainerRemoveContainerEvent>event;
         this.container.removeContainer(removeEvent.data);
-
         break;
     }
   }

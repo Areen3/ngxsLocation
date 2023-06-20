@@ -1,7 +1,9 @@
-<div>
-  {{ context.name }}
-  {{ context.id }}
-  {{ vehicle$ | async | json }}
-  <button (click)="ChangeSpeed()">change speed</button>
-  <button (click)="RemoveVehicle()">remove</button>
+<div class="veh-item veh-div-flex veh-item-align">
+  <vehicle-item-stupid
+    [context]="context"
+    [data]="data$ | async"
+    [metaData]="metaData$ | async"
+    (eventEmitter)="outputEvents($event)"
+  >
+  </vehicle-item-stupid>
 </div>

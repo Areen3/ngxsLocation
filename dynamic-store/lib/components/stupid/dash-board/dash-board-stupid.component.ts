@@ -8,7 +8,8 @@ import { VehicleContainerEnum } from '../../../model/enums/vehicle-container.enu
 
 @Component({
   selector: 'dashboard-stupid',
-  templateUrl: './dash-board-stupid.component.html'
+  templateUrl: './dash-board-stupid.component.html',
+  styleUrls: ['./dash-board-stupid.component.scss']
 })
 export class DashBoardStupidComponent {
   @Input()
@@ -17,6 +18,7 @@ export class DashBoardStupidComponent {
   metaData: DashBoardStupidMetaDataModel;
   @Output()
   eventEmitter: EventEmitter<DashBoardEvents> = new EventEmitter<DashBoardEvents>();
+  isDisabled = true;
 
   constructor() {}
 
@@ -25,5 +27,9 @@ export class DashBoardStupidComponent {
       eventType: DashBoardEventType.addContainer,
       data: <VehicleContainerEnum>type
     });
+  }
+
+  onSelected(value: string) {
+    this.isDisabled = value === VehicleContainerEnum.selectStoreType;
   }
 }

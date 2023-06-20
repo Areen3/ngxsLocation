@@ -1,0 +1,16 @@
+@import '../../../assets/scss/variables/variables';
+.veh-cont {
+  grid-area: container;
+}
+.veh-cont-stup-desc {
+  margin: $margin;
+  font-size: $font-size;
+}
+.margin {
+  margin-bottom: 0;
+}
+.veh-cont-btns {
+  display: flex;
+  justify-content: end;
+  flex-wrap: wrap;
+}

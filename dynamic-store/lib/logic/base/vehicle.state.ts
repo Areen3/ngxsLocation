@@ -6,6 +6,10 @@ import { ChangeSpeedVehicleAction, UpdateVehicleAction } from './state.actions';
 import { AbstractVehicleSpeedService } from '../../model/abstract/abstract-vehicle-speed.service';
 import { VehicleEnum } from '../../model/domain/vehicle.enum';
 import { VehicleModel } from '../../model/domain/vehicle.model';
+import {
+  VehicleItemStupidDataModel,
+  VehicleItemStupidMetaDataModel
+} from '../../model/stupid/vehicle-item-stupid.model';
 
 @State<VehicleStateModel>({
   name: StateNamesEnum.vehicle,
@@ -23,6 +27,18 @@ import { VehicleModel } from '../../model/domain/vehicle.model';
 @Injectable()
 export class VehicleState<T extends VehicleModel = VehicleModel> implements NgxsOnInit {
   constructor(protected readonly speedSrv: AbstractVehicleSpeedService<T>) {}
+
+  @Selector()
+  static formData$(state: VehicleStateModel): VehicleItemStupidDataModel {
+    return {
+      vehicle: state.data
+    };
+  }
+
+  @Selector()
+  static formMetaData$(_state: VehicleStateModel): VehicleItemStupidMetaDataModel {
+    return {};
+  }
 
   @Selector()
   static vehicle$(state: VehicleStateModel): VehicleModel {

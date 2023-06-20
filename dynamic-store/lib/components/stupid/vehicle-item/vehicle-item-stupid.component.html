@@ -1,7 +1,11 @@
-<div>
-  {{ context.name }}
-  {{ context.id }}
-  {{ data | json }}
-  <button (click)="ChangeSpeed()">change speed</button>
-  <button (click)="RemoveVehicle()">remove</button>
+<table class="table-veh-item">
+  <tr>
+    <ng-container *ngFor="let item of data.vehicle | keyvalue">
+      <td class="table-item table-item-number">{{ item.key }}: {{ item.value }}</td>
+    </ng-container>
+  </tr>
+</table>
+<div class="veh-div-flex">
+  <button (click)="ChangeSpeed()" class="button-change">change vehicle speed</button>
+  <button (click)="RemoveVehicle()" class="button-remove">remove vehicle</button>
 </div>

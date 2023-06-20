@@ -1,0 +1,23 @@
+.button-add,
+.button-change,
+.button-remove {
+  font-size: $font-size;
+  padding: $btn-padding;
+  border-radius: $border-radius;
+  margin: $margin;
+}
+.button-add {
+  background-color: $btn-add-color;
+  border: 2px solid $btn-add-color;
+}
+.button-change {
+  background-color: $btn-change-color;
+  border: 2px solid $btn-change-color;
+}
+.button-remove {
+  background-color: $btn-delete-color;
+  border: 2px solid $btn-delete-color;
+}
+.disabledBtn {
+  background-color: grey;
+}

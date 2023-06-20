@@ -1,0 +1,17 @@
+@import '../variables/variables';
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: #ddd;
+}
+body {
+  width: 100%;
+  min-height: 100vh;
+  font-family: $font;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(25, 25, 25);
+}

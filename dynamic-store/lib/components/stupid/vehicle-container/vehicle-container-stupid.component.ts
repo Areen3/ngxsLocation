@@ -9,7 +9,8 @@ import { DashBoardContextItemModel } from '../../../logic/dash-board/dash-board-
 
 @Component({
   selector: 'vehicle-container-stupid',
-  templateUrl: './vehicle-container-stupid.component.html'
+  templateUrl: './vehicle-container-stupid.component.html',
+  styleUrls: ['./vehicle-container-stupid.component.scss']
 })
 export class VehicleContainerStupidComponent {
   @Input()
@@ -21,6 +22,7 @@ export class VehicleContainerStupidComponent {
   @Output()
   eventEmitter: EventEmitter<VehicleContainerEvents> =
     new EventEmitter<VehicleContainerEvents>();
+  isDisabled = true;
 
   RemoveContainer() {
     this.eventEmitter.emit({
@@ -34,5 +36,9 @@ export class VehicleContainerStupidComponent {
       eventType: VehicleContainerEventType.addVehicle,
       data: <VehicleEnum>vehicle
     });
+  }
+
+  onSelectedVehicle(value: string) {
+    this.isDisabled = value === VehicleEnum.selectVehicle;
   }
 }
