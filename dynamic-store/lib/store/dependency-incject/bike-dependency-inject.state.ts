@@ -3,16 +3,17 @@ import { State } from '@ngxs/store';
 import { StateNamesEnum } from '../../model/store/state-names.enum';
 import { AbstractVehicleSpeedService } from '../../model/abstract/abstract-vehicle-speed.service';
 import { VehicleEnum } from '../../model/domain/vehicle.enum';
-import { BikeVehicleSpeedService } from '../services/bike-vehicle-speed.service';
-import { VehicleState } from '../base/vehicle.state';
-import { VehicleStateModel } from '../base/vehicle-state.model';
 import { BikeModel } from '../../model/domain/bike.model';
-import { registerState } from '../../model/decorators/register-state.decorator';
+import { registerVehicleState } from '../../model/decorators/register-vehicle-state.decorator';
 import { AbstractSpeedMultiplierService } from '../../model/abstract/abstract-speed-multiplier-.service';
-import { MuscleMultiplierService } from '../services/muscle-multiplier.service';
-
+import { BikeVehicleSpeedService } from '../../logic/services/bike-vehicle-speed.service';
+import { VehicleStateModel } from '../../logic/base/vehicle-state.model';
+import { MuscleMultiplierService } from '../../logic/services/muscle-multiplier.service';
+import { VehicleDependencyInjectState } from './vehicle-dependency-inject.state';
+import { StateBuildersUtils } from '../../logic/utils/state-builders.utils';
+import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
 @State<VehicleStateModel<BikeModel>>({
-  name: StateNamesEnum.vehicle,
+  name: StateBuildersUtils.buildDependencyInjectStateName(StateNamesEnum.vehicleBike),
   defaults: {
     data: { name: '', type: VehicleEnum.motorBike, speed: 0, seats: 1 },
     context: { name: '', id: 0, location: '' },
@@ -20,7 +21,7 @@ import { MuscleMultiplierService } from '../services/muscle-multiplier.service';
   },
   creationMode: {
     providers: [
-      { provide: BikeStateService },
+      { provide: BikeDependencyInjectState },
       { provide: AbstractVehicleSpeedService, useClass: BikeVehicleSpeedService },
       { provide: AbstractSpeedMultiplierService, useClass: MuscleMultiplierService }
     ],
@@ -28,5 +29,5 @@ import { MuscleMultiplierService } from '../services/muscle-multiplier.service';
   }
 })
 @Injectable()
-@registerState(VehicleEnum.bike)
-export class BikeStateService extends VehicleState<BikeModel> {}
+@registerVehicleState(VehicleContainerEnum.dependencyInjectedStore, VehicleEnum.bike)
+export class BikeDependencyInjectState extends VehicleDependencyInjectState<BikeModel> {}

@@ -1,15 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import {
-  VehicleContainerContextModel,
-  VehicleContainerStateModel
-} from './vehicle-container-state.model';
-import {
-  AddVehicleAction,
-  AddVehicleContainerAction,
-  RemoveVehicleAction,
-  RemoveVehicleContainerAction
-} from './state.actions';
 import { StateNamesEnum } from '../../model/store/state-names.enum';
 import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
 import {
@@ -17,17 +7,30 @@ import {
   VehicleContainerStupidMetaDataModel
 } from '../../model/stupid/vehicle-container-stupid.model';
 import { VehicleEnum } from '../../model/domain/vehicle.enum';
+import {
+  VehicleContainerContextModel,
+  VehicleContainerStateModel
+} from '../../logic/vehicle-container/vehicle-container-state.model';
+import {
+  AddVehicleAction,
+  AddVehicleContainerAction,
+  RemoveVehicleAction,
+  RemoveVehicleContainerAction
+} from '../../logic/vehicle-container/state.actions';
+import { StateBuildersUtils } from '../../logic/utils/state-builders.utils';
+import { registerContainerState } from '../../model/decorators/register-container-state.decorator';
 
 @State<VehicleContainerStateModel>({
-  name: StateNamesEnum.vehicleContainer,
+  name: StateBuildersUtils.buildDependencyInjectStateName(StateNamesEnum.vehicleContainer),
   defaults: {
-    data: { lastId: 0, type: VehicleContainerEnum.dynamicStore, itemNumber: 0 },
+    data: { lastId: 0, type: VehicleContainerEnum.dependencyInjectedStore, itemNumber: 0 },
     metaData: { dropDown: Object.values(VehicleEnum), remove: false },
     context: { name: '', vehicles: [] }
   }
 })
+@registerContainerState(VehicleContainerEnum.dependencyInjectedStore)
 @Injectable()
-export class VehicleContainerState {
+export class VehicleDependencyInjectContainerState {
   @Selector()
   static formData$(state: VehicleContainerStateModel): VehicleContainerStupidDataModel {
     return {

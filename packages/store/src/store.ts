@@ -188,7 +188,7 @@ export class Store {
   /**
    * Select a observable slice of store from specified location
    */
-  selectInContext(selector: any, location: SingleLocation): Observable<any> {
+  selectInContext<T>(selector: any, location: SingleLocation): Observable<T> {
     const seletorMDModel: SelectorMetaDataModel =
       StoreValidators.getValidSelectorMeta(selector);
     const containerClass = seletorMDModel.containerClass;

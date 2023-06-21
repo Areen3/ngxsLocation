@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Action, NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
-import { VehicleStateModel } from './vehicle-state.model';
 import { StateNamesEnum } from '../../model/store/state-names.enum';
-import { ChangeSpeedVehicleAction, UpdateVehicleAction } from './state.actions';
 import { AbstractVehicleSpeedService } from '../../model/abstract/abstract-vehicle-speed.service';
 import { VehicleEnum } from '../../model/domain/vehicle.enum';
 import { VehicleModel } from '../../model/domain/vehicle.model';
@@ -10,9 +8,12 @@ import {
   VehicleItemStupidDataModel,
   VehicleItemStupidMetaDataModel
 } from '../../model/stupid/vehicle-item-stupid.model';
+import { VehicleStateModel } from '../../logic/base/vehicle-state.model';
+import { ChangeSpeedVehicleAction, UpdateVehicleAction } from '../../logic/base/state.actions';
+import { StateBuildersUtils } from '../../logic/utils/state-builders.utils';
 
 @State<VehicleStateModel>({
-  name: StateNamesEnum.vehicle,
+  name: StateBuildersUtils.buildDependencyInjectStateName(StateNamesEnum.vehicle),
   defaults: {
     data: { name: '', type: VehicleEnum.bike, speed: 0 },
     context: { name: '', location: '', id: 0 },
@@ -25,7 +26,9 @@ import {
   }
 })
 @Injectable()
-export class VehicleState<T extends VehicleModel = VehicleModel> implements NgxsOnInit {
+export class VehicleDependencyInjectState<T extends VehicleModel = VehicleModel>
+  implements NgxsOnInit
+{
   constructor(protected readonly speedSrv: AbstractVehicleSpeedService<T>) {}
 
   @Selector()

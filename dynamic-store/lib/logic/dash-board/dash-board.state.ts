@@ -9,6 +9,7 @@ import {
   DashBoardStupidMetaDataModel
 } from '../../model/stupid/dash-board-stupid.model';
 import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
+import { VehicleAppServiceState } from '../../store/app-service/vehicle-app-service.state';
 
 @State<DashBoardStateModel>({
   name: StateNamesEnum.dashBoard,
@@ -16,7 +17,8 @@ import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
     data: { lastId: 0, id: 0 },
     context: { items: [] },
     metaData: { dropDown: Object.values(VehicleContainerEnum), remove: false }
-  }
+  },
+  children: [VehicleAppServiceState]
 })
 @Injectable()
 export class DashBoardState {

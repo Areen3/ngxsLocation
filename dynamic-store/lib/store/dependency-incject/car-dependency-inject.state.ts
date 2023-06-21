@@ -3,16 +3,18 @@ import { State } from '@ngxs/store';
 import { StateNamesEnum } from '../../model/store/state-names.enum';
 import { AbstractVehicleSpeedService } from '../../model/abstract/abstract-vehicle-speed.service';
 import { VehicleEnum } from '../../model/domain/vehicle.enum';
-import { VehicleState } from '../base/vehicle.state';
-import { VehicleStateModel } from '../base/vehicle-state.model';
 import { VehicleModel } from '../../model/domain/vehicle.model';
-import { CarVehicleSpeedService } from '../services/car-vehicle-speed.service';
-import { registerState } from '../../model/decorators/register-state.decorator';
+import { registerVehicleState } from '../../model/decorators/register-vehicle-state.decorator';
 import { AbstractSpeedMultiplierService } from '../../model/abstract/abstract-speed-multiplier-.service';
-import { MechanicalMultiplierService } from '../services/mechanical-multiplier.service';
+import { VehicleStateModel } from '../../logic/base/vehicle-state.model';
+import { CarVehicleSpeedService } from '../../logic/services/car-vehicle-speed.service';
+import { MechanicalMultiplierService } from '../../logic/services/mechanical-multiplier.service';
+import { VehicleDependencyInjectState } from './vehicle-dependency-inject.state';
+import { StateBuildersUtils } from '../../logic/utils/state-builders.utils';
+import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
 
 @State<VehicleStateModel<VehicleModel>>({
-  name: StateNamesEnum.vehicleCar,
+  name: StateBuildersUtils.buildDependencyInjectStateName(StateNamesEnum.vehicleCar),
   defaults: {
     data: { name: '', type: VehicleEnum.car, speed: 0 },
     context: { name: '', id: 0, location: '' },
@@ -20,7 +22,7 @@ import { MechanicalMultiplierService } from '../services/mechanical-multiplier.s
   },
   creationMode: {
     providers: [
-      { provide: CarStateService },
+      { provide: CarDependencyInjectState },
       { provide: AbstractVehicleSpeedService, useClass: CarVehicleSpeedService },
       { provide: AbstractSpeedMultiplierService, useClass: MechanicalMultiplierService }
     ],
@@ -28,5 +30,7 @@ import { MechanicalMultiplierService } from '../services/mechanical-multiplier.s
   }
 })
 @Injectable()
-@registerState(VehicleEnum.car)
-export class CarStateService<T extends VehicleModel = VehicleModel> extends VehicleState<T> {}
+@registerVehicleState(VehicleContainerEnum.dependencyInjectedStore, VehicleEnum.car)
+export class CarDependencyInjectState<
+  T extends VehicleModel = VehicleModel
+> extends VehicleDependencyInjectState<T> {}

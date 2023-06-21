@@ -4,9 +4,6 @@ import { SingleLocation, Store } from '@ngxs/store';
 
 import { Observable } from 'rxjs';
 import { VehicleItemModel } from '../../../model/store/vehicle-item.model';
-import { VehicleContainerManagerService } from '../../../logic/services/vehicle-container-manager.service';
-import { ChangeSpeedVehicleAction } from '../../../logic/base/state.actions';
-import { VehicleState } from '../../../logic/base/vehicle.state';
 import {
   VehicleItemEvents,
   VehicleItemEventType,
@@ -16,6 +13,11 @@ import {
   VehicleItemStupidDataModel,
   VehicleItemStupidMetaDataModel
 } from '../../../model/stupid/vehicle-item-stupid.model';
+import { VehicleDependencyInjectState } from '../../../store/dependency-incject/vehicle-dependency-inject.state';
+import {
+  ChangeSpeedAppServiceAction,
+  RemoveVehicleAppServiceAction
+} from '../../../store/app-service/state.actions';
 
 @Component({
   selector: 'vehicle-item',
@@ -28,39 +30,26 @@ export class VehicleItemComponent implements OnInit {
   data$: Observable<VehicleItemStupidDataModel>;
   metaData$: Observable<VehicleItemStupidMetaDataModel>;
 
-  constructor(
-    private readonly store: Store,
-    private container: VehicleContainerManagerService
-  ) {}
+  constructor(private readonly store: Store) {}
 
   outputEvents(event: VehicleItemEvents): void {
     switch (event.eventType) {
       case VehicleItemEventType.changeSpeed:
-        this.ChangeSpeed();
+        this.store.dispatch(new ChangeSpeedAppServiceAction(this.context));
         break;
       case VehicleItemEventType.removeVehicle:
         const removeEvent = <VehicleItemRemoveVehicleEvent>event;
-        this.container.removeVehicle(removeEvent.data);
-        this.RemoveVehicle();
+        this.store.dispatch(new RemoveVehicleAppServiceAction(removeEvent.data));
         break;
     }
   }
 
-  ChangeSpeed(): void {
-    const newSpeed = Math.floor(Math.random() * 100);
-    this.store.dispatchInLocation(
-      new ChangeSpeedVehicleAction(newSpeed),
-      SingleLocation.getLocation(this.context.location)
-    );
-  }
-
-  RemoveVehicle(): void {
-    this.container.removeVehicle(this.context);
-  }
-
   ngOnInit(): void {
     const loc = SingleLocation.getLocation(this.context.location);
-    this.data$ = this.store.selectInContext(VehicleState.formData$, loc);
-    this.metaData$ = this.store.selectInContext(VehicleState.formMetaData$, loc);
+    this.data$ = this.store.selectInContext(VehicleDependencyInjectState.formData$, loc);
+    this.metaData$ = this.store.selectInContext(
+      VehicleDependencyInjectState.formMetaData$,
+      loc
+    );
   }
 }
