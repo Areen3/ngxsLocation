@@ -22,6 +22,7 @@ import { TruckDynamicState } from './store/dynamic/truck-dynamic.state';
 import { VehicleDynamicState } from './store/dynamic/vehicle-dynamic.state';
 import { VehicleDynamicContainerState } from './store/dynamic/vehicle-dynamic-container.state';
 import { VehicleAppServiceState } from './store/app-service/vehicle-app-service.state';
+import { FeRouteModule } from './fe-route.module';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,11 @@ import { VehicleAppServiceState } from './store/app-service/vehicle-app-service.
     VehicleContainerStupidComponent,
     VehicleItemStupidComponent
   ],
-  imports: [CommonModule, NgxsModule.forFeature([DashBoardState, VehicleAppServiceState])],
+  imports: [
+    CommonModule,
+    NgxsModule.forFeature([DashBoardState, VehicleAppServiceState]),
+    FeRouteModule
+  ],
   exports: [
     VehicleContainerComponent,
     VehicleItemComponent,

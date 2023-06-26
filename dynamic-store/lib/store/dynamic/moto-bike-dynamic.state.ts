@@ -13,7 +13,7 @@ import { StateBuildersUtils } from '../../logic/utils/state-builders.utils';
   name: StateBuildersUtils.buildDynamicStateName(StateNamesEnum.vehicleMotoBike),
   defaults: {
     data: { name: '', type: VehicleEnum.motorBike, speed: 0 },
-    context: { name: '', id: 0, location: '' },
+    context: { id: 0, location: '' },
     metaData: { remove: false }
   }
 })

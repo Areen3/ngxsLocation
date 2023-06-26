@@ -7,15 +7,19 @@ import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { environment as env } from '../../integration/environments/environment';
 import { CommonModule } from '@angular/common';
+import { AppRoutingModule } from './app-routing.module';
+import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 
 @NgModule({
   imports: [
     BrowserModule,
     CommonModule,
+    NgxsModule.forRoot([]),
     LibModule,
+    AppRoutingModule,
     NgxsLoggerPluginModule.forRoot({ logger: console, collapsed: false }),
-    NgxsReduxDevtoolsPluginModule.forRoot({ disabled: env.production }),
-    NgxsModule.forRoot([])
+    NgxsRouterPluginModule.forRoot(),
+    NgxsReduxDevtoolsPluginModule.forRoot({ disabled: env.production })
   ],
   declarations: [AppComponent],
   bootstrap: [AppComponent]

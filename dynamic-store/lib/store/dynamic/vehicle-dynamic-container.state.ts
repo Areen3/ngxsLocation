@@ -92,7 +92,6 @@ export class VehicleDynamicContainerState {
           ...state.context.vehicles,
           {
             id: action.payload.id,
-            name: action.payload.vehicle,
             location: action.payload.location
           }
         ]
