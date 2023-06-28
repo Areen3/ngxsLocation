@@ -1,3 +1,4 @@
 export enum RoutingPathEnum {
-  dashboard = 'dashboard'
+  dashboard = 'dashboard',
+  vehicleContainer = 'vehicle-container'
 }

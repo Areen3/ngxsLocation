@@ -1,6 +1,10 @@
 import { Action, Selector, SingleLocation, State, StateContext } from '@ngxs/store';
 import { Injectable } from '@angular/core';
-import { DashBoardContextModel, DashBoardStateModel } from './dash-board-state.model';
+import {
+  DashBoardContextModel,
+  DashBoardDataModel,
+  DashBoardStateModel
+} from './dash-board-state.model';
 import { StateNamesEnum } from '../../model/store/state-names.enum';
 import { AddDashboardItemAction, RemoveDashboardItemAction } from './state.actions';
 import { StateBuildersUtils } from '../utils/state-builders.utils';
@@ -48,6 +52,11 @@ export class DashBoardState {
   @Selector()
   static state$(state: DashBoardStateModel): DashBoardStateModel {
     return state;
+  }
+
+  @Selector()
+  static data$(state: DashBoardStateModel): DashBoardDataModel {
+    return state.data;
   }
 
   @Action(AddDashboardItemAction)

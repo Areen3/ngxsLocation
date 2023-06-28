@@ -1,0 +1,13 @@
+<div>
+  <ul class="tabs">
+    <ng-container *ngFor="let item of data.items">
+      <li
+        class="tabs li"
+        (click)="onSelected(item.id)"
+        [class.active]="item.id === metaData.selected"
+      >
+        {{ item.name }}
+      </li>
+    </ng-container>
+  </ul>
+</div>

@@ -23,6 +23,9 @@ import { VehicleDynamicState } from './store/dynamic/vehicle-dynamic.state';
 import { VehicleDynamicContainerState } from './store/dynamic/vehicle-dynamic-container.state';
 import { VehicleAppServiceState } from './store/app-service/vehicle-app-service.state';
 import { FeRouteModule } from './fe-route.module';
+import { TabsStupidComponent } from './components/stupid/tabs/tabs-stupid.component';
+import { RouteReuseStrategy } from '@angular/router';
+import { ParamChangeRouteResultStrategy } from './guards/strategy/params-change-route-strategy';
 
 @NgModule({
   declarations: [
@@ -31,7 +34,8 @@ import { FeRouteModule } from './fe-route.module';
     DashBoardComponent,
     DashBoardStupidComponent,
     VehicleContainerStupidComponent,
-    VehicleItemStupidComponent
+    VehicleItemStupidComponent,
+    TabsStupidComponent
   ],
   imports: [
     CommonModule,
@@ -47,6 +51,10 @@ import { FeRouteModule } from './fe-route.module';
     VehicleItemStupidComponent
   ],
   providers: [
+    {
+      provide: RouteReuseStrategy,
+      useClass: ParamChangeRouteResultStrategy
+    },
     StateBuildersUtils,
     VehicleAppServiceState,
     VehicleDependencyInjectContainerState,

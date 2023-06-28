@@ -1,7 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SingleLocation, Store } from '@ngxs/store';
-import { DashBoardContextItemModel } from '../../../logic/dash-board/dash-board-state.model';
+import {
+  DashBoardContextItemModel,
+  DashBoardContextModel
+} from '../../../logic/dash-board/dash-board-state.model';
 import {
   VehicleContainerStupidDataModel,
   VehicleContainerStupidMetaDataModel
@@ -18,6 +21,8 @@ import {
   AddVehicleAppServiceAction,
   RemoveVehicleContainerAppServiceAction
 } from '../../../store/app-service/state.actions';
+import { ActivatedRoute } from '@angular/router';
+import { DashBoardState } from '../../../logic/dash-board/dash-board.state';
 
 @Component({
   selector: 'vehicle-container',
@@ -25,15 +30,19 @@ import {
   styleUrls: ['./vehicle-container.component.scss']
 })
 export class VehicleContainerComponent implements OnInit {
-  @Input()
   context: DashBoardContextItemModel;
   data$: Observable<VehicleContainerStupidDataModel>;
   metaData$: Observable<VehicleContainerStupidMetaDataModel>;
   context$: Observable<VehicleContainerContextModel>;
 
-  constructor(private readonly store: Store) {}
+  constructor(private readonly store: Store, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    const contexts = <DashBoardContextModel>(
+      this.store.selectSnapshot(DashBoardState.formContext$)
+    );
+    this.context = contexts.items.find(item => item.id === id)!;
     const loc = SingleLocation.getLocation(this.context.location);
     this.data$ = this.store.selectInContext(
       VehicleDependencyInjectContainerState.formData$,

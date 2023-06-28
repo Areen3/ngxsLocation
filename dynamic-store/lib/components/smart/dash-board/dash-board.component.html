@@ -5,7 +5,14 @@
     (eventEmitter)="outputEvents($event)"
   >
   </dashboard-stupid>
-  <ng-container *ngFor="let item of (this.context$ | async)!.items">
-    <vehicle-container [context]="item"> </vehicle-container>
-  </ng-container>
+  <tabs-stupid
+    [data]="(context$ | async)!"
+    [metaData]="(metaDataTabs$ | async)!"
+    (eventEmitter)="outputTabsEvents($event)"
+  >
+  </tabs-stupid>
+  <router-outlet></router-outlet>
+  <!--  <ng-container *ngFor="let item of (this.context$ | async)!.items">-->
+  <!--    <vehicle-container [context]="item"></vehicle-container>-->
+  <!--  </ng-container>-->
 </div>
