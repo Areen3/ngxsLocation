@@ -1,5 +1,7 @@
 import { BaseActionWithPayload } from '../../model/store/actions';
 import { VehicleEnum } from '../../model/domain/vehicle.enum';
+import { IEntity } from '../../model/base/base';
+import { DashBoardContextItemModel } from '../dash-board/dash-board-state.model';
 
 enum VehicleContainerActionType {
   addContainer = '[vehicle-container] add container',
@@ -8,7 +10,7 @@ enum VehicleContainerActionType {
   remove = '[vehicle] remove'
 }
 
-export class AddVehicleContainerAction extends BaseActionWithPayload<number> {
+export class AddVehicleContainerAction extends BaseActionWithPayload<DashBoardContextItemModel> {
   static readonly type = VehicleContainerActionType.addContainer;
 }
 
@@ -16,9 +18,8 @@ export class RemoveVehicleContainerAction extends BaseActionWithPayload<number> 
   static readonly type = VehicleContainerActionType.removeContainer;
 }
 
-interface VehicleActionData {
+interface VehicleActionData extends IEntity {
   vehicle: VehicleEnum;
-  id: number;
   location: string;
 }
 export class AddVehicleAction extends BaseActionWithPayload<VehicleActionData> {

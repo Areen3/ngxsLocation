@@ -27,6 +27,7 @@ import { TabsStupidComponent } from './components/stupid/tabs/tabs-stupid.compon
 import { RouteReuseStrategy } from '@angular/router';
 import { ParamChangeRouteResultStrategy } from './guards/strategy/params-change-route-strategy';
 import { SimulateBackendService } from './backend/simulate-backend.service';
+import { VehicleContainerDalService } from './backend/vehicle-container-dal.service';
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import { SimulateBackendService } from './backend/simulate-backend.service';
     TruckDynamicState,
     VehicleDynamicState,
     VehicleDynamicContainerState,
-    SimulateBackendService
+    SimulateBackendService,
+    VehicleContainerDalService
   ]
 })
 export class LibModule {

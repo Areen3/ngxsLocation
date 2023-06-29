@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { BehaviorSubject, combineLatest, forkJoin, of, timer } from 'rxjs';
+import { BehaviorSubject, combineLatest, forkJoin, Observable, of, timer } from 'rxjs';
 import { DashBoardState } from '../logic/dash-board/dash-board.state';
 import { filter, map, switchMap } from 'rxjs/operators';
 import {
@@ -25,31 +25,33 @@ export class SimulateBackendService {
     combineLatest([this.store.select(DashBoardState.simulate$), this.subjectPipe])
       .pipe(
         filter(([simulate]) => simulate),
-        map(([_simulate, value]) => value)
+        map(([_simulate, value]) => value),
+        switchMap(value =>
+          value > (this.frequency + 1000) / 2 ? this.addContainer() : this.removeContainer()
+        )
       )
-      .subscribe(value => {
-        console.log(`Wygenerowano zdarzenie i next! ${value}`);
-        value > (this.frequency + 1000) / 2 ? this.addContainer() : this.removeContainer();
-        this.subject.next(value);
+      .subscribe(() => {
+        this.subject.next(1);
       });
   }
 
-  addContainer(): void {
+  addContainer(): Observable<any> {
     const values = this.store.selectSnapshot(DashBoardState.formContext$);
-    if (values.items.length > 5) return;
+    if (values.items.length > 5) return of(false);
     const randomNumber = Math.floor(Math.random() * 2) + 1;
     const value = Object.values(VehicleContainerEnum).filter(
       (_item, index) => index === randomNumber
     );
-    this.store.dispatch(new AddVehicleBackendContainerAppServiceAction(value[0]));
+    return this.store.dispatch(new AddVehicleBackendContainerAppServiceAction(value[0]));
   }
 
-  removeContainer(): void {
+  removeContainer(): Observable<any> {
     const values = this.store.selectSnapshot(DashBoardState.formContext$);
-    if (values.items.length > 0) {
-      const randomNumber = Math.floor(Math.random() * (values.items.length - 1));
-      const vehicleContainer = values.items[randomNumber];
-      this.store.dispatch(new RemoveVehicleBackendContainerAppServiceAction(vehicleContainer));
-    }
+    if (values.items.length === 0) return of(false);
+    const randomNumber = Math.floor(Math.random() * (values.items.length - 1));
+    const vehicleContainer = values.items[randomNumber];
+    return this.store.dispatch(
+      new RemoveVehicleBackendContainerAppServiceAction(vehicleContainer)
+    );
   }
 }

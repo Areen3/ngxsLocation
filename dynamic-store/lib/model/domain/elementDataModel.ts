@@ -1,6 +1,7 @@
-export interface ElementDataModel {
+import { IEntity } from '../base/base';
+
+export interface ElementDataModel extends IEntity {
   name: string;
-  id: number;
 }
 
 export interface ElementsDataModel<T extends ElementDataModel> {

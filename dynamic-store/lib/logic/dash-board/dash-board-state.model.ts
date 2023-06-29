@@ -1,10 +1,9 @@
 import { BaseSimpleStoreModel } from '../../model/store/base-simple-store.model';
-import { IEmptyObject } from '../../model/base/base';
+import { IEmptyObject, IEntity } from '../../model/base/base';
 import { ElementDataModel, ElementsDataModel } from '../../model/domain/elementDataModel';
 
-export interface DashBoardDataModel {
+export interface DashBoardDataModel extends IEntity {
   lastId: number;
-  id: number;
   simulate: boolean;
 }
 

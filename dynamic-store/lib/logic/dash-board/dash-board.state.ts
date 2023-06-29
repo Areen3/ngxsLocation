@@ -1,4 +1,4 @@
-import { Action, Selector, SingleLocation, State, StateContext } from '@ngxs/store';
+import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { Injectable } from '@angular/core';
 import {
   DashBoardContextModel,
@@ -11,7 +11,6 @@ import {
   DashboardRemoveItemAction,
   DashboardSimulateUsersAction
 } from './state.actions';
-import { StateBuildersUtils } from '../utils/state-builders.utils';
 import {
   DashBoardStupidDataModel,
   DashBoardStupidMetaDataModel
@@ -30,8 +29,6 @@ import { VehicleAppServiceState } from '../../store/app-service/vehicle-app-serv
 })
 @Injectable()
 export class DashBoardState {
-  constructor(private storeBuilder: StateBuildersUtils) {}
-
   @Selector()
   static formData$(state: DashBoardStateModel): DashBoardStupidDataModel {
     return {
@@ -75,24 +72,21 @@ export class DashBoardState {
     action: DashboardAddItemAction
   ) {
     const state = ctx.getState();
-    const name = this.storeBuilder.buildStateName(
-      StateNamesEnum.vehicleContainer,
-      action.payload
-    );
-    const locContainer = SingleLocation.getLocation(StateNamesEnum.dashBoard).getChildLocation(
-      name
-    );
     ctx.patchState({
       context: {
         ...state.context,
         items: [
           ...state.context.items,
-          { name, id: action.payload, location: locContainer.path }
+          {
+            name: action.payload.name,
+            id: action.payload.id,
+            location: action.payload.location
+          }
         ]
       },
       data: {
         ...state.data,
-        lastId: action.payload
+        lastId: action.payload.id
       }
     });
   }
@@ -117,7 +111,7 @@ export class DashBoardState {
     action: DashboardRemoveItemAction
   ) {
     const state = ctx.getState();
-    const items = state.context.items.filter(item => item.id !== action.payload);
+    const items = state.context.items.filter(item => item.id !== action.payload.id);
     ctx.patchState({ context: { ...state.context, items } });
   }
 }

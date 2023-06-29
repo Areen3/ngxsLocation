@@ -66,7 +66,7 @@ export class VehicleDependencyInjectContainerState {
     action: AddVehicleContainerAction
   ) {
     const state = ctx.getState();
-    ctx.patchState({ data: { ...state.data, itemNumber: action.payload } });
+    ctx.patchState({ data: { ...state.data, itemNumber: action.payload.id } });
   }
 
   @Action(RemoveVehicleContainerAction)

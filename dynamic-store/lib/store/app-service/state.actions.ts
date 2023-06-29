@@ -6,8 +6,8 @@ import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
 
 enum VehicleAppActionType {
   addContainer = '[vehicle-app-store] add vehicle container',
-  removeContainer = '[vehicle-app-store] remove vehicle container',
   addBackendContainer = '[vehicle-app-store] add backend vehicle container',
+  removeContainer = '[vehicle-app-store] remove vehicle container',
   removeBackendContainer = '[vehicle-app-store] remove backend vehicle container',
   addVehicle = '[vehicle-app-store] add vehicle',
   removeVehicle = '[vehicle-app-store] remove vehicle',
