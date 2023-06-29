@@ -6,7 +6,11 @@ import {
   DashBoardStateModel
 } from './dash-board-state.model';
 import { StateNamesEnum } from '../../model/store/state-names.enum';
-import { AddDashboardItemAction, RemoveDashboardItemAction } from './state.actions';
+import {
+  DashboardAddItemAction,
+  DashboardRemoveItemAction,
+  DashboardSimulateUsersAction
+} from './state.actions';
 import { StateBuildersUtils } from '../utils/state-builders.utils';
 import {
   DashBoardStupidDataModel,
@@ -18,7 +22,7 @@ import { VehicleAppServiceState } from '../../store/app-service/vehicle-app-serv
 @State<DashBoardStateModel>({
   name: StateNamesEnum.dashBoard,
   defaults: {
-    data: { lastId: 0, id: 0 },
+    data: { lastId: 0, id: 0, simulate: false },
     context: { items: [] },
     metaData: { dropDown: Object.values(VehicleContainerEnum), remove: false }
   },
@@ -32,7 +36,8 @@ export class DashBoardState {
   static formData$(state: DashBoardStateModel): DashBoardStupidDataModel {
     return {
       items: state.context.items,
-      count: state.context.items.length
+      count: state.context.items.length,
+      simulate: state.data.simulate
     };
   }
 
@@ -59,10 +64,15 @@ export class DashBoardState {
     return state.data;
   }
 
-  @Action(AddDashboardItemAction)
+  @Selector()
+  static simulate$(state: DashBoardStateModel): boolean {
+    return state.data.simulate;
+  }
+
+  @Action(DashboardAddItemAction)
   AddDashboardItemAction(
     ctx: StateContext<DashBoardStateModel>,
-    action: AddDashboardItemAction
+    action: DashboardAddItemAction
   ) {
     const state = ctx.getState();
     const name = this.storeBuilder.buildStateName(
@@ -87,10 +97,24 @@ export class DashBoardState {
     });
   }
 
-  @Action(RemoveDashboardItemAction)
+  @Action(DashboardSimulateUsersAction)
+  DashboardSimulateUsersAction(
+    ctx: StateContext<DashBoardStateModel>,
+    action: DashboardSimulateUsersAction
+  ): void {
+    const state = ctx.getState();
+    ctx.patchState({
+      data: {
+        ...state.data,
+        simulate: action.payload
+      }
+    });
+  }
+
+  @Action(DashboardRemoveItemAction)
   RemoveDashboardItemAction(
     ctx: StateContext<DashBoardStateModel>,
-    action: RemoveDashboardItemAction
+    action: DashboardRemoveItemAction
   ) {
     const state = ctx.getState();
     const items = state.context.items.filter(item => item.id !== action.payload);

@@ -5,14 +5,15 @@ import { ElementDataModel, ElementsDataModel } from '../../model/domain/elementD
 export interface DashBoardDataModel {
   lastId: number;
   id: number;
+  simulate: boolean;
 }
 
 export interface DashBoardContextItemModel extends ElementDataModel {
   location: string;
 }
+
 export type DashBoardContextModel = ElementsDataModel<DashBoardContextItemModel>;
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface DashBoardMetaDataModel extends IEmptyObject {
   dropDown: Array<string>;
   remove: boolean;

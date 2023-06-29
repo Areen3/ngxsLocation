@@ -32,4 +32,11 @@ export class DashBoardStupidComponent {
   onSelected(value: string) {
     this.isDisabled = value === VehicleContainerEnum.selectStoreType;
   }
+
+  onChange(value: boolean) {
+    this.eventEmitter.emit({
+      eventType: DashBoardEventType.simulateUsers,
+      data: value
+    });
+  }
 }

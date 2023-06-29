@@ -1,9 +1,12 @@
 import {
   DashBoardContextModel,
+  DashBoardDataModel,
   DashBoardMetaDataModel
 } from '../../logic/dash-board/dash-board-state.model';
 
-export interface DashBoardStupidDataModel extends Pick<DashBoardContextModel, 'items'> {
+export interface DashBoardStupidDataModel
+  extends Pick<DashBoardContextModel, 'items'>,
+    Pick<DashBoardDataModel, 'simulate'> {
   count: number;
 }
 

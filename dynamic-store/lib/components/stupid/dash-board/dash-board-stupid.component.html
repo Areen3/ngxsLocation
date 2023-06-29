@@ -18,4 +18,12 @@
       Add store
     </button>
   </div>
+  <label>
+    <input
+      type="checkbox"
+      [checked]="this.data.simulate"
+      (change)="onChange($event.target.checked)"
+    />
+    simulate other users
+  </label>
 </div>

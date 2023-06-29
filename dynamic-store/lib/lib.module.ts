@@ -26,6 +26,7 @@ import { FeRouteModule } from './fe-route.module';
 import { TabsStupidComponent } from './components/stupid/tabs/tabs-stupid.component';
 import { RouteReuseStrategy } from '@angular/router';
 import { ParamChangeRouteResultStrategy } from './guards/strategy/params-change-route-strategy';
+import { SimulateBackendService } from './backend/simulate-backend.service';
 
 @NgModule({
   declarations: [
@@ -67,7 +68,12 @@ import { ParamChangeRouteResultStrategy } from './guards/strategy/params-change-
     MotoBikeDynamicState,
     TruckDynamicState,
     VehicleDynamicState,
-    VehicleDynamicContainerState
+    VehicleDynamicContainerState,
+    SimulateBackendService
   ]
 })
-export class LibModule {}
+export class LibModule {
+  constructor(private readonly simulate: SimulateBackendService) {
+    this.simulate.runSimulate();
+  }
+}

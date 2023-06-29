@@ -9,8 +9,8 @@ import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
 import { StateBuildersUtils } from '../../logic/utils/state-builders.utils';
 import { DashBoardStateModel } from '../../logic/dash-board/dash-board-state.model';
 import {
-  AddDashboardItemAction,
-  RemoveDashboardItemAction
+  DashboardAddItemAction,
+  DashboardRemoveItemAction
 } from '../../logic/dash-board/state.actions';
 import { VehicleContainerStateModel } from '../../logic/vehicle-container/vehicle-container-state.model';
 import {
@@ -24,9 +24,11 @@ import { VehicleDependencyInjectContainerState } from '../dependency-incject/veh
 import { IEmptyObject } from '../../model/base/base';
 import {
   AddVehicleAppServiceAction,
+  AddVehicleBackendContainerAppServiceAction,
   AddVehicleContainerAppServiceAction,
   ChangeSpeedAppServiceAction,
   RemoveVehicleAppServiceAction,
+  RemoveVehicleBackendContainerAppServiceAction,
   RemoveVehicleContainerAppServiceAction
 } from './state.actions';
 import { getRegisterContainerState } from '../../model/decorators/register-container-state.decorator';
@@ -58,7 +60,33 @@ export class VehicleAppServiceState {
     return this.store
       .removeChildInLocalization(loc)
       .pipe(
-        switchMap(() => this.store.dispatch(new RemoveDashboardItemAction(action.payload.id)))
+        switchMap(() => this.store.dispatch(new DashboardRemoveItemAction(action.payload.id)))
+      );
+  }
+
+  @Action(AddVehicleBackendContainerAppServiceAction)
+  addBackendContainer(
+    _ctx: StateContext<IEmptyObject>,
+    action: AddVehicleBackendContainerAppServiceAction
+  ): Observable<any> {
+    console.log('add backend container');
+    return this.addVehicleContainer(action.payload);
+  }
+
+  @Action(RemoveVehicleBackendContainerAppServiceAction)
+  removeBackendContainer(
+    _ctx: StateContext<IEmptyObject>,
+    action: RemoveVehicleBackendContainerAppServiceAction
+  ): Observable<any> {
+    console.log('remove backend container');
+    const loc: SingleLocation = SingleLocation.getLocation(
+      StateNamesEnum.dashBoard,
+      action.payload.name
+    );
+    return this.store
+      .removeChildInLocalization(loc)
+      .pipe(
+        switchMap(() => this.store.dispatch(new DashboardRemoveItemAction(action.payload.id)))
       );
   }
 
@@ -133,7 +161,7 @@ export class VehicleAppServiceState {
     type: Type<any>
   ): Observable<any> {
     return this.store.addChildInLocalization(type, loc, { childName }).pipe(
-      switchMap(() => this.store.dispatchInLocation(new AddDashboardItemAction(count), loc)),
+      switchMap(() => this.store.dispatchInLocation(new DashboardAddItemAction(count), loc)),
       switchMap(() =>
         this.store.dispatchInLocation(
           new AddVehicleContainerAction(count),

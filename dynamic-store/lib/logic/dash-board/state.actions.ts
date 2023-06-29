@@ -2,13 +2,18 @@ import { BaseActionWithPayload } from '../../model/store/actions';
 
 enum DashboardActionType {
   add = '[dashboard] add container',
-  remove = '[dashboard] remove container'
+  remove = '[dashboard] remove container',
+  simulate = '[dashboard] simulate users'
 }
 
-export class AddDashboardItemAction extends BaseActionWithPayload<number> {
+export class DashboardAddItemAction extends BaseActionWithPayload<number> {
   static readonly type = DashboardActionType.add;
 }
 
-export class RemoveDashboardItemAction extends BaseActionWithPayload<number> {
+export class DashboardRemoveItemAction extends BaseActionWithPayload<number> {
   static readonly type = DashboardActionType.remove;
+}
+
+export class DashboardSimulateUsersAction extends BaseActionWithPayload<boolean> {
+  static readonly type = DashboardActionType.simulate;
 }
