@@ -2,7 +2,7 @@ import { IEntity } from '../model/base/base';
 import { Observable, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
-export class BackedDataAccessLayerService<TEntity extends IEntity> {
+export abstract class BackedDataAccessLayerService<TEntity extends IEntity> {
   entities: Array<TEntity> = [];
 
   addEntity(entity: TEntity): Observable<TEntity> {
@@ -25,7 +25,11 @@ export class BackedDataAccessLayerService<TEntity extends IEntity> {
   }
 
   getEntityById(id: number): Observable<TEntity> {
-    return of(this.checkExistEntity(id));
+    const result = this.checkExistEntity(id, false);
+    if (!result) {
+      throw new Error(`You try get not existing entity: ${id}`);
+    }
+    return of(result);
   }
 
   checkExistEntity(entityId: number, withThrow = true): TEntity {

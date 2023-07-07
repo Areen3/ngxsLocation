@@ -7,10 +7,7 @@ import {
   VehicleContainerStupidMetaDataModel
 } from '../../model/stupid/vehicle-container-stupid.model';
 import { VehicleEnum } from '../../model/domain/vehicle.enum';
-import {
-  VehicleContainerContextModel,
-  VehicleContainerStateModel
-} from '../../logic/vehicle-container/vehicle-container-state.model';
+import { VehicleContainerStateModel } from '../../logic/vehicle-container/vehicle-container-state.model';
 import {
   AddVehicleAction,
   AddVehicleContainerAction,
@@ -19,10 +16,12 @@ import {
 } from '../../logic/vehicle-container/state.actions';
 import { StateBuildersUtils } from '../../logic/utils/state-builders.utils';
 import { registerContainerState } from '../../model/decorators/register-container-state.decorator';
+import { AbstractVehicleContainerState } from '../app-service/abstract-vehicle-container.state';
 
 @State<VehicleContainerStateModel>({
   name: StateBuildersUtils.buildDependencyInjectStateName(StateNamesEnum.vehicleContainer),
   defaults: {
+    routing: { isLoading: false, loaded: false },
     data: { lastId: 0, type: VehicleContainerEnum.dependencyInjectedStore, itemNumber: 0 },
     metaData: { dropDown: Object.values(VehicleEnum), remove: false },
     context: { name: '', vehicles: [] }
@@ -30,7 +29,7 @@ import { registerContainerState } from '../../model/decorators/register-containe
 })
 @registerContainerState(VehicleContainerEnum.dependencyInjectedStore)
 @Injectable()
-export class VehicleDependencyInjectContainerState {
+export class VehicleDependencyInjectContainerState extends AbstractVehicleContainerState {
   @Selector()
   static formData$(state: VehicleContainerStateModel): VehicleContainerStupidDataModel {
     return {
@@ -48,16 +47,6 @@ export class VehicleDependencyInjectContainerState {
       dropDown: state.metaData.dropDown,
       remove: state.context.vehicles.length > 0
     };
-  }
-
-  @Selector()
-  static context$(state: VehicleContainerStateModel): VehicleContainerContextModel {
-    return state.context;
-  }
-
-  @Selector()
-  static state$(state: VehicleContainerStateModel): VehicleContainerStateModel {
-    return state;
   }
 
   @Action(AddVehicleContainerAction)

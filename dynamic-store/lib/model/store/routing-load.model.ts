@@ -1,4 +1,4 @@
-export interface RouterLoadModel {
+export interface RoutingLoadModel {
   isLoading: boolean;
   loaded: boolean;
 }

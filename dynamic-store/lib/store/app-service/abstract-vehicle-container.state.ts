@@ -1,0 +1,49 @@
+import { Action, Selector, State, StateContext } from '@ngxs/store';
+import {
+  VehicleContainerContextModel,
+  VehicleContainerStateModel
+} from '../../logic/vehicle-container/vehicle-container-state.model';
+import { StateBuildersUtils } from '../../logic/utils/state-builders.utils';
+import { StateNamesEnum } from '../../model/store/state-names.enum';
+import { Injectable } from '@angular/core';
+import { RoutingLoadModel } from '../../model/store/routing-load.model';
+import {
+  SetIsLoadingRouterAction,
+  SetLoadedRouterAction
+} from '../../logic/routing/state.actions';
+
+@State<VehicleContainerStateModel>({
+  name: StateBuildersUtils.buildDependencyInjectStateName(StateNamesEnum.vehicleContainer),
+  defaults: undefined
+})
+@Injectable()
+export class AbstractVehicleContainerState {
+  @Selector()
+  static context$(state: VehicleContainerStateModel): VehicleContainerContextModel {
+    return state.context;
+  }
+
+  @Selector()
+  static state$(state: VehicleContainerStateModel): VehicleContainerStateModel {
+    return state;
+  }
+
+  @Selector()
+  static routing$(state: VehicleContainerStateModel): RoutingLoadModel {
+    return state.routing;
+  }
+  @Action(SetLoadedRouterAction)
+  SetLoadedRouterAction(
+    ctx: StateContext<VehicleContainerStateModel>,
+    action: SetLoadedRouterAction
+  ) {
+    ctx.patchState({ routing: { isLoading: false, loaded: action.payload } });
+  }
+  @Action(SetIsLoadingRouterAction)
+  SetIsLoadingRouterAction(
+    ctx: StateContext<VehicleContainerStateModel>,
+    action: SetIsLoadingRouterAction
+  ) {
+    ctx.patchState({ routing: { isLoading: action.payload, loaded: false } });
+  }
+}

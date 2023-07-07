@@ -28,6 +28,7 @@ import { RouteReuseStrategy } from '@angular/router';
 import { ParamChangeRouteResultStrategy } from './guards/strategy/params-change-route-strategy';
 import { SimulateBackendService } from './backend/simulate-backend.service';
 import { VehicleContainerDalService } from './backend/vehicle-container-dal.service';
+import { AbstractVehicleContainerState } from './store/app-service/abstract-vehicle-container.state';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,8 @@ import { VehicleContainerDalService } from './backend/vehicle-container-dal.serv
     VehicleDynamicState,
     VehicleDynamicContainerState,
     SimulateBackendService,
-    VehicleContainerDalService
+    VehicleContainerDalService,
+    AbstractVehicleContainerState
   ]
 })
 export class LibModule {

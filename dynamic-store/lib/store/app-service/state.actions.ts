@@ -11,7 +11,8 @@ enum VehicleAppActionType {
   removeBackendContainer = '[vehicle-app-store] remove backend vehicle container',
   addVehicle = '[vehicle-app-store] add vehicle',
   removeVehicle = '[vehicle-app-store] remove vehicle',
-  changeSpeed = '[vehicle-app-store] change speed'
+  changeSpeed = '[vehicle-app-store] change speed',
+  loadVehicleContainer = '[vehicle-app-store] load vehicle container'
 }
 
 export class AddVehicleContainerAppServiceAction extends BaseActionWithPayload<VehicleContainerEnum> {
@@ -43,4 +44,8 @@ export class RemoveVehicleAppServiceAction extends BaseActionWithPayload<Vehicle
 
 export class ChangeSpeedAppServiceAction extends BaseActionWithPayload<VehicleItemModel> {
   static readonly type = VehicleAppActionType.changeSpeed;
+}
+
+export class LoadVehicleContainerAppServiceAction extends BaseActionWithPayload<DashBoardContextItemModel> {
+  static readonly type = VehicleAppActionType.loadVehicleContainer;
 }

@@ -4,8 +4,10 @@ import { VehicleModel } from '../../model/domain/vehicle.model';
 import { BikeModel } from '../../model/domain/bike.model';
 import { VehicleEnum } from '../../model/domain/vehicle.enum';
 import { AbstractSpeedMultiplierService } from '../../model/abstract/abstract-speed-multiplier-.service';
+import { registerVehicleService } from '../../model/decorators/register-vehicle-service.decorator';
 
 @Injectable()
+@registerVehicleService(VehicleEnum.bike)
 export class BikeVehicleSpeedService<T extends BikeModel = BikeModel>
   implements AbstractVehicleSpeedService<T>
 {

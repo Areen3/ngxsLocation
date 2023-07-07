@@ -1,6 +1,7 @@
 import { VehicleContainersModel } from '../../model/store/vehicle-containers.model';
 import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
 import { BaseSimpleStoreModel } from '../../model/store/base-simple-store.model';
+import { RoutingLoadModel } from '../../model/store/routing-load.model';
 
 export interface VehicleContainerDataModel {
   type: VehicleContainerEnum;
@@ -22,4 +23,6 @@ export interface VehicleContainerStateModel
     VehicleContainerDataModel,
     VehicleContainerMetaDataModel,
     VehicleContainerContextModel
-  > {}
+  > {
+  routing: RoutingLoadModel;
+}
