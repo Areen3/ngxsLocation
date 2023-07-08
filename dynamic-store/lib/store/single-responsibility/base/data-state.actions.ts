@@ -1,5 +1,5 @@
-import { BaseActionWithPayload } from '../../model/store/actions';
-import { IEmptyObject } from '../../model/base/base';
+import { IEmptyObject } from '../../../model/base/base';
+import { BaseActionWithPayload } from '../../../model/store/actions';
 
 enum DataActionType {
   update = '[data-action] update data'

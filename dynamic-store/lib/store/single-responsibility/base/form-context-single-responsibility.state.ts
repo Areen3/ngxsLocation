@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { StateNamesEnum } from '../../model/store/state-names.enum';
 import { BaseSingleResponsibilityState } from './base-single-responsibility.state';
 import { AddToContextAction, RemoveFromContextAction } from './context-state.actions';
+import { ContextSingleResponsibilityStoreModel } from '../../../model/store/base-simple-store.model';
 import {
   ElementContextDataModel,
   ElementsDataModel
-} from '../../model/domain/elementDataModel';
-import { ContextSingleResponsibilityStoreModel } from '../../model/store/base-simple-store.model';
+} from '../../../model/domain/elementDataModel';
+import { StateNamesEnum } from '../../../model/store/state-names.enum';
 
 @State<ContextSingleResponsibilityStoreModel<ElementsDataModel<ElementContextDataModel>>>({
   name: StateNamesEnum.formContext,
@@ -16,7 +16,9 @@ import { ContextSingleResponsibilityStoreModel } from '../../model/store/base-si
   }
 })
 @Injectable()
-export class FormContextSingleResponsibilityState extends BaseSingleResponsibilityState {
+export class FormContextSingleResponsibilityState<
+  T extends ElementsDataModel<ElementContextDataModel>
+> extends BaseSingleResponsibilityState {
   @Selector()
   static formContext$(
     state: ContextSingleResponsibilityStoreModel<ElementsDataModel<ElementContextDataModel>>
@@ -28,9 +30,7 @@ export class FormContextSingleResponsibilityState extends BaseSingleResponsibili
 
   @Action(AddToContextAction)
   AddToContextAction(
-    ctx: StateContext<
-      ContextSingleResponsibilityStoreModel<ElementsDataModel<ElementContextDataModel>>
-    >,
+    ctx: StateContext<ContextSingleResponsibilityStoreModel<T>>,
     action: AddToContextAction
   ) {
     const state = ctx.getState();
@@ -52,9 +52,7 @@ export class FormContextSingleResponsibilityState extends BaseSingleResponsibili
 
   @Action(RemoveFromContextAction)
   RemoveFromContextAction(
-    ctx: StateContext<
-      ContextSingleResponsibilityStoreModel<ElementsDataModel<ElementContextDataModel>>
-    >,
+    ctx: StateContext<ContextSingleResponsibilityStoreModel<T>>,
     action: RemoveFromContextAction
   ) {
     const state = ctx.getState();

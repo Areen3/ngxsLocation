@@ -1,4 +1,5 @@
 import { IEmptyObject } from '../base/base';
+import { RoutingLoadModel } from './routing-load.model';
 
 export interface DataSingleResponsibilityStoreModel<Data extends IEmptyObject> {
   // określa dane domenowe jakei są przechowywane przez store
@@ -13,6 +14,9 @@ export interface MetaDataSingleResponsibilityStoreModel<MetaData extends IEmptyO
 export interface ContextSingleResponsibilityStoreModel<Context extends IEmptyObject> {
   // określa lokalizację danego elementu w storze
   context: Context;
+}
+export interface RoutingSingleResponsibilityStateModel {
+  routing: RoutingLoadModel;
 }
 
 export interface BaseSimpleStoreModel<

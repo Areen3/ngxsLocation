@@ -30,11 +30,16 @@ import { SimulateBackendService } from './backend/simulate-backend.service';
 import { VehicleContainerDalService } from './backend/vehicle-container-dal.service';
 import { AbstractVehicleContainerState } from './store/app-service/abstract-vehicle-container.state';
 import { SelectorBuildersUtils } from './logic/utils/selector-builders.utils';
-import { VehicleSingleResponsibilityContainerState } from './store/single-responsibility/vehicle-single-responsibility-container.state';
-import { RoutingSingleResponsibilityState } from './store/single-responsibility/routing-single-responsibility.state';
-import { FormDataSingleResponsibilityState } from './store/single-responsibility/form-data-single-responsibility.state';
-import { FormMetaDataSingleResponsibilityState } from './store/single-responsibility/form-meta-data-single-responsibility.state';
-import { FormContextSingleResponsibilityState } from './store/single-responsibility/form-context-single-responsibility.state';
+import { VehicleSingleResponsibilityContainerState } from './store/single-responsibility/container/vehicle-single-responsibility-container.state';
+import { RoutingSingleResponsibilityState } from './store/single-responsibility/base/routing-single-responsibility.state';
+import { FormDataSingleResponsibilityState } from './store/single-responsibility/base/form-data-single-responsibility.state';
+import { FormMetaDataSingleResponsibilityState } from './store/single-responsibility/base/form-meta-data-single-responsibility.state';
+import { FormContextSingleResponsibilityState } from './store/single-responsibility/base/form-context-single-responsibility.state';
+import { ItemContextSingleResponsibilityState } from './store/single-responsibility/base/item-context-single-responsibility.state';
+import { FormDataVehicleContainerState } from './store/single-responsibility/container/form-data-vehicle-container.state';
+import { FormMetaDataVehicleContainerState } from './store/single-responsibility/container/form-meta-data-vehicle-container.state';
+import { FormContextVehicleContainerState } from './store/single-responsibility/container/form-context-vehicle-container.state';
+import { LocationBuildersUtils } from './logic/utils/location-builders.utils';
 
 @NgModule({
   declarations: [
@@ -85,7 +90,12 @@ import { FormContextSingleResponsibilityState } from './store/single-responsibil
     RoutingSingleResponsibilityState,
     FormDataSingleResponsibilityState,
     FormContextSingleResponsibilityState,
-    FormMetaDataSingleResponsibilityState
+    ItemContextSingleResponsibilityState,
+    FormMetaDataSingleResponsibilityState,
+    FormDataVehicleContainerState,
+    FormMetaDataVehicleContainerState,
+    FormContextVehicleContainerState,
+    LocationBuildersUtils
   ]
 })
 export class LibModule {

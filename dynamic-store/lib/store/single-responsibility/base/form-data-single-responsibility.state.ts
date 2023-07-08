@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { StateNamesEnum } from '../../model/store/state-names.enum';
 import { BaseSingleResponsibilityState } from './base-single-responsibility.state';
-import { IEmptyObject } from '../../model/base/base';
-import { DataSingleResponsibilityStoreModel } from '../../model/store/base-simple-store.model';
 import { UpdateDataAction } from './data-state.actions';
+import { DataSingleResponsibilityStoreModel } from '../../../model/store/base-simple-store.model';
+import { IEmptyObject } from '../../../model/base/base';
+import { StateNamesEnum } from '../../../model/store/state-names.enum';
 
 @State<DataSingleResponsibilityStoreModel<IEmptyObject>>({
   name: StateNamesEnum.formData,
@@ -13,9 +13,11 @@ import { UpdateDataAction } from './data-state.actions';
   }
 })
 @Injectable()
-export class FormDataSingleResponsibilityState extends BaseSingleResponsibilityState {
+export class FormDataSingleResponsibilityState<
+  T extends IEmptyObject
+> extends BaseSingleResponsibilityState {
   @Selector()
-  static formContext$(
+  static formData$(
     state: DataSingleResponsibilityStoreModel<IEmptyObject>
   ): DataSingleResponsibilityStoreModel<IEmptyObject>['data'] {
     return state.data;
@@ -23,7 +25,7 @@ export class FormDataSingleResponsibilityState extends BaseSingleResponsibilityS
 
   @Action(UpdateDataAction)
   UpdateDataAction(
-    ctx: StateContext<DataSingleResponsibilityStoreModel<IEmptyObject>>,
+    ctx: StateContext<DataSingleResponsibilityStoreModel<T>>,
     action: UpdateDataAction
   ) {
     const state = ctx.getState();

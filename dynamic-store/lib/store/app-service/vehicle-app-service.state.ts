@@ -40,6 +40,7 @@ import { VehicleContainerDalService } from '../../backend/vehicle-container-dal.
 import { Navigate } from '@ngxs/router-plugin';
 import { RoutingPathEnum } from '../../model/enums/routing-path-enum';
 import { SetLoadedRouterAction } from '../../logic/routing/state.actions';
+import { LocationBuildersUtils } from '../../logic/utils/location-builders.utils';
 
 @State<IEmptyObject>({
   name: 'AppServiceVehicle'
@@ -49,7 +50,8 @@ export class VehicleAppServiceState {
   constructor(
     private readonly store: Store,
     private readonly storeBuilder: StateBuildersUtils,
-    private readonly dal: VehicleContainerDalService
+    private readonly dal: VehicleContainerDalService,
+    private readonly locBuilder: LocationBuildersUtils
   ) {}
 
   @Action(AddVehicleContainerAppServiceAction)
@@ -147,7 +149,16 @@ export class VehicleAppServiceState {
           )
         )
       ),
-      switchMap(() => this.store.dispatchInLocation(new SetLoadedRouterAction(true), loc))
+      switchMap(() =>
+        this.store.dispatchInLocation(
+          new SetLoadedRouterAction(true),
+          this.locBuilder.convertLocation(
+            loc.path,
+            action.payload.type,
+            StateNamesEnum.routingState
+          )
+        )
+      )
     );
   }
 
@@ -176,7 +187,11 @@ export class VehicleAppServiceState {
           this.innerAddStoreContainer(data, getRegisterContainerState(containerEnum)),
           this.store.dispatchInLocation(
             new SetLoadedRouterAction(readBe),
-            SingleLocation.getLocation(data.location)
+            this.locBuilder.convertLocation(
+              data.location,
+              containerEnum,
+              StateNamesEnum.routingState
+            )
           ),
           of(data)
         )
@@ -202,7 +217,7 @@ export class VehicleAppServiceState {
       switchMap(() =>
         this.store.dispatchInLocation(
           new AddVehicleContainerAction(data),
-          SingleLocation.getLocation(data.location)
+          this.locBuilder.convertLocation(data.location, data.type, StateNamesEnum.formData)
         )
       )
     );

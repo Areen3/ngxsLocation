@@ -1,5 +1,5 @@
-import { BaseActionWithPayload } from '../../model/store/actions';
-import { ElementContextDataModel } from '../../model/domain/elementDataModel';
+import { ElementContextDataModel } from '../../../model/domain/elementDataModel';
+import { BaseActionWithPayload } from '../../../model/store/actions';
 
 enum ContextActionType {
   add = '[context-action] add to context',

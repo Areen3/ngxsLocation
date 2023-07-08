@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { State } from '@ngxs/store';
-import { StateNamesEnum } from '../../model/store/state-names.enum';
-import { IEmptyObject } from '../../model/base/base';
+import { IEmptyObject } from '../../../model/base/base';
+import { StateNamesEnum } from '../../../model/store/state-names.enum';
 
 @State<IEmptyObject>({
   name: StateNamesEnum.baseSimpleResponsibility,
