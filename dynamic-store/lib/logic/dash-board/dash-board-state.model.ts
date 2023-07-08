@@ -1,6 +1,7 @@
 import { BaseSimpleStoreModel } from '../../model/store/base-simple-store.model';
 import { IEmptyObject, IEntity } from '../../model/base/base';
 import { ElementDataModel, ElementsDataModel } from '../../model/domain/elementDataModel';
+import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
 
 export interface DashBoardDataModel extends IEntity {
   lastId: number;
@@ -9,6 +10,7 @@ export interface DashBoardDataModel extends IEntity {
 
 export interface DashBoardContextItemModel extends ElementDataModel {
   location: string;
+  type: VehicleContainerEnum;
 }
 
 export type DashBoardContextModel = ElementsDataModel<DashBoardContextItemModel>;

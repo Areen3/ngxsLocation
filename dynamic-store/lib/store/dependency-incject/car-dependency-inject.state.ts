@@ -25,8 +25,7 @@ import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
       { provide: CarDependencyInjectState },
       { provide: AbstractVehicleSpeedService, useClass: CarVehicleSpeedService },
       { provide: AbstractSpeedMultiplierService, useClass: MechanicalMultiplierService }
-    ],
-    newInstance: true
+    ]
   }
 })
 @Injectable()

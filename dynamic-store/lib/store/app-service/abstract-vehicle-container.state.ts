@@ -11,6 +11,8 @@ import {
   SetIsLoadingRouterAction,
   SetLoadedRouterAction
 } from '../../logic/routing/state.actions';
+import { registerSelectorMethod } from '../../model/decorators/register-selector-method.decorator';
+import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
 
 @State<VehicleContainerStateModel>({
   name: StateBuildersUtils.buildDependencyInjectStateName(StateNamesEnum.vehicleContainer),
@@ -19,7 +21,9 @@ import {
 @Injectable()
 export class AbstractVehicleContainerState {
   @Selector()
-  static context$(state: VehicleContainerStateModel): VehicleContainerContextModel {
+  @registerSelectorMethod(VehicleContainerEnum.dependencyInjectedStore)
+  @registerSelectorMethod(VehicleContainerEnum.dynamicStore)
+  static formContext$(state: VehicleContainerStateModel): VehicleContainerContextModel {
     return state.context;
   }
 

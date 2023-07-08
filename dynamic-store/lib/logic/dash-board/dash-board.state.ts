@@ -78,6 +78,7 @@ export class DashBoardState {
         items: [
           ...state.context.items,
           {
+            type: action.payload.type,
             name: action.payload.name,
             id: action.payload.id,
             location: action.payload.location

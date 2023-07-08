@@ -29,6 +29,7 @@ import { ParamChangeRouteResultStrategy } from './guards/strategy/params-change-
 import { SimulateBackendService } from './backend/simulate-backend.service';
 import { VehicleContainerDalService } from './backend/vehicle-container-dal.service';
 import { AbstractVehicleContainerState } from './store/app-service/abstract-vehicle-container.state';
+import { SelectorBuildersUtils } from './logic/utils/selector-builders.utils';
 
 @NgModule({
   declarations: [
@@ -73,7 +74,8 @@ import { AbstractVehicleContainerState } from './store/app-service/abstract-vehi
     VehicleDynamicContainerState,
     SimulateBackendService,
     VehicleContainerDalService,
-    AbstractVehicleContainerState
+    AbstractVehicleContainerState,
+    SelectorBuildersUtils
   ]
 })
 export class LibModule {

@@ -16,13 +16,13 @@ import {
   VehicleContainerRemoveContainerEvent
 } from '../../stupid/vehicle-container/vehicle-container.event';
 import { VehicleContainerContextModel } from '../../../logic/vehicle-container/vehicle-container-state.model';
-import { VehicleDependencyInjectContainerState } from '../../../store/dependency-incject/vehicle-dependency-inject-container.state';
 import {
   AddVehicleAppServiceAction,
   RemoveVehicleContainerAppServiceAction
 } from '../../../store/app-service/state.actions';
 import { ActivatedRoute } from '@angular/router';
 import { DashBoardState } from '../../../logic/dash-board/dash-board.state';
+import { SelectorBuildersUtils } from '../../../logic/utils/selector-builders.utils';
 
 @Component({
   selector: 'vehicle-container',
@@ -35,7 +35,11 @@ export class VehicleContainerComponent implements OnInit {
   metaData$: Observable<VehicleContainerStupidMetaDataModel>;
   context$: Observable<VehicleContainerContextModel>;
 
-  constructor(private readonly store: Store, private route: ActivatedRoute) {}
+  constructor(
+    private readonly store: Store,
+    private route: ActivatedRoute,
+    private readonly selectorBuilder: SelectorBuildersUtils
+  ) {}
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -44,18 +48,12 @@ export class VehicleContainerComponent implements OnInit {
     );
     this.context = contexts.items.find(item => item.id === id)!;
     const loc = SingleLocation.getLocation(this.context.location);
-    this.data$ = this.store.selectInContext(
-      VehicleDependencyInjectContainerState.formData$,
+    this.data$ = this.selectorBuilder.getFormDataVehicleContainer$(this.context.type, loc);
+    this.metaData$ = this.selectorBuilder.getFormMetaDataVehicleContainer$(
+      this.context.type,
       loc
     );
-    this.metaData$ = this.store.selectInContext(
-      VehicleDependencyInjectContainerState.formMetaData$,
-      loc
-    );
-    this.context$ = this.store.selectInContext(
-      VehicleDependencyInjectContainerState.context$,
-      loc
-    );
+    this.context$ = this.selectorBuilder.getContextVehicleContainer$(this.context.type, loc);
   }
 
   outputEvents(event: VehicleContainerEvents): void {

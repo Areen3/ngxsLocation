@@ -17,6 +17,7 @@ import {
 import { StateBuildersUtils } from '../../logic/utils/state-builders.utils';
 import { registerContainerState } from '../../model/decorators/register-container-state.decorator';
 import { AbstractVehicleContainerState } from '../app-service/abstract-vehicle-container.state';
+import { registerSelectorMethod } from '../../model/decorators/register-selector-method.decorator';
 
 @State<VehicleContainerStateModel>({
   name: StateBuildersUtils.buildDependencyInjectStateName(StateNamesEnum.vehicleContainer),
@@ -31,6 +32,7 @@ import { AbstractVehicleContainerState } from '../app-service/abstract-vehicle-c
 @Injectable()
 export class VehicleDependencyInjectContainerState extends AbstractVehicleContainerState {
   @Selector()
+  @registerSelectorMethod(VehicleContainerEnum.dependencyInjectedStore)
   static formData$(state: VehicleContainerStateModel): VehicleContainerStupidDataModel {
     return {
       items: state.context.vehicles,
@@ -40,6 +42,7 @@ export class VehicleDependencyInjectContainerState extends AbstractVehicleContai
   }
 
   @Selector()
+  @registerSelectorMethod(VehicleContainerEnum.dependencyInjectedStore)
   static formMetaData$(
     state: VehicleContainerStateModel
   ): VehicleContainerStupidMetaDataModel {

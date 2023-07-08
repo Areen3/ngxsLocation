@@ -168,7 +168,9 @@ export class VehicleAppServiceState {
     readBe = true
   ): Observable<DashBoardContextItemModel> {
     return this.store.selectOnce(DashBoardState.state$).pipe(
-      map((data: DashBoardStateModel) => this.buildDashBoardContextItem(data.data.lastId)),
+      map((data: DashBoardStateModel) =>
+        this.buildDashBoardContextItem(data.data.lastId, containerEnum)
+      ),
       switchMap(data =>
         of(
           this.innerAddStoreContainer(data, getRegisterContainerState(containerEnum)),
@@ -237,7 +239,10 @@ export class VehicleAppServiceState {
     return SingleLocation.getLocation(StateNamesEnum.dashBoard).getChildLocation(name);
   }
 
-  private buildDashBoardContextItem(lastId: number): DashBoardContextItemModel {
+  private buildDashBoardContextItem(
+    lastId: number,
+    type: VehicleContainerEnum
+  ): DashBoardContextItemModel {
     const loc: SingleLocation = SingleLocation.getLocation(StateNamesEnum.dashBoard);
     const newLastId = lastId + 1;
     const childName = this.storeBuilder.buildStateName(
@@ -246,6 +251,7 @@ export class VehicleAppServiceState {
     );
     return {
       name: childName,
+      type: type,
       id: newLastId,
       location: loc.getChildLocation(childName).path
     };
