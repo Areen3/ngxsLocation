@@ -16,7 +16,7 @@ import { StateBuildersUtils } from '../../logic/utils/state-builders.utils';
   name: StateBuildersUtils.buildDependencyInjectStateName(StateNamesEnum.vehicle),
   defaults: {
     data: { name: '', type: VehicleEnum.bike, speed: 0 },
-    context: { location: '', id: 0 },
+    context: { location: '', id: 0, name: '' },
     metaData: { remove: false }
   },
   creationMode: {

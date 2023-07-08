@@ -17,7 +17,7 @@ import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
   name: StateBuildersUtils.buildDependencyInjectStateName(StateNamesEnum.vehicleCar),
   defaults: {
     data: { name: '', type: VehicleEnum.car, speed: 0 },
-    context: { id: 0, location: '' },
+    context: { id: 0, location: '', name: '' },
     metaData: { remove: false }
   },
   creationMode: {

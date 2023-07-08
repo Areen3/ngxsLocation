@@ -1,5 +1,3 @@
-import { IEntity } from '../base/base';
+import { ElementContextDataModel } from '../domain/elementDataModel';
 
-export interface VehicleItemModel extends IEntity {
-  location: string;
-}
+export type VehicleItemModel = ElementContextDataModel;

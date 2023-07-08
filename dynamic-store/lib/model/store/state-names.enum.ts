@@ -5,5 +5,10 @@ export enum StateNamesEnum {
   vehicleCar = 'vehicleCar',
   vehicleBike = 'vehicleBike',
   vehicleMotoBike = 'vehicleMotoBike',
-  vehicleTruck = 'vehicleTruck'
+  vehicleTruck = 'vehicleTruck',
+  baseSimpleResponsibility = 'baseSimpleResponsibility',
+  formContext = 'formContext',
+  formData = 'formData',
+  formMetaData = 'formMetaData',
+  routingState = 'routingState'
 }

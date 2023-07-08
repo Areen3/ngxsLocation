@@ -25,7 +25,7 @@ import { registerSelectorMethod } from '../../model/decorators/register-selector
     routing: { isLoading: false, loaded: false },
     data: { lastId: 0, type: VehicleContainerEnum.dependencyInjectedStore, itemNumber: 0 },
     metaData: { dropDown: Object.values(VehicleEnum), remove: false },
-    context: { name: '', vehicles: [] }
+    context: { items: [] }
   }
 })
 @registerContainerState(VehicleContainerEnum.dependencyInjectedStore)
@@ -35,7 +35,7 @@ export class VehicleDependencyInjectContainerState extends AbstractVehicleContai
   @registerSelectorMethod(VehicleContainerEnum.dependencyInjectedStore)
   static formData$(state: VehicleContainerStateModel): VehicleContainerStupidDataModel {
     return {
-      items: state.context.vehicles,
+      items: state.context.items,
       name: state.data.type.toString(),
       id: state.data.lastId
     };
@@ -48,7 +48,7 @@ export class VehicleDependencyInjectContainerState extends AbstractVehicleContai
   ): VehicleContainerStupidMetaDataModel {
     return {
       dropDown: state.metaData.dropDown,
-      remove: state.context.vehicles.length > 0
+      remove: state.context.items.length > 0
     };
   }
 
@@ -80,10 +80,11 @@ export class VehicleDependencyInjectContainerState extends AbstractVehicleContai
       },
       context: {
         ...state.context,
-        vehicles: [
-          ...state.context.vehicles,
+        items: [
+          ...state.context.items,
           {
             id: action.payload.id,
+            name: action.payload.name,
             location: action.payload.location
           }
         ]
@@ -100,7 +101,7 @@ export class VehicleDependencyInjectContainerState extends AbstractVehicleContai
     ctx.patchState({
       context: {
         ...state.context,
-        vehicles: state.context.vehicles.filter(item => item.id !== action.payload)
+        items: state.context.items.filter(item => item.id !== action.payload)
       }
     });
   }

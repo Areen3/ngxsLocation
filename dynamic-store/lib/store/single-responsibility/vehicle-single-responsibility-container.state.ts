@@ -16,23 +16,22 @@ import {
 } from '../../logic/vehicle-container/state.actions';
 import { StateBuildersUtils } from '../../logic/utils/state-builders.utils';
 import { registerContainerState } from '../../model/decorators/register-container-state.decorator';
-import { AbstractVehicleContainerState } from '../app-service/abstract-vehicle-container.state';
 import { registerSelectorMethod } from '../../model/decorators/register-selector-method.decorator';
 
 @State<VehicleContainerStateModel>({
-  name: StateBuildersUtils.buildDynamicStateName(StateNamesEnum.vehicleContainer),
+  name: StateBuildersUtils.buildDependencyInjectStateName(StateNamesEnum.vehicleContainer),
   defaults: {
     routing: { isLoading: false, loaded: false },
-    data: { lastId: 0, type: VehicleContainerEnum.dynamicStore, itemNumber: 0 },
+    data: { lastId: 0, type: VehicleContainerEnum.singleResponsibilityStore, itemNumber: 0 },
     metaData: { dropDown: Object.values(VehicleEnum), remove: false },
     context: { items: [] }
   }
 })
-@registerContainerState(VehicleContainerEnum.dynamicStore)
+@registerContainerState(VehicleContainerEnum.singleResponsibilityStore)
 @Injectable()
-export class VehicleDynamicContainerState extends AbstractVehicleContainerState {
+export class VehicleSingleResponsibilityContainerState {
   @Selector()
-  @registerSelectorMethod(VehicleContainerEnum.dynamicStore)
+  @registerSelectorMethod(VehicleContainerEnum.singleResponsibilityStore)
   static formData$(state: VehicleContainerStateModel): VehicleContainerStupidDataModel {
     return {
       items: state.context.items,
@@ -42,7 +41,7 @@ export class VehicleDynamicContainerState extends AbstractVehicleContainerState 
   }
 
   @Selector()
-  @registerSelectorMethod(VehicleContainerEnum.dynamicStore)
+  @registerSelectorMethod(VehicleContainerEnum.singleResponsibilityStore)
   static formMetaData$(
     state: VehicleContainerStateModel
   ): VehicleContainerStupidMetaDataModel {

@@ -7,8 +7,8 @@
   >
   </vehicle-container-stupid>
   <div class="flex-dir">
-    <ng-container *ngIf="(context$ | async)!.vehicles">
-      <ng-container *ngFor="let item of (context$ | async)!.vehicles">
+    <ng-container *ngIf="(context$ | async)!.items">
+      <ng-container *ngFor="let item of (context$ | async)!.items">
         <vehicle-item [context]="item"></vehicle-item>
       </ng-container>
     </ng-container>

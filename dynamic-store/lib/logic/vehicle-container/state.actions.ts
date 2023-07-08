@@ -1,6 +1,6 @@
 import { BaseActionWithPayload } from '../../model/store/actions';
 import { VehicleEnum } from '../../model/domain/vehicle.enum';
-import { IEntity } from '../../model/base/base';
+import { ElementLocationModel, ElementNameModel, IEntity } from '../../model/base/base';
 import { DashBoardContextItemModel } from '../dash-board/dash-board-state.model';
 
 enum VehicleContainerActionType {
@@ -18,9 +18,8 @@ export class RemoveVehicleContainerAction extends BaseActionWithPayload<number> 
   static readonly type = VehicleContainerActionType.removeContainer;
 }
 
-interface VehicleActionData extends IEntity {
+interface VehicleActionData extends IEntity, ElementLocationModel, ElementNameModel {
   vehicle: VehicleEnum;
-  location: string;
 }
 export class AddVehicleAction extends BaseActionWithPayload<VehicleActionData> {
   static readonly type = VehicleContainerActionType.add;

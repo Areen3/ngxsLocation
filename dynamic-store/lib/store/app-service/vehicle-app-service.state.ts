@@ -221,6 +221,7 @@ export class VehicleAppServiceState {
           new AddVehicleAction({
             id: count,
             vehicle,
+            name: childName,
             location: loc.getChildLocation(childName).path
           }),
           loc

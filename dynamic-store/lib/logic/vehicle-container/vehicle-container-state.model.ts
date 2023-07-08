@@ -1,21 +1,21 @@
-import { VehicleContainersModel } from '../../model/store/vehicle-containers.model';
 import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
 import { BaseSimpleStoreModel } from '../../model/store/base-simple-store.model';
-import { RoutingLoadModel } from '../../model/store/routing-load.model';
+import { VehicleItemModel } from '../../model/store/vehicle-item.model';
+import { ElementsDataModel } from '../../model/domain/elementDataModel';
+import { RoutingSingleResponsibilityStateModel } from '../../model/store/single-responsibility-state.model';
 
 export interface VehicleContainerDataModel {
   type: VehicleContainerEnum;
   itemNumber: number;
   lastId: number;
 }
+
 export interface VehicleContainerMetaDataModel {
   remove: boolean;
   dropDown: Array<string>;
 }
 
-export interface VehicleContainerContextModel extends VehicleContainersModel {
-  name: string;
-}
+export type VehicleContainerContextModel = ElementsDataModel<VehicleItemModel>;
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface VehicleContainerStateModel
@@ -24,5 +24,5 @@ export interface VehicleContainerStateModel
     VehicleContainerMetaDataModel,
     VehicleContainerContextModel
   > {
-  routing: RoutingLoadModel;
+  routing: RoutingSingleResponsibilityStateModel;
 }

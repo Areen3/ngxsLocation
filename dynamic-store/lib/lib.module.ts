@@ -30,6 +30,11 @@ import { SimulateBackendService } from './backend/simulate-backend.service';
 import { VehicleContainerDalService } from './backend/vehicle-container-dal.service';
 import { AbstractVehicleContainerState } from './store/app-service/abstract-vehicle-container.state';
 import { SelectorBuildersUtils } from './logic/utils/selector-builders.utils';
+import { VehicleSingleResponsibilityContainerState } from './store/single-responsibility/vehicle-single-responsibility-container.state';
+import { RoutingSingleResponsibilityState } from './store/single-responsibility/routing-single-responsibility.state';
+import { FormDataSingleResponsibilityState } from './store/single-responsibility/form-data-single-responsibility.state';
+import { FormMetaDataSingleResponsibilityState } from './store/single-responsibility/form-meta-data-single-responsibility.state';
+import { FormContextSingleResponsibilityState } from './store/single-responsibility/form-context-single-responsibility.state';
 
 @NgModule({
   declarations: [
@@ -75,7 +80,12 @@ import { SelectorBuildersUtils } from './logic/utils/selector-builders.utils';
     SimulateBackendService,
     VehicleContainerDalService,
     AbstractVehicleContainerState,
-    SelectorBuildersUtils
+    SelectorBuildersUtils,
+    VehicleSingleResponsibilityContainerState,
+    RoutingSingleResponsibilityState,
+    FormDataSingleResponsibilityState,
+    FormContextSingleResponsibilityState,
+    FormMetaDataSingleResponsibilityState
   ]
 })
 export class LibModule {

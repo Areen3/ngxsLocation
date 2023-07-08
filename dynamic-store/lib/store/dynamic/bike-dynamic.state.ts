@@ -14,7 +14,7 @@ import { VehicleModel } from '../../model/domain/vehicle.model';
   name: StateBuildersUtils.buildDynamicStateName(StateNamesEnum.vehicleBike),
   defaults: {
     data: { name: '', type: VehicleEnum.motorBike, speed: 0, seats: 1 },
-    context: { id: 0, location: '' },
+    context: { id: 0, location: '', name: '' },
     metaData: { remove: false }
   }
 })
