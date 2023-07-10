@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { BaseSingleResponsibilityState } from './base-single-responsibility.state';
-import { RoutingSingleResponsibilityStateModel } from '../../../model/store/base-simple-store.model';
+import {
+  HostSingleResponsibilityAreaAccessModel,
+  RoutingSingleResponsibilityStateModel
+} from '../../../model/store/base-simple-store.model';
 import { StateNamesEnum } from '../../../model/store/state-names.enum';
 import { RoutingLoadModel } from '../../../model/store/routing-load.model';
 import {
@@ -17,7 +20,7 @@ import { registerSelectorMethod } from '../../../model/decorators/register-selec
 @Injectable()
 export class RoutingSingleResponsibilityState<
   T extends RoutingSingleResponsibilityStateModel
-> extends BaseSingleResponsibilityState {
+> extends BaseSingleResponsibilityState<HostSingleResponsibilityAreaAccessModel> {
   @Selector()
   @registerSelectorMethod('')
   static routing$(state: RoutingSingleResponsibilityStateModel): RoutingLoadModel {

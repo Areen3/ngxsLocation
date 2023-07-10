@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Action, State, StateContext } from '@ngxs/store';
+import { Action, NgxsOnInit, State, StateContext } from '@ngxs/store';
 import { BaseSingleResponsibilityState } from './base-single-responsibility.state';
 import { UpdateMetaDataAction } from './meta-data-state.actions';
-import { MetaDataSingleResponsibilityStoreModel } from '../../../model/store/base-simple-store.model';
+import {
+  ContextSingleResponsibilityStoreModel,
+  HostSingleResponsibilityAreaAccessModel,
+  MetaDataSingleResponsibilityStoreModel
+} from '../../../model/store/base-simple-store.model';
 import { IEmptyObject } from '../../../model/base/base';
 import { StateNamesEnum } from '../../../model/store/state-names.enum';
 
@@ -14,8 +18,12 @@ import { StateNamesEnum } from '../../../model/store/state-names.enum';
 })
 @Injectable()
 export class FormMetaDataSingleResponsibilityState<
-  T extends IEmptyObject
-> extends BaseSingleResponsibilityState {
+    T extends IEmptyObject,
+    TCtx extends HostSingleResponsibilityAreaAccessModel
+  >
+  extends BaseSingleResponsibilityState<TCtx>
+  implements NgxsOnInit
+{
   @Action(UpdateMetaDataAction)
   UpdateDataAction(
     ctx: StateContext<MetaDataSingleResponsibilityStoreModel<T>>,
@@ -23,10 +31,12 @@ export class FormMetaDataSingleResponsibilityState<
   ) {
     const state = ctx.getState();
     ctx.patchState({
-      metaData: {
-        ...state.metaData,
-        ...action.payload
-      }
+      ...state,
+      ...action.payload
     });
+  }
+
+  ngxsOnInit(ctx: StateContext<ContextSingleResponsibilityStoreModel<T>>): void {
+    this.host.data.metaData = ctx;
   }
 }

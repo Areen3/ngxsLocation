@@ -10,5 +10,6 @@ export enum StateNamesEnum {
   formContext = 'formContext',
   formData = 'formData',
   formMetaData = 'formMetaData',
-  routingState = 'routingState'
+  routingState = 'routingState',
+  crudSrState = 'crudSrState'
 }

@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Action, NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
 import { BaseSingleResponsibilityState } from './base-single-responsibility.state';
 import { AddToContextAction, RemoveFromContextAction } from './context-state.actions';
-import { ContextSingleResponsibilityStoreModel } from '../../../model/store/base-simple-store.model';
+import {
+  ContextSingleResponsibilityStoreModel,
+  HostSingleResponsibilityAreaAccessModel
+} from '../../../model/store/base-simple-store.model';
 import {
   ElementContextDataModel,
   ElementsDataModel
@@ -18,8 +21,12 @@ import { registerSelectorMethod } from '../../../model/decorators/register-selec
 })
 @Injectable()
 export class FormContextSingleResponsibilityState<
-  T extends ElementsDataModel<ElementContextDataModel>
-> extends BaseSingleResponsibilityState {
+    T extends ElementsDataModel<ElementContextDataModel>,
+    TCtx extends HostSingleResponsibilityAreaAccessModel
+  >
+  extends BaseSingleResponsibilityState<TCtx>
+  implements NgxsOnInit
+{
   @Selector()
   @registerSelectorMethod('')
   static formContext$(
@@ -64,5 +71,9 @@ export class FormContextSingleResponsibilityState<
         items: state.context.items.filter(item => item.id !== action.payload.id)
       }
     });
+  }
+
+  ngxsOnInit(ctx: StateContext<ContextSingleResponsibilityStoreModel<T>>): void {
+    this.host.data.context = ctx;
   }
 }

@@ -40,6 +40,8 @@ import { FormDataVehicleContainerState } from './store/single-responsibility/con
 import { FormMetaDataVehicleContainerState } from './store/single-responsibility/container/form-meta-data-vehicle-container.state';
 import { FormContextVehicleContainerState } from './store/single-responsibility/container/form-context-vehicle-container.state';
 import { LocationBuildersUtils } from './logic/utils/location-builders.utils';
+import { HostAreaAccessService } from './store/single-responsibility/area-services/host-area-access.service';
+import { CrudSrVehicleContainerState } from './store/single-responsibility/container/crud-sr-vehicle-container.state';
 
 @NgModule({
   declarations: [
@@ -95,7 +97,9 @@ import { LocationBuildersUtils } from './logic/utils/location-builders.utils';
     FormDataVehicleContainerState,
     FormMetaDataVehicleContainerState,
     FormContextVehicleContainerState,
-    LocationBuildersUtils
+    LocationBuildersUtils,
+    HostAreaAccessService,
+    CrudSrVehicleContainerState
   ]
 })
 export class LibModule {

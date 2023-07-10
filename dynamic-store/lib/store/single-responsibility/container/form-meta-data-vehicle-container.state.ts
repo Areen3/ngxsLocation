@@ -1,17 +1,14 @@
-import { Injectable } from '@angular/core';
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Injectable, Self } from '@angular/core';
+import { Selector, State } from '@ngxs/store';
 import { MetaDataSingleResponsibilityStoreModel } from '../../../model/store/base-simple-store.model';
 import { StateNamesEnum } from '../../../model/store/state-names.enum';
 import { FormMetaDataSingleResponsibilityState } from '../base/form-meta-data-single-responsibility.state';
-import {
-  VehicleContainerMetaDataModel,
-  VehicleContainerStateModel
-} from '../../../logic/vehicle-container/vehicle-container-state.model';
+import { VehicleContainerMetaDataModel } from '../../../logic/vehicle-container/vehicle-container-state.model';
 import { VehicleEnum } from '../../../model/domain/vehicle.enum';
-import { UpdateMetaDataAction } from '../base/meta-data-state.actions';
 import { registerSelectorMethod } from '../../../model/decorators/register-selector-method.decorator';
 import { VehicleContainerStupidMetaDataModel } from '../../../model/stupid/vehicle-container-stupid.model';
-import { SetCountContainerAction } from '../../../logic/vehicle-container/state.actions';
+import { HostAreaAccessService } from '../area-services/host-area-access.service';
+import { HostVehicleContainerAccessModel } from '../../../model/store/host-area.model';
 
 @State<MetaDataSingleResponsibilityStoreModel<VehicleContainerMetaDataModel>>({
   name: StateNamesEnum.formMetaData,
@@ -20,9 +17,16 @@ import { SetCountContainerAction } from '../../../logic/vehicle-container/state.
   }
 })
 @Injectable()
-export class FormMetaDataVehicleContainerState<
-  T extends VehicleContainerMetaDataModel
-> extends FormMetaDataSingleResponsibilityState<any> {
+export class FormMetaDataVehicleContainerState extends FormMetaDataSingleResponsibilityState<
+  VehicleContainerMetaDataModel,
+  HostVehicleContainerAccessModel
+> {
+  constructor(
+    @Self() protected readonly host: HostAreaAccessService<HostVehicleContainerAccessModel>
+  ) {
+    super(host);
+  }
+
   @Selector()
   @registerSelectorMethod('')
   static formMetaData$(
@@ -32,32 +36,5 @@ export class FormMetaDataVehicleContainerState<
       dropDown: state.metaData.dropDown,
       remove: state.metaData.containersCount > 0
     };
-  }
-
-  @Action(UpdateMetaDataAction)
-  UpdateDataAction(
-    ctx: StateContext<MetaDataSingleResponsibilityStoreModel<T>>,
-    action: UpdateMetaDataAction
-  ) {
-    const state = ctx.getState();
-    ctx.patchState({
-      metaData: {
-        ...state.metaData,
-        ...action.payload
-      }
-    });
-  }
-  @Action(SetCountContainerAction)
-  SetCountContainer(
-    ctx: StateContext<VehicleContainerStateModel>,
-    action: SetCountContainerAction
-  ) {
-    const state: VehicleContainerStateModel = ctx.getState();
-    ctx.patchState({
-      metaData: {
-        ...state.metaData,
-        containersCount: state.metaData.containersCount + action.payload
-      }
-    });
   }
 }

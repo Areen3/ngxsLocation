@@ -12,8 +12,7 @@ import {
   AddVehicleAction,
   AddVehicleContainerAction,
   RemoveVehicleAction,
-  RemoveVehicleContainerAction,
-  SetCountContainerAction
+  RemoveVehicleContainerAction
 } from '../../logic/vehicle-container/state.actions';
 import { StateBuildersUtils } from '../../logic/utils/state-builders.utils';
 import { registerContainerState } from '../../model/decorators/register-container-state.decorator';
@@ -59,16 +58,18 @@ export class VehicleDependencyInjectContainerState extends AbstractVehicleContai
     action: AddVehicleContainerAction
   ) {
     const state = ctx.getState();
-    ctx.patchState({ data: { ...state.data, itemNumber: action.payload.id } });
+    ctx.patchState({
+      data: { ...state.data, itemNumber: action.payload.id },
+      metaData: { ...state.metaData, containersCount: state.metaData.containersCount + 1 }
+    });
   }
 
   @Action(RemoveVehicleContainerAction)
-  RemoveVehicleContainer(
-    ctx: StateContext<VehicleContainerStateModel>,
-    action: RemoveVehicleContainerAction
-  ) {
+  RemoveVehicleContainer(ctx: StateContext<VehicleContainerStateModel>) {
     const state: VehicleContainerStateModel = ctx.getState();
-    console.log(state, action);
+    ctx.patchState({
+      metaData: { ...state.metaData, containersCount: state.metaData.containersCount - 1 }
+    });
   }
 
   @Action(AddVehicleAction)
@@ -103,19 +104,6 @@ export class VehicleDependencyInjectContainerState extends AbstractVehicleContai
       context: {
         ...state.context,
         items: state.context.items.filter(item => item.id !== action.payload)
-      }
-    });
-  }
-  @Action(SetCountContainerAction)
-  SetCountContainer(
-    ctx: StateContext<VehicleContainerStateModel>,
-    action: SetCountContainerAction
-  ) {
-    const state: VehicleContainerStateModel = ctx.getState();
-    ctx.patchState({
-      metaData: {
-        ...state.metaData,
-        containersCount: state.metaData.containersCount + action.payload
       }
     });
   }

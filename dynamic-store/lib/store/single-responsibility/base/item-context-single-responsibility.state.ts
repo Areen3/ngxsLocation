@@ -3,7 +3,10 @@ import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { BaseSingleResponsibilityState } from './base-single-responsibility.state';
 import { UpdateItemContextAction } from './context-state.actions';
 import { StateNamesEnum } from '../../../model/store/state-names.enum';
-import { ContextSingleResponsibilityStoreModel } from '../../../model/store/base-simple-store.model';
+import {
+  ContextSingleResponsibilityStoreModel,
+  HostSingleResponsibilityAreaAccessModel
+} from '../../../model/store/base-simple-store.model';
 import { ElementContextDataModel } from '../../../model/domain/elementDataModel';
 
 @State<ContextSingleResponsibilityStoreModel<ElementContextDataModel>>({
@@ -13,7 +16,7 @@ import { ElementContextDataModel } from '../../../model/domain/elementDataModel'
   }
 })
 @Injectable()
-export class ItemContextSingleResponsibilityState extends BaseSingleResponsibilityState {
+export class ItemContextSingleResponsibilityState extends BaseSingleResponsibilityState<HostSingleResponsibilityAreaAccessModel> {
   @Selector()
   static formContext$(
     state: ContextSingleResponsibilityStoreModel<ElementContextDataModel>

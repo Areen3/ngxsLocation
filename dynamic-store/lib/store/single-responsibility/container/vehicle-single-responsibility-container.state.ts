@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Self } from '@angular/core';
 import { State } from '@ngxs/store';
 import { IEmptyObject } from '../../../model/base/base';
 import { StateBuildersUtils } from '../../../logic/utils/state-builders.utils';
@@ -9,6 +9,9 @@ import { VehicleContainerEnum } from '../../../model/enums/vehicle-container.enu
 import { FormDataVehicleContainerState } from './form-data-vehicle-container.state';
 import { FormMetaDataVehicleContainerState } from './form-meta-data-vehicle-container.state';
 import { FormContextVehicleContainerState } from './form-context-vehicle-container.state';
+import { HostAreaAccessService } from '../area-services/host-area-access.service';
+import { HostVehicleContainerAccessModel } from '../../../model/store/host-area.model';
+import { CrudSrVehicleContainerState } from './crud-sr-vehicle-container.state';
 
 @State<IEmptyObject>({
   name: StateBuildersUtils.buildDependencyInjectStateName(StateNamesEnum.vehicleContainer),
@@ -19,7 +22,9 @@ import { FormContextVehicleContainerState } from './form-context-vehicle-contain
       { provide: FormContextVehicleContainerState },
       { provide: FormDataVehicleContainerState },
       { provide: FormMetaDataVehicleContainerState },
-      { provide: RoutingSingleResponsibilityState }
+      { provide: RoutingSingleResponsibilityState },
+      { provide: CrudSrVehicleContainerState },
+      { provide: HostAreaAccessService }
     ],
     newInstance: true
   },
@@ -27,9 +32,14 @@ import { FormContextVehicleContainerState } from './form-context-vehicle-contain
     FormContextVehicleContainerState,
     FormDataVehicleContainerState,
     FormMetaDataVehicleContainerState,
-    RoutingSingleResponsibilityState
+    RoutingSingleResponsibilityState,
+    CrudSrVehicleContainerState
   ]
 })
 @registerContainerState(VehicleContainerEnum.singleResponsibilityStore)
 @Injectable()
-export class VehicleSingleResponsibilityContainerState {}
+export class VehicleSingleResponsibilityContainerState {
+  constructor(
+    @Self() protected readonly host: HostAreaAccessService<HostVehicleContainerAccessModel>
+  ) {}
+}
