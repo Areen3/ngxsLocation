@@ -54,6 +54,7 @@ export class VehicleContainerComponent implements OnInit {
       loc
     );
     this.context$ = this.selectorBuilder.getContextVehicleContainer$(this.context.type, loc);
+    //this.context$ = this.store.select(DashBoardState.formContext$);
   }
 
   outputEvents(event: VehicleContainerEvents): void {

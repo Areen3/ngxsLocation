@@ -19,7 +19,8 @@ import { VehicleContainerStateModel } from '../../logic/vehicle-container/vehicl
 import {
   AddVehicleAction,
   AddVehicleContainerAction,
-  RemoveVehicleAction
+  RemoveVehicleAction,
+  SetCountContainerAction
 } from '../../logic/vehicle-container/state.actions';
 import { DashBoardState } from '../../logic/dash-board/dash-board.state';
 import { ChangeSpeedVehicleAction, UpdateVehicleAction } from '../../logic/base/state.actions';
@@ -82,6 +83,16 @@ export class VehicleAppServiceState {
     );
     return this.store.removeChildInLocalization(loc).pipe(
       switchMap(() => this.store.dispatch(new DashboardRemoveItemAction(action.payload))),
+      switchMap(() =>
+        this.store.dispatchInLocation(
+          new SetCountContainerAction(-1),
+          this.locBuilder.convertLocation(
+            loc.path,
+            action.payload.type,
+            StateNamesEnum.formMetaData
+          )
+        )
+      ),
       switchMap(() => this.dal.removeEntity(action.payload)),
       switchMap(() => this.store.dispatch(new Navigate([RoutingPathEnum.dashboard])))
     );
@@ -218,6 +229,16 @@ export class VehicleAppServiceState {
         this.store.dispatchInLocation(
           new AddVehicleContainerAction(data),
           this.locBuilder.convertLocation(data.location, data.type, StateNamesEnum.formData)
+        )
+      ),
+      switchMap(() =>
+        this.store.dispatchInLocation(
+          new SetCountContainerAction(+1),
+          this.locBuilder.convertLocation(
+            data.location,
+            data.type,
+            StateNamesEnum.formMetaData
+          )
         )
       )
     );

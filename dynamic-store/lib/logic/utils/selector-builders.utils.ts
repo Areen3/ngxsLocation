@@ -10,19 +10,26 @@ import { getRegisterContainerState } from '../../model/decorators/register-conta
 import { getRegisterSelectedMethod } from '../../model/decorators/register-selector-method.decorator';
 import { MethodSelectorEnum } from '../../model/enums/method-selector.enum';
 import { VehicleContainerContextModel } from '../vehicle-container/vehicle-container-state.model';
+import { LocationBuildersUtils } from './location-builders.utils';
+import { StateNamesEnum } from '../../model/store/state-names.enum';
 
 @Injectable()
 export class SelectorBuildersUtils {
-  constructor(private readonly store: Store) {}
+  constructor(
+    private readonly store: Store,
+    private readonly locBuilder: LocationBuildersUtils
+  ) {}
 
   getFormDataVehicleContainer$(
     type: VehicleContainerEnum,
     loc: SingleLocation
   ): Observable<VehicleContainerStupidDataModel> {
-    const mySelector = getRegisterSelectedMethod(type, MethodSelectorEnum.formData$);
+    const myType = type === VehicleContainerEnum.singleResponsibilityStore ? '' : type;
+    const mySelector = getRegisterSelectedMethod(myType, MethodSelectorEnum.formData$);
+    const myLoc = this.locBuilder.convertLocation(loc.path, type, StateNamesEnum.formData);
     return this.store.selectInContext(
-      this.getSelector(type, loc, mySelector.descriptor.value, mySelector.name),
-      loc
+      this.getSelector(type, myLoc, mySelector.descriptor.value, mySelector.name),
+      myLoc
     );
   }
 
@@ -30,10 +37,12 @@ export class SelectorBuildersUtils {
     type: VehicleContainerEnum,
     loc: SingleLocation
   ): Observable<VehicleContainerStupidMetaDataModel> {
-    const mySelector = getRegisterSelectedMethod(type, MethodSelectorEnum.formMetaData$);
+    const myType = type === VehicleContainerEnum.singleResponsibilityStore ? '' : type;
+    const mySelector = getRegisterSelectedMethod(myType, MethodSelectorEnum.formMetaData$);
+    const myLoc = this.locBuilder.convertLocation(loc.path, type, StateNamesEnum.formMetaData);
     return this.store.selectInContext(
-      this.getSelector(type, loc, mySelector.descriptor.value, mySelector.name),
-      loc
+      this.getSelector(type, myLoc, mySelector.descriptor.value, mySelector.name),
+      myLoc
     );
   }
 
@@ -41,10 +50,12 @@ export class SelectorBuildersUtils {
     type: VehicleContainerEnum,
     loc: SingleLocation
   ): Observable<VehicleContainerContextModel> {
-    const mySelector = getRegisterSelectedMethod(type, MethodSelectorEnum.formContext$);
+    const myType = type === VehicleContainerEnum.singleResponsibilityStore ? '' : type;
+    const mySelector = getRegisterSelectedMethod(myType, MethodSelectorEnum.formContext$);
+    const myLoc = this.locBuilder.convertLocation(loc.path, type, StateNamesEnum.formContext);
     return this.store.selectInContext(
-      this.getSelector(type, loc, mySelector.descriptor.value, mySelector.name),
-      loc
+      this.getSelector(type, myLoc, mySelector.descriptor.value, mySelector.name),
+      myLoc
     );
   }
 

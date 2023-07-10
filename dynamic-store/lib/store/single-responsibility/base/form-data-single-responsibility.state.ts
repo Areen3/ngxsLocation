@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Action, State, StateContext } from '@ngxs/store';
 import { BaseSingleResponsibilityState } from './base-single-responsibility.state';
 import { UpdateDataAction } from './data-state.actions';
 import { DataSingleResponsibilityStoreModel } from '../../../model/store/base-simple-store.model';
@@ -16,13 +16,6 @@ import { StateNamesEnum } from '../../../model/store/state-names.enum';
 export class FormDataSingleResponsibilityState<
   T extends IEmptyObject
 > extends BaseSingleResponsibilityState {
-  @Selector()
-  static formData$(
-    state: DataSingleResponsibilityStoreModel<IEmptyObject>
-  ): DataSingleResponsibilityStoreModel<IEmptyObject>['data'] {
-    return state.data;
-  }
-
   @Action(UpdateDataAction)
   UpdateDataAction(
     ctx: StateContext<DataSingleResponsibilityStoreModel<T>>,

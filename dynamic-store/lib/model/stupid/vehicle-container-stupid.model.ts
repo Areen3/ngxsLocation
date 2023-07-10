@@ -7,4 +7,7 @@ export interface VehicleContainerStupidDataModel extends IEntity {
   name: string;
 }
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface VehicleContainerStupidMetaDataModel extends VehicleContainerMetaDataModel {}
+export interface VehicleContainerStupidMetaDataModel
+  extends Pick<VehicleContainerMetaDataModel, 'dropDown'> {
+  remove: boolean;
+}

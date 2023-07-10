@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, State, StateContext } from '@ngxs/store';
+import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { DataSingleResponsibilityStoreModel } from '../../../model/store/base-simple-store.model';
 import { StateNamesEnum } from '../../../model/store/state-names.enum';
 import { FormDataSingleResponsibilityState } from '../base/form-data-single-responsibility.state';
@@ -9,17 +9,31 @@ import {
   AddVehicleContainerAction,
   RemoveVehicleContainerAction
 } from '../../../logic/vehicle-container/state.actions';
+import { registerSelectorMethod } from '../../../model/decorators/register-selector-method.decorator';
+import { VehicleContainerStupidDataModel } from '../../../model/stupid/vehicle-container-stupid.model';
 
 @State<DataSingleResponsibilityStoreModel<VehicleContainerDataModel>>({
   name: StateNamesEnum.formData,
   defaults: {
-    data: { lastId: 0, type: VehicleContainerEnum.dynamicStore, itemNumber: 0 }
+    data: { lastId: 0, type: VehicleContainerEnum.singleResponsibilityStore, itemNumber: 0 }
   }
 })
 @Injectable()
 export class FormDataVehicleContainerState<
   T extends VehicleContainerDataModel
 > extends FormDataSingleResponsibilityState<T> {
+  @Selector()
+  @registerSelectorMethod('')
+  static formData$(
+    state: DataSingleResponsibilityStoreModel<VehicleContainerDataModel>
+  ): VehicleContainerStupidDataModel {
+    return {
+      items: [], //state.context.items,
+      name: state.data.type.toString(),
+      id: state.data.lastId
+    };
+  }
+
   @Action(AddVehicleContainerAction)
   AddVehicleContainer(
     ctx: StateContext<DataSingleResponsibilityStoreModel<T>>,

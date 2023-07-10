@@ -13,7 +13,7 @@ export interface VehicleContainerDataModel {
 }
 
 export interface VehicleContainerMetaDataModel {
-  remove: boolean;
+  containersCount: number;
   dropDown: Array<string>;
 }
 

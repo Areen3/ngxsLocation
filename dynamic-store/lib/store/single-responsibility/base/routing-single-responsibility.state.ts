@@ -8,6 +8,7 @@ import {
   SetIsLoadingRouterAction,
   SetLoadedRouterAction
 } from '../../../logic/routing/state.actions';
+import { registerSelectorMethod } from '../../../model/decorators/register-selector-method.decorator';
 
 @State<RoutingSingleResponsibilityStateModel>({
   name: StateNamesEnum.routingState,
@@ -18,6 +19,7 @@ export class RoutingSingleResponsibilityState<
   T extends RoutingSingleResponsibilityStateModel
 > extends BaseSingleResponsibilityState {
   @Selector()
+  @registerSelectorMethod('')
   static routing$(state: RoutingSingleResponsibilityStateModel): RoutingLoadModel {
     return state.routing;
   }

@@ -6,6 +6,7 @@ import { DashBoardContextItemModel } from '../dash-board/dash-board-state.model'
 enum VehicleContainerActionType {
   addContainer = '[vehicle-container] add container',
   removeContainer = '[vehicle-container] remove container',
+  setCountContainers = '[vehicle] set count containers ',
   add = '[vehicle] add',
   remove = '[vehicle] remove'
 }
@@ -16,6 +17,10 @@ export class AddVehicleContainerAction extends BaseActionWithPayload<DashBoardCo
 
 export class RemoveVehicleContainerAction extends BaseActionWithPayload<number> {
   static readonly type = VehicleContainerActionType.removeContainer;
+}
+
+export class SetCountContainerAction extends BaseActionWithPayload<number> {
+  static readonly type = VehicleContainerActionType.setCountContainers;
 }
 
 interface VehicleActionData extends IEntity, ElementLocationModel, ElementNameModel {

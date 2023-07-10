@@ -12,7 +12,8 @@ import {
   AddVehicleAction,
   AddVehicleContainerAction,
   RemoveVehicleAction,
-  RemoveVehicleContainerAction
+  RemoveVehicleContainerAction,
+  SetCountContainerAction
 } from '../../logic/vehicle-container/state.actions';
 import { StateBuildersUtils } from '../../logic/utils/state-builders.utils';
 import { registerContainerState } from '../../model/decorators/register-container-state.decorator';
@@ -24,7 +25,7 @@ import { registerSelectorMethod } from '../../model/decorators/register-selector
   defaults: {
     routing: { isLoading: false, loaded: false },
     data: { lastId: 0, type: VehicleContainerEnum.dynamicStore, itemNumber: 0 },
-    metaData: { dropDown: Object.values(VehicleEnum), remove: false },
+    metaData: { dropDown: Object.values(VehicleEnum), containersCount: 0 },
     context: { items: [] }
   }
 })
@@ -48,7 +49,7 @@ export class VehicleDynamicContainerState extends AbstractVehicleContainerState 
   ): VehicleContainerStupidMetaDataModel {
     return {
       dropDown: state.metaData.dropDown,
-      remove: state.context.items.length > 0
+      remove: state.metaData.containersCount > 0
     };
   }
 
@@ -102,6 +103,20 @@ export class VehicleDynamicContainerState extends AbstractVehicleContainerState 
       context: {
         ...state.context,
         items: state.context.items.filter(item => item.id !== action.payload)
+      }
+    });
+  }
+
+  @Action(SetCountContainerAction)
+  SetCountContainer(
+    ctx: StateContext<VehicleContainerStateModel>,
+    action: SetCountContainerAction
+  ) {
+    const state: VehicleContainerStateModel = ctx.getState();
+    ctx.patchState({
+      metaData: {
+        ...state.metaData,
+        containersCount: state.metaData.containersCount + action.payload
       }
     });
   }

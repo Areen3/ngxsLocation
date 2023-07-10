@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Action, State, StateContext } from '@ngxs/store';
 import { BaseSingleResponsibilityState } from './base-single-responsibility.state';
 import { UpdateMetaDataAction } from './meta-data-state.actions';
 import { MetaDataSingleResponsibilityStoreModel } from '../../../model/store/base-simple-store.model';
@@ -16,13 +16,6 @@ import { StateNamesEnum } from '../../../model/store/state-names.enum';
 export class FormMetaDataSingleResponsibilityState<
   T extends IEmptyObject
 > extends BaseSingleResponsibilityState {
-  @Selector()
-  static formMetaData$(
-    state: MetaDataSingleResponsibilityStoreModel<IEmptyObject>
-  ): MetaDataSingleResponsibilityStoreModel<IEmptyObject>['metaData'] {
-    return state.metaData;
-  }
-
   @Action(UpdateMetaDataAction)
   UpdateDataAction(
     ctx: StateContext<MetaDataSingleResponsibilityStoreModel<T>>,

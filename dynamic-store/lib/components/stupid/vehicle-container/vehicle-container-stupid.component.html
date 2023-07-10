@@ -1,7 +1,5 @@
 <div class="veh-div-flex veh-cont">
-  <div class="veh-cont-stup-desc">
-    {{ data.name }}, id of last vehicle store: {{ data.id }}
-  </div>
+  <div class="veh-cont-stupid-desc">type: {{ data.name }}, lastId: {{ data.id }}</div>
   <div class="veh-cont-btns">
     <select #teams class="select" (change)="onSelectedVehicle(teams.value)">
       <ng-container *ngFor="let item of metaData.dropDown">

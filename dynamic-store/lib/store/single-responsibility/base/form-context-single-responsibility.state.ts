@@ -8,6 +8,7 @@ import {
   ElementsDataModel
 } from '../../../model/domain/elementDataModel';
 import { StateNamesEnum } from '../../../model/store/state-names.enum';
+import { registerSelectorMethod } from '../../../model/decorators/register-selector-method.decorator';
 
 @State<ContextSingleResponsibilityStoreModel<ElementsDataModel<ElementContextDataModel>>>({
   name: StateNamesEnum.formContext,
@@ -20,6 +21,7 @@ export class FormContextSingleResponsibilityState<
   T extends ElementsDataModel<ElementContextDataModel>
 > extends BaseSingleResponsibilityState {
   @Selector()
+  @registerSelectorMethod('')
   static formContext$(
     state: ContextSingleResponsibilityStoreModel<ElementsDataModel<ElementContextDataModel>>
   ): ContextSingleResponsibilityStoreModel<
