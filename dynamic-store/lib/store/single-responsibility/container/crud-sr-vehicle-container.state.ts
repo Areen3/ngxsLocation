@@ -1,9 +1,5 @@
 import { Injectable, Self } from '@angular/core';
 import { Action, State, StateContext, Store } from '@ngxs/store';
-import {
-  DataSingleResponsibilityStoreModel,
-  MetaDataSingleResponsibilityStoreModel
-} from '../../../model/store/base-simple-store.model';
 import { StateNamesEnum } from '../../../model/store/state-names.enum';
 import {
   AddVehicleContainerAction,
@@ -36,51 +32,44 @@ export class CrudSrVehicleContainerState extends BaseSingleResponsibilityState<H
 
   @Action(AddVehicleContainerAction)
   AddVehicleContainer(
-    _ctx: StateContext<IEmptyObject>,
+    ctx: StateContext<IEmptyObject>,
     action: AddVehicleContainerAction
   ): Observable<any> {
-    const locData = _ctx.getLocation().getNeighborLocation(StateNamesEnum.formData);
-    const locMeaData = _ctx.getLocation().getNeighborLocation(StateNamesEnum.formMetaData);
+    const locData = ctx.getLocation().getNeighborLocation(StateNamesEnum.formData);
+    const locMeaData = ctx.getLocation().getNeighborLocation(StateNamesEnum.formMetaData);
     const dataState = this.host.ctx.data.getState();
-    const newData: DataSingleResponsibilityStoreModel<VehicleContainerDataModel> = {
+    const newData: VehicleContainerDataModel = {
       ...dataState,
-      data: {
-        ...dataState.data,
-        itemNumber: action.payload.id
-      }
+      itemNumber: action.payload.id
     };
     const metaDataState = this.host.ctx.metaData.getState();
-    const newMetaData: MetaDataSingleResponsibilityStoreModel<VehicleContainerMetaDataModel> =
-      {
-        ...metaDataState,
-        metaData: {
-          ...metaDataState.metaData,
-          containersCount: metaDataState.metaData.containersCount + 1
-        }
-      };
+    const newMetaData: VehicleContainerMetaDataModel = {
+      ...metaDataState,
+      containersCount: metaDataState.containersCount + 1
+    };
     return from([
-      this.store.dispatchInLocation(new UpdateDataAction(newData), locData),
-      this.store.dispatchInLocation(new UpdateMetaDataAction(newMetaData), locMeaData)
+      this.store.dispatchInLocation(
+        new UpdateDataAction<VehicleContainerDataModel>(newData),
+        locData
+      ),
+      this.store.dispatchInLocation(
+        new UpdateMetaDataAction<VehicleContainerMetaDataModel>(newMetaData),
+        locMeaData
+      )
     ]);
   }
 
   @Action(RemoveVehicleContainerAction)
-  RemoveVehicleContainer(
-    _ctx: StateContext<IEmptyObject>,
-    action: RemoveVehicleContainerAction
-  ) {
-    const locMeaData = action.location
-      .getParentPath()
-      .getChildLocation(StateNamesEnum.formMetaData);
+  RemoveVehicleContainer(ctx: StateContext<IEmptyObject>) {
+    const locMeaData = ctx.getLocation().getNeighborLocation(StateNamesEnum.formMetaData);
     const metaDataState = this.host.ctx.metaData.getState();
-    const newMetaData: MetaDataSingleResponsibilityStoreModel<VehicleContainerMetaDataModel> =
-      {
-        ...metaDataState,
-        metaData: {
-          ...metaDataState.metaData,
-          containersCount: metaDataState.metaData.containersCount - 1
-        }
-      };
-    return this.store.dispatchInLocation(new UpdateMetaDataAction(newMetaData), locMeaData);
+    const newMetaData: VehicleContainerMetaDataModel = {
+      ...metaDataState,
+      containersCount: metaDataState.containersCount - 1
+    };
+    return this.store.dispatchInLocation(
+      new UpdateMetaDataAction<VehicleContainerMetaDataModel>(newMetaData),
+      locMeaData
+    );
   }
 }

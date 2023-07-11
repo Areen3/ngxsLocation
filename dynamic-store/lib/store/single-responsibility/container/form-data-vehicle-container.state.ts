@@ -1,6 +1,5 @@
 import { Injectable, Self } from '@angular/core';
 import { Selector, State } from '@ngxs/store';
-import { DataSingleResponsibilityStoreModel } from '../../../model/store/base-simple-store.model';
 import { StateNamesEnum } from '../../../model/store/state-names.enum';
 import { FormDataSingleResponsibilityState } from '../base/form-data-single-responsibility.state';
 import { VehicleContainerDataModel } from '../../../logic/vehicle-container/vehicle-container-state.model';
@@ -10,11 +9,9 @@ import { VehicleContainerStupidDataModel } from '../../../model/stupid/vehicle-c
 import { HostAreaAccessService } from '../area-services/host-area-access.service';
 import { HostVehicleContainerAccessModel } from '../../../model/store/host-area.model';
 
-@State<DataSingleResponsibilityStoreModel<VehicleContainerDataModel>>({
+@State<VehicleContainerDataModel>({
   name: StateNamesEnum.formData,
-  defaults: {
-    data: { lastId: 0, type: VehicleContainerEnum.singleResponsibilityStore, itemNumber: 0 }
-  }
+  defaults: { lastId: 0, type: VehicleContainerEnum.singleResponsibilityStore, itemNumber: 0 }
 })
 @Injectable()
 export class FormDataVehicleContainerState<
@@ -28,13 +25,11 @@ export class FormDataVehicleContainerState<
 
   @Selector()
   @registerSelectorMethod('')
-  static formData$(
-    state: DataSingleResponsibilityStoreModel<VehicleContainerDataModel>
-  ): VehicleContainerStupidDataModel {
+  static formData$(state: VehicleContainerDataModel): VehicleContainerStupidDataModel {
     return {
       items: [], //state.context.items,
-      name: state.data.type.toString(),
-      id: state.data.lastId
+      name: state.type.toString(),
+      id: state.lastId
     };
   }
 }

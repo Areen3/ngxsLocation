@@ -11,6 +11,8 @@ import { SetIsLoadingRouterAction } from '../../logic/routing/state.actions';
 import { LoadVehicleContainerAppServiceAction } from '../../store/app-service/state.actions';
 import { LocationBuildersUtils } from '../../logic/utils/location-builders.utils';
 import { StateNamesEnum } from '../../model/store/state-names.enum';
+import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
+import { RoutingSingleResponsibilityState } from '../../store/single-responsibility/base/routing-single-responsibility.state';
 
 @Injectable({ providedIn: 'root' })
 export class VehicleContainerGuard implements CanActivate {
@@ -28,14 +30,17 @@ export class VehicleContainerGuard implements CanActivate {
         return container!;
       }),
       switchMap(container => {
+        const loc = this.locBuilder.convertLocation(
+          container.location,
+          container.type,
+          StateNamesEnum.routing
+        );
         const routing = <RoutingLoadModel>(
           this.store.selectSnapshotInContext(
-            AbstractVehicleContainerState.routing$,
-            this.locBuilder.convertLocation(
-              container.location,
-              container.type,
-              StateNamesEnum.routingState
-            )
+            container.type === VehicleContainerEnum.singleResponsibilityStore
+              ? RoutingSingleResponsibilityState.routing$
+              : AbstractVehicleContainerState.routing$,
+            loc
           )
         );
         if (routing.isLoading && !routing.loaded) return of(false);
@@ -49,7 +54,7 @@ export class VehicleContainerGuard implements CanActivate {
     const loc = this.locBuilder.convertLocation(
       container.location,
       container.type,
-      StateNamesEnum.routingState
+      StateNamesEnum.routing
     );
     return from(this.store.dispatchInLocation(new SetIsLoadingRouterAction(true), loc)).pipe(
       switchMap(() =>

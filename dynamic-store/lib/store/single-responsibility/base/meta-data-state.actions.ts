@@ -5,8 +5,6 @@ enum MetaDataActionType {
   update = '[meta-data-action] update meta-data'
 }
 
-export class UpdateMetaDataAction<
-  T extends IEmptyObject = IEmptyObject
-> extends BaseActionWithPayload<T> {
+export class UpdateMetaDataAction<T extends IEmptyObject> extends BaseActionWithPayload<T> {
   static readonly type = MetaDataActionType.update;
 }

@@ -59,6 +59,19 @@ export class SelectorBuildersUtils {
     );
   }
 
+  getRoutingVehicleContainer$(
+    type: VehicleContainerEnum,
+    loc: SingleLocation
+  ): Observable<VehicleContainerContextModel> {
+    const myType = type === VehicleContainerEnum.singleResponsibilityStore ? '' : type;
+    const mySelector = getRegisterSelectedMethod(myType, MethodSelectorEnum.routing$);
+    const myLoc = this.locBuilder.convertLocation(loc.path, type, StateNamesEnum.routing);
+    return this.store.selectInContext(
+      this.getSelector(type, myLoc, mySelector.descriptor.value, mySelector.name),
+      myLoc
+    );
+  }
+
   getSelector(
     type: VehicleContainerEnum,
     loc: SingleLocation,

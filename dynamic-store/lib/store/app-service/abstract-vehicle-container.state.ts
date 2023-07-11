@@ -33,6 +33,8 @@ export class AbstractVehicleContainerState {
   }
 
   @Selector()
+  @registerSelectorMethod(VehicleContainerEnum.dependencyInjectedStore)
+  @registerSelectorMethod(VehicleContainerEnum.dynamicStore)
   static routing$(state: VehicleContainerStateModel): RoutingLoadModel {
     return state.routing;
   }

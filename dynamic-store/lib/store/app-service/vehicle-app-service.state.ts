@@ -166,7 +166,7 @@ export class VehicleAppServiceState {
           this.locBuilder.convertLocation(
             loc.path,
             action.payload.type,
-            StateNamesEnum.routingState
+            StateNamesEnum.routing
           )
         )
       )
@@ -201,7 +201,7 @@ export class VehicleAppServiceState {
             this.locBuilder.convertLocation(
               data.location,
               containerEnum,
-              StateNamesEnum.routingState
+              StateNamesEnum.routing
             )
           ),
           of(data)

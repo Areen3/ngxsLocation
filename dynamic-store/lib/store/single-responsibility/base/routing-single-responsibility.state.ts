@@ -1,41 +1,36 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { BaseSingleResponsibilityState } from './base-single-responsibility.state';
-import {
-  HostSingleResponsibilityAreaAccessModel,
-  RoutingSingleResponsibilityStateModel
-} from '../../../model/store/base-simple-store.model';
+import { HostSingleResponsibilityAreaAccessModel } from '../../../model/store/base-simple-store.model';
 import { StateNamesEnum } from '../../../model/store/state-names.enum';
-import { RoutingLoadModel } from '../../../model/store/routing-load.model';
 import {
   SetIsLoadingRouterAction,
   SetLoadedRouterAction
 } from '../../../logic/routing/state.actions';
 import { registerSelectorMethod } from '../../../model/decorators/register-selector-method.decorator';
+import { RoutingLoadModel } from '../../../model/store/routing-load.model';
 
-@State<RoutingSingleResponsibilityStateModel>({
-  name: StateNamesEnum.routingState,
-  defaults: { routing: { isLoading: false, loaded: false } }
+@State<RoutingLoadModel>({
+  name: StateNamesEnum.routing,
+  defaults: { isLoading: false, loaded: false }
 })
 @Injectable()
 export class RoutingSingleResponsibilityState<
-  T extends RoutingSingleResponsibilityStateModel
+  T extends RoutingLoadModel
 > extends BaseSingleResponsibilityState<HostSingleResponsibilityAreaAccessModel> {
   @Selector()
   @registerSelectorMethod('')
-  static routing$(state: RoutingSingleResponsibilityStateModel): RoutingLoadModel {
-    return state.routing;
+  static routing$(state: RoutingLoadModel): RoutingLoadModel {
+    return state;
   }
 
   @Action(SetLoadedRouterAction)
   SetLoadedRouter(ctx: StateContext<T>, action: SetLoadedRouterAction) {
-    ctx.patchState(<T>{ routing: { isLoading: false, loaded: action.payload } });
+    ctx.patchState(<T>{ isLoading: false, loaded: action.payload });
   }
 
   @Action(SetIsLoadingRouterAction)
   SetIsLoadingRouter(ctx: StateContext<T>, action: SetIsLoadingRouterAction) {
-    ctx.patchState(<T>{
-      routing: { isLoading: action.payload, loaded: false }
-    });
+    ctx.patchState(<T>{ isLoading: action.payload, loaded: false });
   }
 }

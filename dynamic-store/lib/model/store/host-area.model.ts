@@ -1,9 +1,4 @@
-import {
-  ContextSingleResponsibilityStoreModel,
-  DataSingleResponsibilityStoreModel,
-  HostSingleResponsibilityAreaAccessModel,
-  MetaDataSingleResponsibilityStoreModel
-} from './base-simple-store.model';
+import { HostSingleResponsibilityAreaAccessModel } from './base-simple-store.model';
 import {
   VehicleContainerDataModel,
   VehicleContainerMetaDataModel
@@ -12,7 +7,7 @@ import { ElementsDataModel } from '../domain/elementDataModel';
 import { VehicleItemModel } from './vehicle-item.model';
 
 export type HostVehicleContainerAccessModel = HostSingleResponsibilityAreaAccessModel<
-  DataSingleResponsibilityStoreModel<VehicleContainerDataModel>,
-  MetaDataSingleResponsibilityStoreModel<VehicleContainerMetaDataModel>,
-  ContextSingleResponsibilityStoreModel<ElementsDataModel<VehicleItemModel>>
+  VehicleContainerDataModel,
+  VehicleContainerMetaDataModel,
+  ElementsDataModel<VehicleItemModel>
 >;

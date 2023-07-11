@@ -1,33 +1,23 @@
-import { IEmptyObject } from '../base/base';
 import { RoutingLoadModel } from './routing-load.model';
 import { StateContext } from '@ngxs/store';
 
-export interface DataSingleResponsibilityStoreModel<Data extends IEmptyObject> {
-  // określa dane domenowe jakei są przechowywane przez store
-  data: Data;
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface DataSingleResponsibilityStoreModel {}
 
-export interface MetaDataSingleResponsibilityStoreModel<MetaData extends IEmptyObject> {
-  // określa dane sterujące formularzem jakie mają być przechowywane przez store
-  metaData: MetaData;
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface MetaDataSingleResponsibilityStoreModel {}
 
-export interface ContextSingleResponsibilityStoreModel<Context extends IEmptyObject> {
-  // określa lokalizację danego elementu w storze
-  context: Context;
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface ContextSingleResponsibilityStoreModel {}
 
 export interface RoutingSingleResponsibilityStateModel {
   routing: RoutingLoadModel;
 }
 
-export interface BaseSimpleStoreModel<
-  Data extends IEmptyObject,
-  MetaData extends IEmptyObject,
-  Context extends IEmptyObject
-> extends DataSingleResponsibilityStoreModel<Data>,
-    MetaDataSingleResponsibilityStoreModel<MetaData>,
-    ContextSingleResponsibilityStoreModel<Context> {}
+export interface BaseSimpleStoreModel
+  extends DataSingleResponsibilityStoreModel,
+    MetaDataSingleResponsibilityStoreModel,
+    ContextSingleResponsibilityStoreModel {}
 
 export interface HostDataAreaAccessModel<TData> {
   data: StateContext<TData>;
