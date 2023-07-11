@@ -8,6 +8,7 @@ import { MappedStore } from '../internal/internals';
 import { setValue, getValue } from '../utils/utils';
 import { InternalStateOperations } from '../internal/state-operations';
 import { simplePatch } from './state-operators';
+import { SingleLocation } from '../common/location';
 
 /**
  * State Context factory class
@@ -38,7 +39,6 @@ export class StateContextFactory {
       // This needs to be fixed, but is a 'breaking' change.
       // I will do this fix in a subsequent PR and we can decide how to handle it.
     }
-
     function setStateFromOperator(currentAppState: any, stateOperator: StateOperator<T>) {
       const local = getState(currentAppState);
       const newValue = stateOperator(local as ExistingState<T>);
@@ -67,6 +67,9 @@ export class StateContextFactory {
       },
       dispatch(actions: any | any[]): Observable<void> {
         return root.dispatch(actions);
+      },
+      getLocation(): SingleLocation {
+        return SingleLocation.getLocation(mappedStore.path);
       }
     };
   }

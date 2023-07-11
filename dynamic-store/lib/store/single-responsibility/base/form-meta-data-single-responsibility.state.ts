@@ -37,6 +37,6 @@ export class FormMetaDataSingleResponsibilityState<
   }
 
   ngxsOnInit(ctx: StateContext<ContextSingleResponsibilityStoreModel<T>>): void {
-    this.host.data.metaData = ctx;
+    this.host.ctx.metaData = ctx;
   }
 }

@@ -9,6 +9,7 @@ import { DispatchOutsideZoneNgxsExecutionStrategy } from './execution/dispatch-o
 import { NgxsExecutionStrategy } from './execution/symbols';
 import { SharedSelectorOptions } from './internal/internals';
 import { StateToken } from './state-token/state-token';
+import { SingleLocation } from './common';
 
 export const ROOT_OPTIONS = new InjectionToken<NgxsModuleOptions>('ROOT_OPTIONS');
 export const ROOT_STATE_TOKEN = new InjectionToken<any>('ROOT_STATE_TOKEN');
@@ -113,6 +114,11 @@ export interface StateContext<T> {
    * Dispatch a new action and return the dispatched observable.
    */
   dispatch(actions: any | any[]): Observable<void>;
+
+  /**
+   * Get location state in store Tree
+   */
+  getLocation(): SingleLocation;
 }
 
 export type NgxsNextPluginFn = (state: any, mutation: any) => any;

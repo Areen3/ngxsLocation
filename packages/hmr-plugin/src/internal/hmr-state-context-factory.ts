@@ -1,4 +1,4 @@
-import { StateContext, Store } from '@ngxs/store';
+import { SingleLocation, StateContext, Store } from '@ngxs/store';
 import { isStateOperator } from '@ngxs/store/operators';
 import { NgModuleRef } from '@angular/core';
 
@@ -37,6 +37,9 @@ export class HmrStateContextFactory<T, S> {
         const newState = { ...currentState, ...(<object>val) };
         this.store!.reset(newState);
         return newState;
+      },
+      getLocation(): SingleLocation {
+        return SingleLocation.getLocation('');
       }
     };
   }

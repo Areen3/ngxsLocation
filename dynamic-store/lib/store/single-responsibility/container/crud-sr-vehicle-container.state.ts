@@ -1,5 +1,5 @@
 import { Injectable, Self } from '@angular/core';
-import { Action, State, Store } from '@ngxs/store';
+import { Action, State, StateContext, Store } from '@ngxs/store';
 import {
   DataSingleResponsibilityStoreModel,
   MetaDataSingleResponsibilityStoreModel
@@ -35,12 +35,13 @@ export class CrudSrVehicleContainerState extends BaseSingleResponsibilityState<H
   }
 
   @Action(AddVehicleContainerAction)
-  AddVehicleContainer(_ctx: IEmptyObject, action: AddVehicleContainerAction): Observable<any> {
-    const locData = action.location.getParentPath().getChildLocation(StateNamesEnum.formData);
-    const locMeaData = action.location
-      .getParentPath()
-      .getChildLocation(StateNamesEnum.formMetaData);
-    const dataState = this.host.data.data.getState();
+  AddVehicleContainer(
+    _ctx: StateContext<IEmptyObject>,
+    action: AddVehicleContainerAction
+  ): Observable<any> {
+    const locData = _ctx.getLocation().getNeighborLocation(StateNamesEnum.formData);
+    const locMeaData = _ctx.getLocation().getNeighborLocation(StateNamesEnum.formMetaData);
+    const dataState = this.host.ctx.data.getState();
     const newData: DataSingleResponsibilityStoreModel<VehicleContainerDataModel> = {
       ...dataState,
       data: {
@@ -48,7 +49,7 @@ export class CrudSrVehicleContainerState extends BaseSingleResponsibilityState<H
         itemNumber: action.payload.id
       }
     };
-    const metaDataState = this.host.data.metaData.getState();
+    const metaDataState = this.host.ctx.metaData.getState();
     const newMetaData: MetaDataSingleResponsibilityStoreModel<VehicleContainerMetaDataModel> =
       {
         ...metaDataState,
@@ -64,11 +65,14 @@ export class CrudSrVehicleContainerState extends BaseSingleResponsibilityState<H
   }
 
   @Action(RemoveVehicleContainerAction)
-  RemoveVehicleContainer(_ctx: IEmptyObject, action: RemoveVehicleContainerAction) {
+  RemoveVehicleContainer(
+    _ctx: StateContext<IEmptyObject>,
+    action: RemoveVehicleContainerAction
+  ) {
     const locMeaData = action.location
       .getParentPath()
       .getChildLocation(StateNamesEnum.formMetaData);
-    const metaDataState = this.host.data.metaData.getState();
+    const metaDataState = this.host.ctx.metaData.getState();
     const newMetaData: MetaDataSingleResponsibilityStoreModel<VehicleContainerMetaDataModel> =
       {
         ...metaDataState,

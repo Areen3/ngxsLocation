@@ -28,6 +28,10 @@ export class SingleLocation {
   getChildLocation(childName: string): SingleLocation {
     return SingleLocation.getLocation(`${this._path}.${childName}`);
   }
+
+  getNeighborLocation(childName: string): SingleLocation {
+    return SingleLocation.getLocation(this._path).getParentPath().getChildLocation(childName);
+  }
   getLocation(): SingleLocation {
     return SingleLocation.getLocation(this._path);
   }
