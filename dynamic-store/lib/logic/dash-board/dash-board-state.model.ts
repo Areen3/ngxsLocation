@@ -1,6 +1,7 @@
 import { ElementLocationModel, IEmptyObject, IEntity } from '../../model/base/base';
 import { ElementDataModel, ElementsDataModel } from '../../model/domain/elementDataModel';
 import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
+import { BaseStateModel } from '../base/vehicle-state.model';
 
 export interface DashBoardDataModel extends IEntity {
   lastId: number;
@@ -19,8 +20,5 @@ export interface DashBoardMetaDataModel extends IEmptyObject {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface DashBoardStateModel {
-  data: DashBoardDataModel;
-  metaData: DashBoardMetaDataModel;
-  context: DashBoardContextModel;
-}
+export interface DashBoardStateModel
+  extends BaseStateModel<DashBoardDataModel, DashBoardMetaDataModel, DashBoardContextModel> {}
