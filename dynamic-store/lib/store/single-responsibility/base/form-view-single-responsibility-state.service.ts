@@ -22,7 +22,7 @@ export class FormViewSingleResponsibilityState<
   implements NgxsOnInit
 {
   @Action(UpdateViewAction)
-  UpdateDataAction(ctx: StateContext<T>, action: UpdateViewAction<T>) {
+  UpdateViewAction(ctx: StateContext<T>, action: UpdateViewAction<T>) {
     const state = ctx.getState();
     ctx.patchState({
       ...state,

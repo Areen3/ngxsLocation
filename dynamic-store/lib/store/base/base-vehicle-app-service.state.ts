@@ -3,7 +3,7 @@ import { SingleLocation, State } from '@ngxs/store';
 import { StateNamesEnum } from '../../model/store/state-names.enum';
 import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
 import { StateBuildersUtils } from '../../logic/utils/state-builders.utils';
-import { DashBoardContextItemModel } from '../../logic/dash-board/dash-board-state.model';
+import { DashBoardElementsItemModel } from '../../logic/dash-board/dash-board-state.model';
 import { IEmptyObject } from '../../model/base/base';
 
 @State<IEmptyObject>({
@@ -13,10 +13,10 @@ import { IEmptyObject } from '../../model/base/base';
 export class BaseVehicleAppServiceState {
   constructor(protected readonly storeBuilder: StateBuildersUtils) {}
 
-  protected buildDashBoardContextItem(
+  protected buildDashBoardElementsItem(
     lastId: number,
     type: VehicleContainerEnum
-  ): DashBoardContextItemModel {
+  ): DashBoardElementsItemModel {
     const loc: SingleLocation = SingleLocation.getLocation(StateNamesEnum.dashBoard);
     const newLastId = lastId + 1;
     const childName = this.storeBuilder.buildStateName(

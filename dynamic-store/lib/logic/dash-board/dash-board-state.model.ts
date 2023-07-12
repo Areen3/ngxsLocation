@@ -8,11 +8,11 @@ export interface DashBoardModelModel extends IEntity {
   simulate: boolean;
 }
 
-export interface DashBoardContextItemModel extends ElementDataModel, ElementLocationModel {
+export interface DashBoardElementsItemModel extends ElementDataModel, ElementLocationModel {
   type: VehicleContainerEnum;
 }
 
-export type DashBoardElementsModel = ElementsDataModel<DashBoardContextItemModel>;
+export type DashBoardElementsModel = ElementsDataModel<DashBoardElementsItemModel>;
 
 export interface DashBoardViewModel extends IEmptyObject {
   dropDown: Array<string>;

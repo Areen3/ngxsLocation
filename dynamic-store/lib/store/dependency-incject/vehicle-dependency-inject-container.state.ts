@@ -3,7 +3,7 @@ import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { StateNamesEnum } from '../../model/store/state-names.enum';
 import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
 import {
-  VehicleContainerStupidDataModel,
+  VehicleContainerStupidModelModel,
   VehicleContainerStupidViewModel
 } from '../../model/stupid/vehicle-container-stupid.model';
 import { VehicleEnum } from '../../model/domain/vehicle.enum';
@@ -33,7 +33,7 @@ import { registerSelectorVehicleContainerMethod } from '../../model/decorators/r
 export class VehicleDependencyInjectContainerState extends AbstractVehicleContainerState {
   @Selector()
   @registerSelectorVehicleContainerMethod(VehicleContainerEnum.dependencyInjectedStore)
-  static formModel$(state: VehicleContainerStateModel): VehicleContainerStupidDataModel {
+  static formModel$(state: VehicleContainerStateModel): VehicleContainerStupidModelModel {
     return {
       items: state.elements.items,
       name: state.model.type.toString(),

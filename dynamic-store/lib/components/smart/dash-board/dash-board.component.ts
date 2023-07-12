@@ -9,11 +9,11 @@ import {
   DashBoardSimulateUsersEvent
 } from '../../stupid/dash-board/dash-board.event';
 import {
-  DashBoardStupidDataModel,
+  DashBoardStupidModelModel,
   DashBoardStupidViewModel
-} from '../../../model/stupid/dash-board-stupid.model';
+} from '../../../model/stupid/dash-board-stupid-model.model';
 import {
-  TabsStupidDataModel,
+  TabsStupidModelModel,
   TabsStupidViewModel
 } from '../../../model/stupid/tabs-stupid.model';
 import { TabEvents, TabsEventType } from '../../stupid/tabs/tabs.event';
@@ -26,9 +26,11 @@ import { DashboardSimulateUsersAction } from '../../../logic/dash-board/state.ac
   templateUrl: './dash-board.component.html'
 })
 export class DashBoardComponent {
-  model$: Observable<DashBoardStupidDataModel> = this.store.select(DashBoardState.formModel$);
+  model$: Observable<DashBoardStupidModelModel> = this.store.select(DashBoardState.formModel$);
   view$: Observable<DashBoardStupidViewModel> = this.store.select(DashBoardState.formView$);
-  elements$: Observable<TabsStupidDataModel> = this.store.select(DashBoardState.formElements$);
+  elements$: Observable<TabsStupidModelModel> = this.store.select(
+    DashBoardState.formElements$
+  );
   viewTabs$: Observable<TabsStupidViewModel> = of({ selected: 1, isSelected: false });
 
   constructor(private store: Store) {}

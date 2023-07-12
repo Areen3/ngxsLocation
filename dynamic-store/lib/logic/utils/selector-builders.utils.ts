@@ -3,7 +3,7 @@ import { createSelector, SingleLocation, Store } from '@ngxs/store';
 import { Injectable, Type } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
-  VehicleContainerStupidDataModel,
+  VehicleContainerStupidModelModel,
   VehicleContainerStupidViewModel
 } from '../../model/stupid/vehicle-container-stupid.model';
 import { getRegisterContainerState } from '../../model/decorators/register-container-state.decorator';
@@ -28,7 +28,7 @@ export class SelectorBuildersUtils {
   getFormModelVehicleContainer$(
     type: VehicleContainerEnum,
     loc: SingleLocation
-  ): Observable<VehicleContainerStupidDataModel> {
+  ): Observable<VehicleContainerStupidModelModel> {
     const myType = type === VehicleContainerEnum.singleResponsibilityStore ? '' : type;
     const mySelector = getRegisterSelectedVehicleContainerMethod(
       myType,
@@ -66,7 +66,7 @@ export class SelectorBuildersUtils {
       myType,
       MethodSelectorEnum.formElements$
     );
-    const myLoc = this.locBuilder.convertLocation(loc.path, type, StateNamesEnum.formContext);
+    const myLoc = this.locBuilder.convertLocation(loc.path, type, StateNamesEnum.formElements);
     return this.store.selectInContext(
       this.getSelector(type, myLoc, mySelector.descriptor.value, mySelector.name),
       myLoc

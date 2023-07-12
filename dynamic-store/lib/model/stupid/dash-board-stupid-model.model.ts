@@ -4,7 +4,7 @@ import {
   DashBoardViewModel
 } from '../../logic/dash-board/dash-board-state.model';
 
-export interface DashBoardStupidDataModel
+export interface DashBoardStupidModelModel
   extends Pick<DashBoardElementsModel, 'items'>,
     Pick<DashBoardModelModel, 'simulate'> {
   count: number;

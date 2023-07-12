@@ -22,7 +22,7 @@ export class VehicleContainerAddGuard implements CanActivate {
       )
     ).pipe(
       switchMap(() => {
-        const data = this.store.selectSnapshot(DashBoardState.data$);
+        const data = this.store.selectSnapshot(DashBoardState.model$);
         return this.store.dispatch(
           new Navigate([
             RoutingPathEnum.dashboard,

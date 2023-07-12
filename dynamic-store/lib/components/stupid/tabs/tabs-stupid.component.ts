@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TabEvents, TabsEventType } from './tabs.event';
 import {
-  TabsStupidDataModel,
+  TabsStupidModelModel,
   TabsStupidViewModel
 } from '../../../model/stupid/tabs-stupid.model';
 import {
@@ -15,7 +15,7 @@ import {
   styleUrls: ['./tabs-stupid.component.scss']
 })
 export class TabsStupidComponent<
-  TModel = TabsStupidDataModel,
+  TModel = TabsStupidModelModel,
   TView = TabsStupidViewModel,
   TEvents extends TabEvents = TabEvents
 > implements BaseStupidInputInterface<TModel, TView>, BaseStupidOutputInterface<TEvents>

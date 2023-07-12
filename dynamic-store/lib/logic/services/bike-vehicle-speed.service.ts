@@ -16,7 +16,7 @@ export class BikeVehicleSpeedService<T extends BikeModel = BikeModel>
     return this.multiplier.getSpeed(20);
   }
 
-  getEmptyData<T extends VehicleModel>(): T {
+  getEmptyModel<T extends VehicleModel>(): T {
     const result: BikeModel = {
       speed: this.getSpeed(),
       name: 'bike',

@@ -74,7 +74,7 @@ export class VehicleDependencyInjectState<T extends VehicleModel = VehicleModel>
   }
 
   ngxsOnInit(ctx: StateContext<VehicleStateModel>) {
-    const data = this.speedSrv.getEmptyData();
+    const data = this.speedSrv.getEmptyModel();
     ctx.patchState({ model: data });
   }
 }

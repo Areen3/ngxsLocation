@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { VehicleEnum } from '../../../model/domain/vehicle.enum';
 import {
-  VehicleContainerStupidDataModel,
+  VehicleContainerStupidModelModel,
   VehicleContainerStupidViewModel
 } from '../../../model/stupid/vehicle-container-stupid.model';
 import { VehicleContainerEvents, VehicleContainerEventType } from './vehicle-container.event';
-import { DashBoardContextItemModel } from '../../../logic/dash-board/dash-board-state.model';
+import { DashBoardElementsItemModel } from '../../../logic/dash-board/dash-board-state.model';
 import {
-  BaseStupidContextInterface,
+  BaseStupidElementsInterface,
   BaseStupidInputInterface,
   BaseStupidOutputInterface
 } from '../base/base-stupid-input-interface';
@@ -19,13 +19,13 @@ import {
 })
 export class VehicleContainerStupidComponent<
   TEvents extends VehicleContainerEvents,
-  TModel = VehicleContainerStupidDataModel,
+  TModel = VehicleContainerStupidModelModel,
   TView = VehicleContainerStupidViewModel,
-  TElements extends DashBoardContextItemModel = DashBoardContextItemModel
+  TElements extends DashBoardElementsItemModel = DashBoardElementsItemModel
 > implements
     BaseStupidInputInterface<TModel, TView>,
     BaseStupidOutputInterface<TEvents>,
-    BaseStupidContextInterface<TElements>
+    BaseStupidElementsInterface<TElements>
 {
   @Input()
   elements: TElements;
@@ -40,7 +40,7 @@ export class VehicleContainerStupidComponent<
   RemoveContainer() {
     this.eventEmitter.emit(<TEvents>{
       eventType: VehicleContainerEventType.removeContainer,
-      data: <DashBoardContextItemModel>this.elements
+      data: <DashBoardElementsItemModel>this.elements
     });
   }
 

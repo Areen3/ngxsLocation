@@ -6,9 +6,9 @@ import { StateNamesEnum } from '../../../model/store/state-names.enum';
 import { RoutingSingleResponsibilityState } from '../base/routing-single-responsibility.state';
 import { registerContainerState } from '../../../model/decorators/register-container-state.decorator';
 import { VehicleContainerEnum } from '../../../model/enums/vehicle-container.enum';
-import { FormDataVehicleContainerState } from './form-data-vehicle-container.state';
+import { FormModelVehicleContainerState } from './form-model-vehicle-container-state.service';
 import { FormViewVehicleContainerState } from './form-view-vehicle-container-state.service';
-import { FormContextVehicleContainerState } from './form-context-vehicle-container.state';
+import { FormElementsVehicleContainerState } from './formelements-vehicle-container-state.service';
 import { HostAreaAccessService } from '../area-services/host-area-access.service';
 import { HostVehicleContainerAccessModel } from '../../../model/store/host-area.model';
 import { CrudSrVehicleContainerState } from './crud-sr-vehicle-container.state';
@@ -19,8 +19,8 @@ import { CrudSrVehicleContainerState } from './crud-sr-vehicle-container.state';
   creationMode: {
     providers: [
       { provide: VehicleSingleResponsibilityContainerState },
-      { provide: FormContextVehicleContainerState },
-      { provide: FormDataVehicleContainerState },
+      { provide: FormElementsVehicleContainerState },
+      { provide: FormModelVehicleContainerState },
       { provide: FormViewVehicleContainerState },
       { provide: RoutingSingleResponsibilityState },
       { provide: CrudSrVehicleContainerState },
@@ -29,8 +29,8 @@ import { CrudSrVehicleContainerState } from './crud-sr-vehicle-container.state';
     newInstance: true
   },
   children: [
-    FormContextVehicleContainerState,
-    FormDataVehicleContainerState,
+    FormElementsVehicleContainerState,
+    FormModelVehicleContainerState,
     FormViewVehicleContainerState,
     RoutingSingleResponsibilityState,
     CrudSrVehicleContainerState

@@ -8,9 +8,9 @@ export class AbstractVehicleSpeedService<TType extends VehicleModel> {
     );
   }
 
-  getEmptyData(): TType {
+  getEmptyModel(): TType {
     throw new Error(
-      `You should implement this method: ${AbstractVehicleSpeedService.prototype.getEmptyData.name}`
+      `You should implement this method: ${AbstractVehicleSpeedService.prototype.getEmptyModel.name}`
     );
   }
 }

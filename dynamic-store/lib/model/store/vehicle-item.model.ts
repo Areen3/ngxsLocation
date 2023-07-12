@@ -1,3 +1,3 @@
-import { ElementContextDataModel } from '../domain/elementDataModel';
+import { ElementElementsDataModel } from '../domain/elementDataModel';
 
-export type VehicleItemModel = ElementContextDataModel;
+export type VehicleItemModel = ElementElementsDataModel;

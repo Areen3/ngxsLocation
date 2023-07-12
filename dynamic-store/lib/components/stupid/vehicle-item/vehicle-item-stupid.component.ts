@@ -6,7 +6,7 @@ import {
   VehicleItemStupidViewModel
 } from '../../../model/stupid/vehicle-item-stupid.model';
 import {
-  BaseStupidContextInterface,
+  BaseStupidElementsInterface,
   BaseStupidInputInterface,
   BaseStupidOutputInterface
 } from '../base/base-stupid-input-interface';
@@ -24,7 +24,7 @@ export class VehicleItemStupidComponent<
 > implements
     BaseStupidInputInterface<TModel, TView>,
     BaseStupidOutputInterface<TEvents>,
-    BaseStupidContextInterface<TElements>
+    BaseStupidElementsInterface<TElements>
 {
   @Input()
   elements: TElements;

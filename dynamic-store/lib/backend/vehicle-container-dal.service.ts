@@ -1,20 +1,20 @@
 import { BackedDataAccessLayerService } from './backed-data-access-layer.service';
 import { Injectable } from '@angular/core';
-import { DashBoardContextItemModel } from '../logic/dash-board/dash-board-state.model';
+import { DashBoardElementsItemModel } from '../logic/dash-board/dash-board-state.model';
 import { from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { VehicleEnum } from '../model/domain/vehicle.enum';
 
 interface ContainerDto {
-  container: DashBoardContextItemModel;
+  container: DashBoardElementsItemModel;
   vehicles: Array<VehicleEnum>;
 }
 
 @Injectable()
-export class VehicleContainerDalService extends BackedDataAccessLayerService<DashBoardContextItemModel> {
+export class VehicleContainerDalService extends BackedDataAccessLayerService<DashBoardElementsItemModel> {
   getEntityByIdWithGenerate(id: number): Observable<ContainerDto> {
     return from(super.getEntityById(id)).pipe(
-      map<DashBoardContextItemModel, ContainerDto>(data => ({
+      map<DashBoardElementsItemModel, ContainerDto>(data => ({
         container: data,
         vehicles: this.generateVehicles()
       }))

@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import {
-  DashBoardStupidDataModel,
+  DashBoardStupidModelModel,
   DashBoardStupidViewModel
-} from '../../../model/stupid/dash-board-stupid.model';
+} from '../../../model/stupid/dash-board-stupid-model.model';
 import { DashBoardEvents, DashBoardEventType } from './dash-board.event';
 import { VehicleContainerEnum } from '../../../model/enums/vehicle-container.enum';
 import {
@@ -16,7 +16,7 @@ import {
   styleUrls: ['./dash-board-stupid.component.scss']
 })
 export class DashBoardStupidComponent<
-  TModel = DashBoardStupidDataModel,
+  TModel = DashBoardStupidModelModel,
   TView = DashBoardStupidViewModel,
   TEvents extends DashBoardEvents = DashBoardEvents
 > implements BaseStupidInputInterface<TModel, TView>, BaseStupidOutputInterface<TEvents>

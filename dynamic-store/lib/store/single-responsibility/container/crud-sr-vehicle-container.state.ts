@@ -15,7 +15,7 @@ import {
 } from '../../../logic/vehicle-container/vehicle-container-state.model';
 import { UpdateViewAction } from '../base/view-state.actions';
 import { from, Observable } from 'rxjs';
-import { UpdateDataAction } from '../base/data-state.actions';
+import { UpdateModelAction } from '../base/data-state.actions';
 
 @State<IEmptyObject>({
   name: StateNamesEnum.crudSrState,
@@ -49,7 +49,7 @@ export class CrudSrVehicleContainerState extends BaseSingleResponsibilityState<H
     };
     return from([
       this.store.dispatchInLocation(
-        new UpdateDataAction<VehicleContainerModelModel>(newData),
+        new UpdateModelAction<VehicleContainerModelModel>(newData),
         locData
       ),
       this.store.dispatchInLocation(

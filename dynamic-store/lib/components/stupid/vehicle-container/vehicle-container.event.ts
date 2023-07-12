@@ -1,6 +1,6 @@
 import { BaseEventsAbstract } from '../../../model/events/base.event';
 import { VehicleEnum } from '../../../model/domain/vehicle.enum';
-import { DashBoardContextItemModel } from '../../../logic/dash-board/dash-board-state.model';
+import { DashBoardElementsItemModel } from '../../../logic/dash-board/dash-board-state.model';
 
 export enum VehicleContainerEventType {
   addVehicle = 'addVehicle',
@@ -13,7 +13,7 @@ export type VehicleContainerAddVehicleEvent = BaseEventsAbstract<
 >;
 export type VehicleContainerRemoveContainerEvent = BaseEventsAbstract<
   VehicleContainerEventType.removeContainer,
-  DashBoardContextItemModel
+  DashBoardElementsItemModel
 >;
 export type VehicleContainerEvents =
   | VehicleContainerAddVehicleEvent

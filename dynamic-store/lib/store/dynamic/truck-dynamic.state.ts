@@ -20,7 +20,7 @@ import { StateBuildersUtils } from '../../logic/utils/state-builders.utils';
 @Injectable()
 @registerVehicleState(VehicleContainerEnum.dynamicStore, VehicleEnum.truck)
 export class TruckDynamicState extends VehicleDynamicState {
-  protected getEmptyData<T extends VehicleModel>(): T {
+  protected getEmptyModel<T extends VehicleModel>(): T {
     const result: VehicleModel = {
       speed: this.getSpeed(90),
       name: 'truck',

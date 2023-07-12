@@ -68,12 +68,12 @@ export class VehicleDynamicState implements NgxsOnInit {
   }
 
   ngxsOnInit(ctx: StateContext<VehicleStateModel>) {
-    const data = this.getEmptyData();
+    const data = this.getEmptyModel();
     ctx.patchState({ model: data });
   }
 
-  protected getEmptyData<T extends VehicleModel>(): T {
-    throw new Error(`You should implement this method: ${this.getEmptyData.name}`);
+  protected getEmptyModel<T extends VehicleModel>(): T {
+    throw new Error(`You should implement this method: ${this.getEmptyModel.name}`);
   }
 
   protected getSpeed(_speed: number): number {

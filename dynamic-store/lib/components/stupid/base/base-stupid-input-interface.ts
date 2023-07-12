@@ -13,6 +13,6 @@ export interface BaseStupidOutputInterface<TEvents> {
   eventEmitter: EventEmitter<TEvents>;
 }
 
-export interface BaseStupidContextInterface<TElements> {
+export interface BaseStupidElementsInterface<TElements> {
   elements: TElements;
 }

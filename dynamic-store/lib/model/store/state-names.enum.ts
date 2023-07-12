@@ -8,7 +8,7 @@ export enum StateNamesEnum {
   vehicleMotoBike = 'vehicleMotoBike',
   vehicleTruck = 'vehicleTruck',
   baseSimpleResponsibility = 'baseSimpleResponsibility',
-  formContext = 'formContext',
+  formElements = 'formElements',
   formModel = 'formModel',
   formView = 'formView',
   routing = 'routing',

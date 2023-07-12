@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RangeLocations, SingleLocation, Store } from '@ngxs/store';
 import {
-  DashBoardContextItemModel,
+  DashBoardElementsItemModel,
   DashBoardElementsModel
 } from '../../../logic/dash-board/dash-board-state.model';
 import {
-  VehicleContainerStupidDataModel,
+  VehicleContainerStupidModelModel,
   VehicleContainerStupidViewModel
 } from '../../../model/stupid/vehicle-container-stupid.model';
 import {
@@ -30,8 +30,8 @@ import { SelectorBuildersUtils } from '../../../logic/utils/selector-builders.ut
   styleUrls: ['./vehicle-container.component.scss']
 })
 export class VehicleContainerComponent implements OnInit {
-  context: DashBoardContextItemModel;
-  model$: Observable<VehicleContainerStupidDataModel>;
+  elements: DashBoardElementsItemModel;
+  model$: Observable<VehicleContainerStupidModelModel>;
   view$: Observable<VehicleContainerStupidViewModel>;
   elements$: Observable<VehicleContainerElementsModel>;
 
@@ -43,14 +43,17 @@ export class VehicleContainerComponent implements OnInit {
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    const contexts = <DashBoardElementsModel>(
+    const elements = <DashBoardElementsModel>(
       this.store.selectSnapshot(DashBoardState.formElements$)
     );
-    this.context = contexts.items.find(item => item.id === id)!;
-    const loc = SingleLocation.getLocation(this.context.location);
-    this.model$ = this.selectorBuilder.getFormModelVehicleContainer$(this.context.type, loc);
-    this.view$ = this.selectorBuilder.getFormViewVehicleContainer$(this.context.type, loc);
-    this.elements$ = this.selectorBuilder.getElementsVehicleContainer$(this.context.type, loc);
+    this.elements = elements.items.find(item => item.id === id)!;
+    const loc = SingleLocation.getLocation(this.elements.location);
+    this.model$ = this.selectorBuilder.getFormModelVehicleContainer$(this.elements.type, loc);
+    this.view$ = this.selectorBuilder.getFormViewVehicleContainer$(this.elements.type, loc);
+    this.elements$ = this.selectorBuilder.getElementsVehicleContainer$(
+      this.elements.type,
+      loc
+    );
   }
 
   outputEvents(event: VehicleContainerEvents): void {
@@ -58,8 +61,8 @@ export class VehicleContainerComponent implements OnInit {
       case VehicleContainerEventType.addVehicle:
         const addEvent = <VehicleContainerAddVehicleEvent>event;
         this.store.dispatchInLocation(
-          new AddVehicleAppServiceAction({ container: this.context, vehicle: addEvent.data }),
-          RangeLocations.filterByContext(this.context.type, this.context.type)
+          new AddVehicleAppServiceAction({ container: this.elements, vehicle: addEvent.data }),
+          RangeLocations.filterByContext(this.elements.type, this.elements.type)
         );
         break;
       case VehicleContainerEventType.removeContainer:

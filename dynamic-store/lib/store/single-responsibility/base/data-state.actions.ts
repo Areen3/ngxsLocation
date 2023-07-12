@@ -1,10 +1,10 @@
 import { IEmptyObject } from '../../../model/base/base';
 import { BaseActionWithPayload } from '../../../model/store/actions';
 
-enum DataActionType {
-  update = '[data-action] update data'
+enum ModelActionType {
+  update = '[model-action] update model'
 }
 
-export class UpdateDataAction<T extends IEmptyObject> extends BaseActionWithPayload<T> {
-  static readonly type = DataActionType.update;
+export class UpdateModelAction<T extends IEmptyObject> extends BaseActionWithPayload<T> {
+  static readonly type = ModelActionType.update;
 }

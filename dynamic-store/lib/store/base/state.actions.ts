@@ -1,5 +1,5 @@
 import { BaseActionWithPayload } from '../../model/store/actions';
-import { DashBoardContextItemModel } from '../../logic/dash-board/dash-board-state.model';
+import { DashBoardElementsItemModel } from '../../logic/dash-board/dash-board-state.model';
 import { VehicleEnum } from '../../model/domain/vehicle.enum';
 import { VehicleItemModel } from '../../model/store/vehicle-item.model';
 import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
@@ -20,12 +20,12 @@ export class AddVehicleContainerAppServiceAction extends BaseActionWithPayload<{
   static readonly type = VehicleAppActionType.addContainer;
 }
 
-export class RemoveVehicleContainerAppServiceAction extends BaseActionWithPayload<DashBoardContextItemModel> {
+export class RemoveVehicleContainerAppServiceAction extends BaseActionWithPayload<DashBoardElementsItemModel> {
   static readonly type = VehicleAppActionType.removeContainer;
 }
 
 export class AddVehicleAppServiceAction extends BaseActionWithPayload<{
-  container: DashBoardContextItemModel;
+  container: DashBoardElementsItemModel;
   vehicle: VehicleEnum;
 }> {
   static readonly type = VehicleAppActionType.addVehicle;
@@ -39,6 +39,6 @@ export class ChangeSpeedAppServiceAction extends BaseActionWithPayload<VehicleIt
   static readonly type = VehicleAppActionType.changeSpeed;
 }
 
-export class LoadVehicleContainerAppServiceAction extends BaseActionWithPayload<DashBoardContextItemModel> {
+export class LoadVehicleContainerAppServiceAction extends BaseActionWithPayload<DashBoardElementsItemModel> {
   static readonly type = VehicleAppActionType.loadVehicleContainer;
 }

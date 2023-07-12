@@ -6,4 +6,4 @@ export interface ElementsDataModel<T extends ElementDataModel> {
   items: Array<T>;
 }
 
-export interface ElementContextDataModel extends ElementDataModel, ElementLocationModel {}
+export interface ElementElementsDataModel extends ElementDataModel, ElementLocationModel {}

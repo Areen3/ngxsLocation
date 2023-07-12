@@ -20,9 +20,9 @@ import {
   DashboardSimulateUsersAction
 } from './state.actions';
 import {
-  DashBoardStupidDataModel,
+  DashBoardStupidModelModel,
   DashBoardStupidViewModel
-} from '../../model/stupid/dash-board-stupid.model';
+} from '../../model/stupid/dash-board-stupid-model.model';
 import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
 import { forkJoin } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -43,7 +43,7 @@ export class DashBoardState implements NgxsOnInit {
   constructor(private readonly store: Store) {}
 
   @Selector()
-  static formModel$(state: DashBoardStateModel): DashBoardStupidDataModel {
+  static formModel$(state: DashBoardStateModel): DashBoardStupidModelModel {
     return {
       items: state.elements.items,
       count: state.elements.items.length,
@@ -70,7 +70,7 @@ export class DashBoardState implements NgxsOnInit {
   }
 
   @Selector()
-  static data$(state: DashBoardStateModel): DashBoardModelModel {
+  static model$(state: DashBoardStateModel): DashBoardModelModel {
     return state.model;
   }
 

@@ -6,7 +6,7 @@ import { filter, map, switchMap, take } from 'rxjs/operators';
 import { DashBoardState } from '../../logic/dash-board/dash-board.state';
 import { AbstractVehicleContainerState } from '../../store/base/abstract-vehicle-container.state';
 import { RoutingLoadModel } from '../../model/store/routing-load.model';
-import { DashBoardContextItemModel } from '../../logic/dash-board/dash-board-state.model';
+import { DashBoardElementsItemModel } from '../../logic/dash-board/dash-board-state.model';
 import { SetIsLoadingRouterAction } from '../../logic/routing/state.actions';
 import { LoadVehicleContainerAppServiceAction } from '../../store/base/state.actions';
 import { LocationBuildersUtils } from '../../logic/utils/location-builders.utils';
@@ -50,7 +50,7 @@ export class VehicleContainerGuard implements CanActivate {
     );
   }
 
-  loadData(container: DashBoardContextItemModel): Observable<boolean> {
+  loadData(container: DashBoardElementsItemModel): Observable<boolean> {
     const loc = this.locBuilder.convertLocation(
       container.location,
       container.type,

@@ -1,5 +1,5 @@
 import { BaseActionWithPayload } from '../../model/store/actions';
-import { DashBoardContextItemModel } from './dash-board-state.model';
+import { DashBoardElementsItemModel } from './dash-board-state.model';
 
 enum DashboardActionType {
   add = '[dashboard] add container',
@@ -7,11 +7,11 @@ enum DashboardActionType {
   simulate = '[dashboard] simulate users'
 }
 
-export class DashboardAddItemAction extends BaseActionWithPayload<DashBoardContextItemModel> {
+export class DashboardAddItemAction extends BaseActionWithPayload<DashBoardElementsItemModel> {
   static readonly type = DashboardActionType.add;
 }
 
-export class DashboardRemoveItemAction extends BaseActionWithPayload<DashBoardContextItemModel> {
+export class DashboardRemoveItemAction extends BaseActionWithPayload<DashBoardElementsItemModel> {
   static readonly type = DashboardActionType.remove;
 }
 

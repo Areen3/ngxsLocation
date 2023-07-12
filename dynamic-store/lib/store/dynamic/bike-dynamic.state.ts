@@ -21,7 +21,7 @@ import { VehicleModel } from '../../model/domain/vehicle.model';
 @Injectable()
 @registerVehicleState(VehicleContainerEnum.dynamicStore, VehicleEnum.bike)
 export class BikeDynamicState extends VehicleDynamicState {
-  protected getEmptyData<T extends VehicleModel>(): T {
+  protected getEmptyModel<T extends VehicleModel>(): T {
     const result: BikeModel = {
       speed: this.getSpeed(20),
       name: 'bike',
