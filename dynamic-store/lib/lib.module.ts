@@ -21,7 +21,6 @@ import { MotoBikeDynamicState } from './store/dynamic/moto-bike-dynamic.state';
 import { TruckDynamicState } from './store/dynamic/truck-dynamic.state';
 import { VehicleDynamicState } from './store/dynamic/vehicle-dynamic.state';
 import { VehicleDynamicContainerState } from './store/dynamic/vehicle-dynamic-container.state';
-import { VehicleAppServiceState } from './store/app-service/vehicle-app-service.state';
 import { FeRouteModule } from './fe-route.module';
 import { TabsStupidComponent } from './components/stupid/tabs/tabs-stupid.component';
 import { RouteReuseStrategy } from '@angular/router';
@@ -42,6 +41,10 @@ import { FormContextVehicleContainerState } from './store/single-responsibility/
 import { LocationBuildersUtils } from './logic/utils/location-builders.utils';
 import { HostAreaAccessService } from './store/single-responsibility/area-services/host-area-access.service';
 import { CrudSrVehicleContainerState } from './store/single-responsibility/container/crud-sr-vehicle-container.state';
+import { BaseVehicleAppServiceState } from './store/app-service/base-vehicle-app-service.state';
+import { DynamicVehicleAppServiceState } from './store/dynamic/dynamic-vehicle-app-service.state';
+import { DependencyInjectedVehicleAppServiceState } from './store/dependency-incject/dependency-injected-vehicle-app-service.state';
+import { SingleResponsibilityVehicleAppServiceState } from './store/single-responsibility/app-services/single-responsibility-vehicle-app-service.state';
 
 @NgModule({
   declarations: [
@@ -53,11 +56,7 @@ import { CrudSrVehicleContainerState } from './store/single-responsibility/conta
     VehicleItemStupidComponent,
     TabsStupidComponent
   ],
-  imports: [
-    CommonModule,
-    NgxsModule.forFeature([DashBoardState, VehicleAppServiceState]),
-    FeRouteModule
-  ],
+  imports: [CommonModule, NgxsModule.forFeature([DashBoardState]), FeRouteModule],
   exports: [
     VehicleContainerComponent,
     VehicleItemComponent,
@@ -72,7 +71,6 @@ import { CrudSrVehicleContainerState } from './store/single-responsibility/conta
       useClass: ParamChangeRouteResultStrategy
     },
     StateBuildersUtils,
-    VehicleAppServiceState,
     VehicleDependencyInjectContainerState,
     CarDependencyInjectState,
     MotoBikeDependencyInjectState,
@@ -99,7 +97,11 @@ import { CrudSrVehicleContainerState } from './store/single-responsibility/conta
     FormContextVehicleContainerState,
     LocationBuildersUtils,
     HostAreaAccessService,
-    CrudSrVehicleContainerState
+    CrudSrVehicleContainerState,
+    BaseVehicleAppServiceState,
+    DynamicVehicleAppServiceState,
+    DependencyInjectedVehicleAppServiceState,
+    SingleResponsibilityVehicleAppServiceState
   ]
 })
 export class LibModule {

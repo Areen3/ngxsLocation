@@ -1,5 +1,6 @@
 export enum StateNamesEnum {
   dashBoard = 'dashBoard',
+  vehicleAppService = 'vehicleAppService',
   vehicleContainer = 'vehicleContainer',
   vehicle = 'vehicle',
   vehicleCar = 'vehicleCar',

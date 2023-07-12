@@ -1,0 +1,33 @@
+import { Injectable } from '@angular/core';
+import { SingleLocation, State } from '@ngxs/store';
+import { StateNamesEnum } from '../../model/store/state-names.enum';
+import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
+import { StateBuildersUtils } from '../../logic/utils/state-builders.utils';
+import { DashBoardContextItemModel } from '../../logic/dash-board/dash-board-state.model';
+import { IEmptyObject } from '../../model/base/base';
+
+@State<IEmptyObject>({
+  name: StateNamesEnum.vehicleAppService
+})
+@Injectable()
+export class BaseVehicleAppServiceState {
+  constructor(protected readonly storeBuilder: StateBuildersUtils) {}
+
+  protected buildDashBoardContextItem(
+    lastId: number,
+    type: VehicleContainerEnum
+  ): DashBoardContextItemModel {
+    const loc: SingleLocation = SingleLocation.getLocation(StateNamesEnum.dashBoard);
+    const newLastId = lastId + 1;
+    const childName = this.storeBuilder.buildStateName(
+      StateNamesEnum.vehicleContainer,
+      newLastId
+    );
+    return {
+      name: childName,
+      type: type,
+      id: newLastId,
+      location: loc.getChildLocation(childName).path
+    };
+  }
+}

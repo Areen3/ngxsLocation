@@ -1,4 +1,12 @@
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import {
+  Action,
+  NgxsOnInit,
+  Selector,
+  SingleLocation,
+  State,
+  StateContext,
+  Store
+} from '@ngxs/store';
 import { Injectable } from '@angular/core';
 import {
   DashBoardContextModel,
@@ -16,7 +24,11 @@ import {
   DashBoardStupidMetaDataModel
 } from '../../model/stupid/dash-board-stupid.model';
 import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
-import { VehicleAppServiceState } from '../../store/app-service/vehicle-app-service.state';
+import { forkJoin } from 'rxjs';
+import { take } from 'rxjs/operators';
+import { DependencyInjectedVehicleAppServiceState } from '../../store/dependency-incject/dependency-injected-vehicle-app-service.state';
+import { SingleResponsibilityVehicleAppServiceState } from '../../store/single-responsibility/app-services/single-responsibility-vehicle-app-service.state';
+import { DynamicVehicleAppServiceState } from '../../store/dynamic/dynamic-vehicle-app-service.state';
 
 @State<DashBoardStateModel>({
   name: StateNamesEnum.dashBoard,
@@ -24,11 +36,12 @@ import { VehicleAppServiceState } from '../../store/app-service/vehicle-app-serv
     data: { lastId: 0, id: 0, simulate: false },
     context: { items: [] },
     metaData: { dropDown: Object.values(VehicleContainerEnum), remove: false }
-  },
-  children: [VehicleAppServiceState]
+  }
 })
 @Injectable()
-export class DashBoardState {
+export class DashBoardState implements NgxsOnInit {
+  constructor(private readonly store: Store) {}
+
   @Selector()
   static formData$(state: DashBoardStateModel): DashBoardStupidDataModel {
     return {
@@ -114,5 +127,25 @@ export class DashBoardState {
     const state = ctx.getState();
     const items = state.context.items.filter(item => item.id !== action.payload.id);
     ctx.patchState({ context: { ...state.context, items } });
+  }
+
+  ngxsOnInit(): void {
+    const loc = SingleLocation.getLocation(StateNamesEnum.dashBoard);
+    forkJoin([
+      this.store.addChildInLocalization(DynamicVehicleAppServiceState, loc, {
+        childName: VehicleContainerEnum.dynamicStore,
+        context: VehicleContainerEnum.dynamicStore
+      }),
+      this.store.addChildInLocalization(DependencyInjectedVehicleAppServiceState, loc, {
+        childName: VehicleContainerEnum.dependencyInjectedStore,
+        context: VehicleContainerEnum.dependencyInjectedStore
+      }),
+      this.store.addChildInLocalization(SingleResponsibilityVehicleAppServiceState, loc, {
+        childName: VehicleContainerEnum.singleResponsibilityStore,
+        context: VehicleContainerEnum.singleResponsibilityStore
+      })
+    ])
+      .pipe(take(1))
+      .subscribe(() => {});
   }
 }

@@ -2,7 +2,7 @@ import { ActivatedRouteSnapshot, CanActivate } from '@angular/router';
 import { from, Observable } from 'rxjs';
 import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
 import { Injectable } from '@angular/core';
-import { Store } from '@ngxs/store';
+import { RangeLocations, Store } from '@ngxs/store';
 import { AddVehicleContainerAppServiceAction } from '../../store/app-service/state.actions';
 import { map, switchMap } from 'rxjs/operators';
 import { DashBoardState } from '../../logic/dash-board/dash-board.state';
@@ -16,7 +16,10 @@ export class VehicleContainerAddGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
     const containerType = <VehicleContainerEnum>route.paramMap.get('type');
     return from(
-      this.store.dispatch(new AddVehicleContainerAppServiceAction(containerType))
+      this.store.dispatchInLocation(
+        new AddVehicleContainerAppServiceAction(containerType),
+        RangeLocations.filterByContext(containerType, containerType)
+      )
     ).pipe(
       switchMap(() => {
         const data = this.store.selectSnapshot(DashBoardState.data$);
