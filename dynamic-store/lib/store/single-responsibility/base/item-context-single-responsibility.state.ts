@@ -13,7 +13,7 @@ import { ElementContextDataModel } from '../../../model/domain/elementDataModel'
 @Injectable()
 export class ItemContextSingleResponsibilityState extends BaseSingleResponsibilityState<HostSingleResponsibilityAreaAccessModel> {
   @Selector()
-  static formContext$(state: ElementContextDataModel): ElementContextDataModel {
+  static formElements$(state: ElementContextDataModel): ElementContextDataModel {
     return state;
   }
 

@@ -4,24 +4,24 @@ import { ElementsDataModel } from '../../model/domain/elementDataModel';
 import { BaseStateModel } from '../base/vehicle-state.model';
 import { RoutingSingleResponsibilityStateModel } from '../../model/store/base-simple-store.model';
 
-export interface VehicleContainerDataModel {
+export interface VehicleContainerModelModel {
   type: VehicleContainerEnum;
   itemNumber: number;
   lastId: number;
 }
 
-export interface VehicleContainerMetaDataModel {
+export interface VehicleContainerViewModel {
   containersCount: number;
   dropDown: Array<string>;
 }
 
-export type VehicleContainerContextModel = ElementsDataModel<VehicleItemModel>;
+export type VehicleContainerElementsModel = ElementsDataModel<VehicleItemModel>;
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface VehicleContainerStateModel
   extends BaseStateModel<
-      VehicleContainerDataModel,
-      VehicleContainerMetaDataModel,
-      VehicleContainerContextModel
+      VehicleContainerModelModel,
+      VehicleContainerViewModel,
+      VehicleContainerElementsModel
     >,
     RoutingSingleResponsibilityStateModel {}

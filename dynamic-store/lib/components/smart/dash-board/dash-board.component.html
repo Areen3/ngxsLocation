@@ -1,13 +1,13 @@
 <div class="grid">
   <dashboard-stupid
-    [model]="(data$ | async)!"
-    [view]="(metaData$ | async)!"
+    [model]="(model$ | async)!"
+    [view]="(view$ | async)!"
     (eventEmitter)="outputEvents($event)"
   >
   </dashboard-stupid>
   <tabs-stupid
-    [model]="(context$ | async)!"
-    [view]="(metaDataTabs$ | async)!"
+    [model]="(elements$ | async)!"
+    [view]="(viewTabs$ | async)!"
     (eventEmitter)="outputTabsEvents($event)"
   >
   </tabs-stupid>

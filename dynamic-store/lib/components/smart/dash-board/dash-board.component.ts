@@ -10,11 +10,11 @@ import {
 } from '../../stupid/dash-board/dash-board.event';
 import {
   DashBoardStupidDataModel,
-  DashBoardStupidMetaDataModel
+  DashBoardStupidViewModel
 } from '../../../model/stupid/dash-board-stupid.model';
 import {
   TabsStupidDataModel,
-  TabsStupidMetaDataModel
+  TabsStupidViewModel
 } from '../../../model/stupid/tabs-stupid.model';
 import { TabEvents, TabsEventType } from '../../stupid/tabs/tabs.event';
 import { Navigate } from '@ngxs/router-plugin';
@@ -26,12 +26,10 @@ import { DashboardSimulateUsersAction } from '../../../logic/dash-board/state.ac
   templateUrl: './dash-board.component.html'
 })
 export class DashBoardComponent {
-  data$: Observable<DashBoardStupidDataModel> = this.store.select(DashBoardState.formData$);
-  metaData$: Observable<DashBoardStupidMetaDataModel> = this.store.select(
-    DashBoardState.formMetaData$
-  );
-  context$: Observable<TabsStupidDataModel> = this.store.select(DashBoardState.formContext$);
-  metaDataTabs$: Observable<TabsStupidMetaDataModel> = of({ selected: 1, isSelected: false });
+  model$: Observable<DashBoardStupidDataModel> = this.store.select(DashBoardState.formModel$);
+  view$: Observable<DashBoardStupidViewModel> = this.store.select(DashBoardState.formView$);
+  elements$: Observable<TabsStupidDataModel> = this.store.select(DashBoardState.formElements$);
+  viewTabs$: Observable<TabsStupidViewModel> = of({ selected: 1, isSelected: false });
 
   constructor(private store: Store) {}
 

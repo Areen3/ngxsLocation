@@ -9,8 +9,8 @@ export enum StateNamesEnum {
   vehicleTruck = 'vehicleTruck',
   baseSimpleResponsibility = 'baseSimpleResponsibility',
   formContext = 'formContext',
-  formData = 'formData',
-  formMetaData = 'formMetaData',
+  formModel = 'formModel',
+  formView = 'formView',
   routing = 'routing',
   crudSrState = 'crudSrState'
 }

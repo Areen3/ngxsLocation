@@ -1,6 +1,6 @@
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import {
-  VehicleContainerContextModel,
+  VehicleContainerElementsModel,
   VehicleContainerStateModel
 } from '../../logic/vehicle-container/vehicle-container-state.model';
 import { StateBuildersUtils } from '../../logic/utils/state-builders.utils';
@@ -11,7 +11,7 @@ import {
   SetIsLoadingRouterAction,
   SetLoadedRouterAction
 } from '../../logic/routing/state.actions';
-import { registerSelectorMethod } from '../../model/decorators/register-selector-method.decorator';
+import { registerSelectorVehicleContainerMethod } from '../../model/decorators/register-selector-vehicle-container-method.decorator';
 import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
 
 @State<VehicleContainerStateModel>({
@@ -21,9 +21,9 @@ import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
 @Injectable()
 export class AbstractVehicleContainerState {
   @Selector()
-  @registerSelectorMethod(VehicleContainerEnum.dependencyInjectedStore)
-  @registerSelectorMethod(VehicleContainerEnum.dynamicStore)
-  static formContext$(state: VehicleContainerStateModel): VehicleContainerContextModel {
+  @registerSelectorVehicleContainerMethod(VehicleContainerEnum.dependencyInjectedStore)
+  @registerSelectorVehicleContainerMethod(VehicleContainerEnum.dynamicStore)
+  static formElements$(state: VehicleContainerStateModel): VehicleContainerElementsModel {
     return state.elements;
   }
 
@@ -33,8 +33,8 @@ export class AbstractVehicleContainerState {
   }
 
   @Selector()
-  @registerSelectorMethod(VehicleContainerEnum.dependencyInjectedStore)
-  @registerSelectorMethod(VehicleContainerEnum.dynamicStore)
+  @registerSelectorVehicleContainerMethod(VehicleContainerEnum.dependencyInjectedStore)
+  @registerSelectorVehicleContainerMethod(VehicleContainerEnum.dynamicStore)
   static routing$(state: VehicleContainerStateModel): RoutingLoadModel {
     return state.routing;
   }

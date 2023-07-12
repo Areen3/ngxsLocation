@@ -3,7 +3,7 @@ import { IEmptyObject } from '../base/base';
 
 export type TabsStupidDataModel = Pick<ElementsDataModel<ElementDataModel>, 'items'>;
 
-export interface TabsStupidMetaDataModel extends IEmptyObject {
+export interface TabsStupidViewModel extends IEmptyObject {
   selected: ElementDataModel['id'];
   isSelected: boolean;
 }

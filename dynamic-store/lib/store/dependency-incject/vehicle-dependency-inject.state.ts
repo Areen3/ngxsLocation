@@ -5,12 +5,14 @@ import { AbstractVehicleSpeedService } from '../../model/abstract/abstract-vehic
 import { VehicleEnum } from '../../model/domain/vehicle.enum';
 import { VehicleModel } from '../../model/domain/vehicle.model';
 import {
-  VehicleItemStupidDataModel,
-  VehicleItemStupidMetaDataModel
+  VehicleItemStupidModelModel,
+  VehicleItemStupidViewModel
 } from '../../model/stupid/vehicle-item-stupid.model';
 import { VehicleStateModel } from '../../logic/base/vehicle-state.model';
 import { ChangeSpeedVehicleAction, UpdateVehicleAction } from '../../logic/base/state.actions';
 import { StateBuildersUtils } from '../../logic/utils/state-builders.utils';
+import { registerSelectorVehicleMethod } from '../../model/decorators/register-selector-vehicle-method.decorator';
+import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
 
 @State<VehicleStateModel>({
   name: StateBuildersUtils.buildDependencyInjectStateName(StateNamesEnum.vehicle),
@@ -32,14 +34,16 @@ export class VehicleDependencyInjectState<T extends VehicleModel = VehicleModel>
   constructor(protected readonly speedSrv: AbstractVehicleSpeedService<T>) {}
 
   @Selector()
-  static formData$(state: VehicleStateModel): VehicleItemStupidDataModel {
+  @registerSelectorVehicleMethod(VehicleContainerEnum.dependencyInjectedStore)
+  static formModel$(state: VehicleStateModel): VehicleItemStupidModelModel {
     return {
       vehicle: state.model
     };
   }
 
   @Selector()
-  static formMetaData$(_state: VehicleStateModel): VehicleItemStupidMetaDataModel {
+  @registerSelectorVehicleMethod(VehicleContainerEnum.dependencyInjectedStore)
+  static formView$(_state: VehicleStateModel): VehicleItemStupidViewModel {
     return {};
   }
 

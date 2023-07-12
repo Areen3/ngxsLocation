@@ -8,7 +8,7 @@ import {
   ElementsDataModel
 } from '../../../model/domain/elementDataModel';
 import { StateNamesEnum } from '../../../model/store/state-names.enum';
-import { registerSelectorMethod } from '../../../model/decorators/register-selector-method.decorator';
+import { registerSelectorVehicleContainerMethod } from '../../../model/decorators/register-selector-vehicle-container-method.decorator';
 
 @State<ElementsDataModel<ElementContextDataModel>>({
   name: StateNamesEnum.formContext,
@@ -23,8 +23,8 @@ export class FormContextSingleResponsibilityState<
   implements NgxsOnInit
 {
   @Selector()
-  @registerSelectorMethod('')
-  static formContext$(
+  @registerSelectorVehicleContainerMethod('')
+  static formElements$(
     state: ElementsDataModel<ElementContextDataModel>
   ): ElementsDataModel<ElementContextDataModel> {
     return state;

@@ -4,14 +4,19 @@ import { Injectable, Type } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
   VehicleContainerStupidDataModel,
-  VehicleContainerStupidMetaDataModel
+  VehicleContainerStupidViewModel
 } from '../../model/stupid/vehicle-container-stupid.model';
 import { getRegisterContainerState } from '../../model/decorators/register-container-state.decorator';
-import { getRegisterSelectedMethod } from '../../model/decorators/register-selector-method.decorator';
+import { getRegisterSelectedVehicleContainerMethod } from '../../model/decorators/register-selector-vehicle-container-method.decorator';
 import { MethodSelectorEnum } from '../../model/enums/method-selector.enum';
-import { VehicleContainerContextModel } from '../vehicle-container/vehicle-container-state.model';
+import { VehicleContainerElementsModel } from '../vehicle-container/vehicle-container-state.model';
 import { LocationBuildersUtils } from './location-builders.utils';
 import { StateNamesEnum } from '../../model/store/state-names.enum';
+import { getRegisterSelectedVehicleMethod } from '../../model/decorators/register-selector-vehicle-method.decorator';
+import {
+  VehicleItemStupidModelModel,
+  VehicleItemStupidViewModel
+} from '../../model/stupid/vehicle-item-stupid.model';
 
 @Injectable()
 export class SelectorBuildersUtils {
@@ -20,39 +25,73 @@ export class SelectorBuildersUtils {
     private readonly locBuilder: LocationBuildersUtils
   ) {}
 
-  getFormDataVehicleContainer$(
+  getFormModelVehicleContainer$(
     type: VehicleContainerEnum,
     loc: SingleLocation
   ): Observable<VehicleContainerStupidDataModel> {
     const myType = type === VehicleContainerEnum.singleResponsibilityStore ? '' : type;
-    const mySelector = getRegisterSelectedMethod(myType, MethodSelectorEnum.formData$);
-    const myLoc = this.locBuilder.convertLocation(loc.path, type, StateNamesEnum.formData);
+    const mySelector = getRegisterSelectedVehicleContainerMethod(
+      myType,
+      MethodSelectorEnum.formModel$
+    );
+    const myLoc = this.locBuilder.convertLocation(loc.path, type, StateNamesEnum.formModel);
     return this.store.selectInContext(
       this.getSelector(type, myLoc, mySelector.descriptor.value, mySelector.name),
       myLoc
     );
   }
 
-  getFormMetaDataVehicleContainer$(
+  getFormViewVehicleContainer$(
     type: VehicleContainerEnum,
     loc: SingleLocation
-  ): Observable<VehicleContainerStupidMetaDataModel> {
+  ): Observable<VehicleContainerStupidViewModel> {
     const myType = type === VehicleContainerEnum.singleResponsibilityStore ? '' : type;
-    const mySelector = getRegisterSelectedMethod(myType, MethodSelectorEnum.formMetaData$);
-    const myLoc = this.locBuilder.convertLocation(loc.path, type, StateNamesEnum.formMetaData);
+    const mySelector = getRegisterSelectedVehicleContainerMethod(
+      myType,
+      MethodSelectorEnum.formView$
+    );
+    const myLoc = this.locBuilder.convertLocation(loc.path, type, StateNamesEnum.formView);
     return this.store.selectInContext(
       this.getSelector(type, myLoc, mySelector.descriptor.value, mySelector.name),
       myLoc
     );
   }
 
-  getContextVehicleContainer$(
+  getElementsVehicleContainer$(
     type: VehicleContainerEnum,
     loc: SingleLocation
-  ): Observable<VehicleContainerContextModel> {
+  ): Observable<VehicleContainerElementsModel> {
     const myType = type === VehicleContainerEnum.singleResponsibilityStore ? '' : type;
-    const mySelector = getRegisterSelectedMethod(myType, MethodSelectorEnum.formContext$);
+    const mySelector = getRegisterSelectedVehicleContainerMethod(
+      myType,
+      MethodSelectorEnum.formElements$
+    );
     const myLoc = this.locBuilder.convertLocation(loc.path, type, StateNamesEnum.formContext);
+    return this.store.selectInContext(
+      this.getSelector(type, myLoc, mySelector.descriptor.value, mySelector.name),
+      myLoc
+    );
+  }
+
+  getFormModelVehicle$(
+    type: VehicleContainerEnum,
+    loc: SingleLocation
+  ): Observable<VehicleItemStupidModelModel> {
+    const myType = type === VehicleContainerEnum.singleResponsibilityStore ? '' : type;
+    const mySelector = getRegisterSelectedVehicleMethod(myType, MethodSelectorEnum.formModel$);
+    const myLoc = this.locBuilder.convertLocation(loc.path, type, StateNamesEnum.formModel);
+    return this.store.selectInContext(
+      this.getSelector(type, myLoc, mySelector.descriptor.value, mySelector.name),
+      myLoc
+    );
+  }
+  getFormViewVehicle$(
+    type: VehicleContainerEnum,
+    loc: SingleLocation
+  ): Observable<VehicleItemStupidViewModel> {
+    const myType = type === VehicleContainerEnum.singleResponsibilityStore ? '' : type;
+    const mySelector = getRegisterSelectedVehicleMethod(myType, MethodSelectorEnum.formModel$);
+    const myLoc = this.locBuilder.convertLocation(loc.path, type, StateNamesEnum.formModel);
     return this.store.selectInContext(
       this.getSelector(type, myLoc, mySelector.descriptor.value, mySelector.name),
       myLoc
@@ -62,9 +101,12 @@ export class SelectorBuildersUtils {
   getRoutingVehicleContainer$(
     type: VehicleContainerEnum,
     loc: SingleLocation
-  ): Observable<VehicleContainerContextModel> {
+  ): Observable<VehicleContainerElementsModel> {
     const myType = type === VehicleContainerEnum.singleResponsibilityStore ? '' : type;
-    const mySelector = getRegisterSelectedMethod(myType, MethodSelectorEnum.routing$);
+    const mySelector = getRegisterSelectedVehicleContainerMethod(
+      myType,
+      MethodSelectorEnum.routing$
+    );
     const myLoc = this.locBuilder.convertLocation(loc.path, type, StateNamesEnum.routing);
     return this.store.selectInContext(
       this.getSelector(type, myLoc, mySelector.descriptor.value, mySelector.name),
@@ -82,11 +124,11 @@ export class SelectorBuildersUtils {
     return createSelector(
       [stateType],
       selectorMethod,
-      this.buildCreationMetaData(stateType, selectorName, loc)
+      this.buildCreationView(stateType, selectorName, loc)
     );
   }
 
-  private buildCreationMetaData(
+  private buildCreationView(
     containerClass: Type<any>,
     selectorName: string,
     location: SingleLocation

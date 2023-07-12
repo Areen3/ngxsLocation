@@ -7,7 +7,7 @@ import { RoutingSingleResponsibilityState } from '../base/routing-single-respons
 import { registerContainerState } from '../../../model/decorators/register-container-state.decorator';
 import { VehicleContainerEnum } from '../../../model/enums/vehicle-container.enum';
 import { FormDataVehicleContainerState } from './form-data-vehicle-container.state';
-import { FormMetaDataVehicleContainerState } from './form-meta-data-vehicle-container.state';
+import { FormViewVehicleContainerState } from './form-view-vehicle-container-state.service';
 import { FormContextVehicleContainerState } from './form-context-vehicle-container.state';
 import { HostAreaAccessService } from '../area-services/host-area-access.service';
 import { HostVehicleContainerAccessModel } from '../../../model/store/host-area.model';
@@ -21,7 +21,7 @@ import { CrudSrVehicleContainerState } from './crud-sr-vehicle-container.state';
       { provide: VehicleSingleResponsibilityContainerState },
       { provide: FormContextVehicleContainerState },
       { provide: FormDataVehicleContainerState },
-      { provide: FormMetaDataVehicleContainerState },
+      { provide: FormViewVehicleContainerState },
       { provide: RoutingSingleResponsibilityState },
       { provide: CrudSrVehicleContainerState },
       { provide: HostAreaAccessService }
@@ -31,7 +31,7 @@ import { CrudSrVehicleContainerState } from './crud-sr-vehicle-container.state';
   children: [
     FormContextVehicleContainerState,
     FormDataVehicleContainerState,
-    FormMetaDataVehicleContainerState,
+    FormViewVehicleContainerState,
     RoutingSingleResponsibilityState,
     CrudSrVehicleContainerState
   ]

@@ -5,7 +5,7 @@ import { StateContext } from '@ngxs/store';
 export interface DataSingleResponsibilityStoreModel {}
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface MetaDataSingleResponsibilityStoreModel {}
+export interface ViewSingleResponsibilityStoreModel {}
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ContextSingleResponsibilityStoreModel {}
@@ -16,15 +16,15 @@ export interface RoutingSingleResponsibilityStateModel {
 
 export interface BaseSimpleStoreModel
   extends DataSingleResponsibilityStoreModel,
-    MetaDataSingleResponsibilityStoreModel,
+    ViewSingleResponsibilityStoreModel,
     ContextSingleResponsibilityStoreModel {}
 
 export interface HostDataAreaAccessModel<TData> {
   model: StateContext<TData>;
 }
 
-export interface HostMetaDataAreaAccessModel<TMetaData> {
-  view: StateContext<TMetaData>;
+export interface HostViewAreaAccessModel<TView> {
+  view: StateContext<TView>;
 }
 
 export interface HostContextAreaAccessModel<TContext> {
@@ -32,9 +32,9 @@ export interface HostContextAreaAccessModel<TContext> {
 }
 
 export interface HostSingleResponsibilityAreaAccessModel<
-  TData = any,
-  TMetaData = any,
-  TContext = any
-> extends HostDataAreaAccessModel<TData>,
-    HostMetaDataAreaAccessModel<TMetaData>,
-    HostContextAreaAccessModel<TContext> {}
+  TModel = any,
+  TView = any,
+  TElements = any
+> extends HostDataAreaAccessModel<TModel>,
+    HostViewAreaAccessModel<TView>,
+    HostContextAreaAccessModel<TElements> {}

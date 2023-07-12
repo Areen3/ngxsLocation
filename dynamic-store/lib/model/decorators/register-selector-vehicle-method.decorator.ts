@@ -12,7 +12,7 @@ interface MapDecoratorItem {
 
 const MapDecorator: Map<string, MapDecoratorItem> = new Map();
 
-export function registerSelectorMethod<T extends SelectorDef<any>>(key: string): any {
+export function registerSelectorVehicleMethod<T extends SelectorDef<any>>(key: string): any {
   return <U>(
     target: any,
     name: string,
@@ -22,7 +22,7 @@ export function registerSelectorMethod<T extends SelectorDef<any>>(key: string):
     const originalFn = descriptor?.value;
     if (originalFn && typeof originalFn !== 'function') {
       throw new Error(
-        `You can only use this decorator ${registerSelectorMethod.name} on method `
+        `You can only use this decorator ${registerSelectorVehicleMethod.name} on method `
       );
     }
     const keyMap = buildName(key, name);
@@ -39,13 +39,13 @@ export function registerSelectorMethod<T extends SelectorDef<any>>(key: string):
   };
 }
 
-export function getRegisterSelectedMethod(
+export function getRegisterSelectedVehicleMethod(
   key: string,
   name: string
 ): MapDecoratorItem['type'] {
   if (!MapDecorator.has(buildName(key, name))) {
     throw new Error(
-      `You should first decorate state: ${name} using decorator : @${registerSelectorMethod.name}`
+      `You should first decorate state: ${name} using decorator : @${registerSelectorVehicleMethod.name}`
     );
   }
   const item = MapDecorator.get(buildName(key, name))!;

@@ -3,7 +3,7 @@ import { HostSingleResponsibilityAreaAccessModel } from '../../../model/store/ba
 
 @Injectable()
 export class HostAreaAccessService<TData extends HostSingleResponsibilityAreaAccessModel> {
-  protected _ctx: TData = <TData>(<unknown>{ data: {}, metaData: {}, context: {} });
+  protected _ctx = <TData>{ model: {}, view: {}, elements: {} };
 
   get ctx(): TData {
     if (this._ctx === undefined) throw Error(`You should set ctx data`);

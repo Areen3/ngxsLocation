@@ -23,7 +23,7 @@ export class VehicleContainerGuard implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
     const id = Number(route.paramMap.get('id'));
-    return this.store.selectOnce(DashBoardState.formContext$).pipe(
+    return this.store.selectOnce(DashBoardState.formElements$).pipe(
       map(item => item.items.find(container => container.id === id)),
       map(container => {
         if (!container) throw new Error(`Container with id ${id} doesn't exist`);

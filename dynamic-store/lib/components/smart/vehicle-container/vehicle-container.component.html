@@ -1,15 +1,15 @@
 <div class="margin container-grid">
   <vehicle-container-stupid
     [elements]="context"
-    [model]="(data$ | async)!"
-    [view]="(metaData$ | async)!"
+    [model]="(model$ | async)!"
+    [view]="(view$ | async)!"
     (eventEmitter)="outputEvents($event)"
   >
   </vehicle-container-stupid>
   <div class="flex-dir">
-    <ng-container *ngIf="(context$ | async)!.items">
-      <ng-container *ngFor="let item of (context$ | async)!.items">
-        <vehicle-item [context]="item"></vehicle-item>
+    <ng-container *ngIf="(elements$ | async)!.items">
+      <ng-container *ngFor="let item of (elements$ | async)!.items">
+        <vehicle-item [elements]="item"></vehicle-item>
       </ng-container>
     </ng-container>
   </div>

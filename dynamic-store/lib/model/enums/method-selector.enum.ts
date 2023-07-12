@@ -1,9 +1,6 @@
 export enum MethodSelectorEnum {
-  formData$ = 'formData$',
-  formMetaData$ = 'formMetaData$',
-  formContext$ = 'formContext$',
-  state$ = 'state$',
-  data$ = 'data$',
-  metaData$ = 'metaData$',
+  formModel$ = 'formModel$',
+  formView$ = 'formView$',
+  formElements$ = 'formElements$',
   routing$ = 'routing$'
 }

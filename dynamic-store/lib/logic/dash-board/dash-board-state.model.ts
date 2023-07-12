@@ -3,7 +3,7 @@ import { ElementDataModel, ElementsDataModel } from '../../model/domain/elementD
 import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
 import { BaseStateModel } from '../base/vehicle-state.model';
 
-export interface DashBoardDataModel extends IEntity {
+export interface DashBoardModelModel extends IEntity {
   lastId: number;
   simulate: boolean;
 }
@@ -12,13 +12,13 @@ export interface DashBoardContextItemModel extends ElementDataModel, ElementLoca
   type: VehicleContainerEnum;
 }
 
-export type DashBoardContextModel = ElementsDataModel<DashBoardContextItemModel>;
+export type DashBoardElementsModel = ElementsDataModel<DashBoardContextItemModel>;
 
-export interface DashBoardMetaDataModel extends IEmptyObject {
+export interface DashBoardViewModel extends IEmptyObject {
   dropDown: Array<string>;
   remove: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface DashBoardStateModel
-  extends BaseStateModel<DashBoardDataModel, DashBoardMetaDataModel, DashBoardContextModel> {}
+  extends BaseStateModel<DashBoardModelModel, DashBoardViewModel, DashBoardElementsModel> {}

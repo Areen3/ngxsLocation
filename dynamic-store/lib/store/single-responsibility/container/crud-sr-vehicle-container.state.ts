@@ -10,10 +10,10 @@ import { BaseSingleResponsibilityState } from '../base/base-single-responsibilit
 import { HostAreaAccessService } from '../area-services/host-area-access.service';
 import { HostVehicleContainerAccessModel } from '../../../model/store/host-area.model';
 import {
-  VehicleContainerDataModel,
-  VehicleContainerMetaDataModel
+  VehicleContainerModelModel,
+  VehicleContainerViewModel
 } from '../../../logic/vehicle-container/vehicle-container-state.model';
-import { UpdateMetaDataAction } from '../base/meta-data-state.actions';
+import { UpdateViewAction } from '../base/view-state.actions';
 import { from, Observable } from 'rxjs';
 import { UpdateDataAction } from '../base/data-state.actions';
 
@@ -35,25 +35,25 @@ export class CrudSrVehicleContainerState extends BaseSingleResponsibilityState<H
     ctx: StateContext<IEmptyObject>,
     action: AddVehicleContainerAction
   ): Observable<any> {
-    const locData = ctx.getLocation().getNeighborLocation(StateNamesEnum.formData);
-    const locMeaData = ctx.getLocation().getNeighborLocation(StateNamesEnum.formMetaData);
+    const locData = ctx.getLocation().getNeighborLocation(StateNamesEnum.formModel);
+    const locMeaData = ctx.getLocation().getNeighborLocation(StateNamesEnum.formView);
     const dataState = this.host.ctx.model.getState();
-    const newData: VehicleContainerDataModel = {
+    const newData: VehicleContainerModelModel = {
       ...dataState,
       itemNumber: action.payload.id
     };
-    const metaDataState = this.host.ctx.view.getState();
-    const newMetaData: VehicleContainerMetaDataModel = {
-      ...metaDataState,
-      containersCount: metaDataState.containersCount + 1
+    const viewState = this.host.ctx.view.getState();
+    const newView: VehicleContainerViewModel = {
+      ...viewState,
+      containersCount: viewState.containersCount + 1
     };
     return from([
       this.store.dispatchInLocation(
-        new UpdateDataAction<VehicleContainerDataModel>(newData),
+        new UpdateDataAction<VehicleContainerModelModel>(newData),
         locData
       ),
       this.store.dispatchInLocation(
-        new UpdateMetaDataAction<VehicleContainerMetaDataModel>(newMetaData),
+        new UpdateViewAction<VehicleContainerViewModel>(newView),
         locMeaData
       )
     ]);
@@ -61,14 +61,14 @@ export class CrudSrVehicleContainerState extends BaseSingleResponsibilityState<H
 
   @Action(RemoveVehicleContainerAction)
   RemoveVehicleContainer(ctx: StateContext<IEmptyObject>) {
-    const locMeaData = ctx.getLocation().getNeighborLocation(StateNamesEnum.formMetaData);
-    const metaDataState = this.host.ctx.view.getState();
-    const newMetaData: VehicleContainerMetaDataModel = {
-      ...metaDataState,
-      containersCount: metaDataState.containersCount - 1
+    const locMeaData = ctx.getLocation().getNeighborLocation(StateNamesEnum.formView);
+    const viewState = this.host.ctx.view.getState();
+    const newView: VehicleContainerViewModel = {
+      ...viewState,
+      containersCount: viewState.containersCount - 1
     };
     return this.store.dispatchInLocation(
-      new UpdateMetaDataAction<VehicleContainerMetaDataModel>(newMetaData),
+      new UpdateViewAction<VehicleContainerViewModel>(newView),
       locMeaData
     );
   }

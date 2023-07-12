@@ -1,8 +1,8 @@
 <div class="veh-item veh-div-flex veh-item-align">
   <vehicle-item-stupid
-    [elements]="context"
-    [model]="data$ | async"
-    [view]="metaData$ | async"
+    [elements]="elements"
+    [model]="model$ | async"
+    [view]="view$ | async"
     (eventEmitter)="outputEvents($event)"
   >
   </vehicle-item-stupid>

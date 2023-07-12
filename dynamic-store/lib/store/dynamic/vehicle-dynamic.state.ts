@@ -4,11 +4,13 @@ import { StateNamesEnum } from '../../model/store/state-names.enum';
 import { VehicleEnum } from '../../model/domain/vehicle.enum';
 import { VehicleModel } from '../../model/domain/vehicle.model';
 import {
-  VehicleItemStupidDataModel,
-  VehicleItemStupidMetaDataModel
+  VehicleItemStupidModelModel,
+  VehicleItemStupidViewModel
 } from '../../model/stupid/vehicle-item-stupid.model';
 import { VehicleStateModel } from '../../logic/base/vehicle-state.model';
 import { ChangeSpeedVehicleAction, UpdateVehicleAction } from '../../logic/base/state.actions';
+import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
+import { registerSelectorVehicleMethod } from '../../model/decorators/register-selector-vehicle-method.decorator';
 
 @State<VehicleStateModel>({
   name: StateNamesEnum.vehicle,
@@ -21,14 +23,16 @@ import { ChangeSpeedVehicleAction, UpdateVehicleAction } from '../../logic/base/
 @Injectable()
 export class VehicleDynamicState implements NgxsOnInit {
   @Selector()
-  static formData$(state: VehicleStateModel): VehicleItemStupidDataModel {
+  @registerSelectorVehicleMethod(VehicleContainerEnum.dynamicStore)
+  static formModel$(state: VehicleStateModel): VehicleItemStupidModelModel {
     return {
       vehicle: state.model
     };
   }
 
   @Selector()
-  static formMetaData$(_state: VehicleStateModel): VehicleItemStupidMetaDataModel {
+  @registerSelectorVehicleMethod(VehicleContainerEnum.dynamicStore)
+  static formView$(_state: VehicleStateModel): VehicleItemStupidViewModel {
     return {};
   }
 

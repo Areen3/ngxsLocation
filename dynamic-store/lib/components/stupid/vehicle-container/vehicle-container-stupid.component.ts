@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { VehicleEnum } from '../../../model/domain/vehicle.enum';
 import {
   VehicleContainerStupidDataModel,
-  VehicleContainerStupidMetaDataModel
+  VehicleContainerStupidViewModel
 } from '../../../model/stupid/vehicle-container-stupid.model';
 import { VehicleContainerEvents, VehicleContainerEventType } from './vehicle-container.event';
 import { DashBoardContextItemModel } from '../../../logic/dash-board/dash-board-state.model';
@@ -20,7 +20,7 @@ import {
 export class VehicleContainerStupidComponent<
   TEvents extends VehicleContainerEvents,
   TModel = VehicleContainerStupidDataModel,
-  TView = VehicleContainerStupidMetaDataModel,
+  TView = VehicleContainerStupidViewModel,
   TElements extends DashBoardContextItemModel = DashBoardContextItemModel
 > implements
     BaseStupidInputInterface<TModel, TView>,

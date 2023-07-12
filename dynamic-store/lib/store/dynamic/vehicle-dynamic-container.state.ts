@@ -4,7 +4,7 @@ import { StateNamesEnum } from '../../model/store/state-names.enum';
 import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
 import {
   VehicleContainerStupidDataModel,
-  VehicleContainerStupidMetaDataModel
+  VehicleContainerStupidViewModel
 } from '../../model/stupid/vehicle-container-stupid.model';
 import { VehicleEnum } from '../../model/domain/vehicle.enum';
 import { VehicleContainerStateModel } from '../../logic/vehicle-container/vehicle-container-state.model';
@@ -17,7 +17,7 @@ import {
 import { StateBuildersUtils } from '../../logic/utils/state-builders.utils';
 import { registerContainerState } from '../../model/decorators/register-container-state.decorator';
 import { AbstractVehicleContainerState } from '../base/abstract-vehicle-container.state';
-import { registerSelectorMethod } from '../../model/decorators/register-selector-method.decorator';
+import { registerSelectorVehicleContainerMethod } from '../../model/decorators/register-selector-vehicle-container-method.decorator';
 
 @State<VehicleContainerStateModel>({
   name: StateBuildersUtils.buildDynamicStateName(StateNamesEnum.vehicleContainer),
@@ -32,8 +32,8 @@ import { registerSelectorMethod } from '../../model/decorators/register-selector
 @Injectable()
 export class VehicleDynamicContainerState extends AbstractVehicleContainerState {
   @Selector()
-  @registerSelectorMethod(VehicleContainerEnum.dynamicStore)
-  static formData$(state: VehicleContainerStateModel): VehicleContainerStupidDataModel {
+  @registerSelectorVehicleContainerMethod(VehicleContainerEnum.dynamicStore)
+  static formModel$(state: VehicleContainerStateModel): VehicleContainerStupidDataModel {
     return {
       items: state.elements.items,
       name: state.model.type.toString(),
@@ -42,10 +42,8 @@ export class VehicleDynamicContainerState extends AbstractVehicleContainerState 
   }
 
   @Selector()
-  @registerSelectorMethod(VehicleContainerEnum.dynamicStore)
-  static formMetaData$(
-    state: VehicleContainerStateModel
-  ): VehicleContainerStupidMetaDataModel {
+  @registerSelectorVehicleContainerMethod(VehicleContainerEnum.dynamicStore)
+  static formView$(state: VehicleContainerStateModel): VehicleContainerStupidViewModel {
     return {
       dropDown: state.view.dropDown,
       remove: state.view.containersCount > 0

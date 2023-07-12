@@ -9,8 +9,8 @@ import {
 } from '@ngxs/store';
 import { Injectable } from '@angular/core';
 import {
-  DashBoardContextModel,
-  DashBoardDataModel,
+  DashBoardElementsModel,
+  DashBoardModelModel,
   DashBoardStateModel
 } from './dash-board-state.model';
 import { StateNamesEnum } from '../../model/store/state-names.enum';
@@ -21,7 +21,7 @@ import {
 } from './state.actions';
 import {
   DashBoardStupidDataModel,
-  DashBoardStupidMetaDataModel
+  DashBoardStupidViewModel
 } from '../../model/stupid/dash-board-stupid.model';
 import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
 import { forkJoin } from 'rxjs';
@@ -43,7 +43,7 @@ export class DashBoardState implements NgxsOnInit {
   constructor(private readonly store: Store) {}
 
   @Selector()
-  static formData$(state: DashBoardStateModel): DashBoardStupidDataModel {
+  static formModel$(state: DashBoardStateModel): DashBoardStupidDataModel {
     return {
       items: state.elements.items,
       count: state.elements.items.length,
@@ -52,7 +52,7 @@ export class DashBoardState implements NgxsOnInit {
   }
 
   @Selector()
-  static formMetaData$(state: DashBoardStateModel): DashBoardStupidMetaDataModel {
+  static formView$(state: DashBoardStateModel): DashBoardStupidViewModel {
     return {
       remove: state.elements.items.length > 0,
       dropDown: state.view.dropDown
@@ -60,7 +60,7 @@ export class DashBoardState implements NgxsOnInit {
   }
 
   @Selector()
-  static formContext$(state: DashBoardStateModel): DashBoardContextModel {
+  static formElements$(state: DashBoardStateModel): DashBoardElementsModel {
     return state.elements;
   }
 
@@ -70,7 +70,7 @@ export class DashBoardState implements NgxsOnInit {
   }
 
   @Selector()
-  static data$(state: DashBoardStateModel): DashBoardDataModel {
+  static data$(state: DashBoardStateModel): DashBoardModelModel {
     return state.model;
   }
 

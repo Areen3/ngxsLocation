@@ -15,8 +15,7 @@ import { VehicleContainerStateModel } from '../../logic/vehicle-container/vehicl
 import {
   AddVehicleAction,
   AddVehicleContainerAction,
-  RemoveVehicleAction,
-  RemoveVehicleContainerAction
+  RemoveVehicleAction
 } from '../../logic/vehicle-container/state.actions';
 import { DashBoardState } from '../../logic/dash-board/dash-board.state';
 import { ChangeSpeedVehicleAction, UpdateVehicleAction } from '../../logic/base/state.actions';
@@ -104,9 +103,9 @@ export class DynamicVehicleAppServiceState extends BaseVehicleAppServiceState {
     return this.store.removeChildInLocalization(loc).pipe(
       switchMap(() => this.store.dispatch(new DashboardRemoveItemAction(action.payload))),
       switchMap(() => this.dal.removeEntity(action.payload)),
-      switchMap(() =>
-        this.store.dispatchInLocation(new RemoveVehicleContainerAction(action.payload.id), loc)
-      ),
+      // switchMap(() =>
+      //   this.store.dispatchInLocation(new RemoveVehicleContainerAction(action.payload.id), loc)
+      // ),
       switchMap(() => this.store.dispatch(new Navigate([RoutingPathEnum.dashboard])))
     );
   }

@@ -2,8 +2,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { VehicleItemModel } from '../../../model/store/vehicle-item.model';
 import { VehicleItemEvents, VehicleItemEventType } from './vehicle-item.event';
 import {
-  VehicleItemStupidDataModel,
-  VehicleItemStupidMetaDataModel
+  VehicleItemStupidModelModel,
+  VehicleItemStupidViewModel
 } from '../../../model/stupid/vehicle-item-stupid.model';
 import {
   BaseStupidContextInterface,
@@ -18,8 +18,8 @@ import {
 })
 export class VehicleItemStupidComponent<
   TEvents extends VehicleItemEvents,
-  TModel = VehicleItemStupidDataModel,
-  TView = VehicleItemStupidMetaDataModel,
+  TModel = VehicleItemStupidModelModel,
+  TView = VehicleItemStupidViewModel,
   TElements extends VehicleItemModel = VehicleItemModel
 > implements
     BaseStupidInputInterface<TModel, TView>,

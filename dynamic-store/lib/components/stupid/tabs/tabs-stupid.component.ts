@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TabEvents, TabsEventType } from './tabs.event';
 import {
   TabsStupidDataModel,
-  TabsStupidMetaDataModel
+  TabsStupidViewModel
 } from '../../../model/stupid/tabs-stupid.model';
 import {
   BaseStupidInputInterface,
@@ -16,7 +16,7 @@ import {
 })
 export class TabsStupidComponent<
   TModel = TabsStupidDataModel,
-  TView = TabsStupidMetaDataModel,
+  TView = TabsStupidViewModel,
   TEvents extends TabEvents = TabEvents
 > implements BaseStupidInputInterface<TModel, TView>, BaseStupidOutputInterface<TEvents>
 {

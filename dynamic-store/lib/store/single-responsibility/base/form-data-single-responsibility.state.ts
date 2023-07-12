@@ -7,7 +7,7 @@ import { IEmptyObject } from '../../../model/base/base';
 import { StateNamesEnum } from '../../../model/store/state-names.enum';
 
 @State<IEmptyObject>({
-  name: StateNamesEnum.formData,
+  name: StateNamesEnum.formModel,
   defaults: {
     data: {}
   }

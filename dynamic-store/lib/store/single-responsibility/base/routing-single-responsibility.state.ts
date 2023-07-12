@@ -7,7 +7,7 @@ import {
   SetIsLoadingRouterAction,
   SetLoadedRouterAction
 } from '../../../logic/routing/state.actions';
-import { registerSelectorMethod } from '../../../model/decorators/register-selector-method.decorator';
+import { registerSelectorVehicleContainerMethod } from '../../../model/decorators/register-selector-vehicle-container-method.decorator';
 import { RoutingLoadModel } from '../../../model/store/routing-load.model';
 
 @State<RoutingLoadModel>({
@@ -19,7 +19,7 @@ export class RoutingSingleResponsibilityState<
   T extends RoutingLoadModel
 > extends BaseSingleResponsibilityState<HostSingleResponsibilityAreaAccessModel> {
   @Selector()
-  @registerSelectorMethod('')
+  @registerSelectorVehicleContainerMethod('')
   static routing$(state: RoutingLoadModel): RoutingLoadModel {
     return state;
   }

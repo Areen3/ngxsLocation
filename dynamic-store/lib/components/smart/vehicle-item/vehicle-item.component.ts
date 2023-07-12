@@ -10,14 +10,16 @@ import {
   VehicleItemRemoveVehicleEvent
 } from '../../stupid/vehicle-item/vehicle-item.event';
 import {
-  VehicleItemStupidDataModel,
-  VehicleItemStupidMetaDataModel
+  VehicleItemStupidModelModel,
+  VehicleItemStupidViewModel
 } from '../../../model/stupid/vehicle-item-stupid.model';
-import { VehicleDependencyInjectState } from '../../../store/dependency-incject/vehicle-dependency-inject.state';
 import {
   ChangeSpeedAppServiceAction,
   RemoveVehicleAppServiceAction
 } from '../../../store/base/state.actions';
+import { ActivatedRoute } from '@angular/router';
+import { DashBoardState } from '../../../logic/dash-board/dash-board.state';
+import { SelectorBuildersUtils } from '../../../logic/utils/selector-builders.utils';
 
 @Component({
   selector: 'vehicle-item',
@@ -26,16 +28,20 @@ import {
 })
 export class VehicleItemComponent implements OnInit {
   @Input()
-  context: VehicleItemModel;
-  data$: Observable<VehicleItemStupidDataModel>;
-  metaData$: Observable<VehicleItemStupidMetaDataModel>;
+  elements: VehicleItemModel;
+  model$: Observable<VehicleItemStupidModelModel>;
+  view$: Observable<VehicleItemStupidViewModel>;
 
-  constructor(private readonly store: Store) {}
+  constructor(
+    private readonly store: Store,
+    private readonly route: ActivatedRoute,
+    private readonly selectorBuilder: SelectorBuildersUtils
+  ) {}
 
   outputEvents(event: VehicleItemEvents): void {
     switch (event.eventType) {
       case VehicleItemEventType.changeSpeed:
-        this.store.dispatch(new ChangeSpeedAppServiceAction(this.context));
+        this.store.dispatch(new ChangeSpeedAppServiceAction(this.elements));
         break;
       case VehicleItemEventType.removeVehicle:
         const removeEvent = <VehicleItemRemoveVehicleEvent>event;
@@ -45,11 +51,11 @@ export class VehicleItemComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const loc = SingleLocation.getLocation(this.context.location);
-    this.data$ = this.store.selectInContext(VehicleDependencyInjectState.formData$, loc);
-    this.metaData$ = this.store.selectInContext(
-      VehicleDependencyInjectState.formMetaData$,
-      loc
-    );
+    const containerId = Number(this.route.snapshot.paramMap.get('id'));
+    const dashBoard = this.store.selectSnapshot(DashBoardState.formElements$);
+    const item = dashBoard.items.find(item => item.id === containerId)!;
+    const loc = SingleLocation.getLocation(this.elements.location);
+    this.model$ = this.selectorBuilder.getFormModelVehicle$(item.type, loc);
+    this.view$ = this.selectorBuilder.getFormViewVehicle$(item.type, loc);
   }
 }
