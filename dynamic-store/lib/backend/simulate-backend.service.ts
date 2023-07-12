@@ -6,7 +6,7 @@ import { filter, map, switchMap } from 'rxjs/operators';
 import {
   AddVehicleContainerAppServiceAction,
   RemoveVehicleContainerAppServiceAction
-} from '../store/app-service/state.actions';
+} from '../store/base/state.actions';
 import { VehicleContainerEnum } from '../model/enums/vehicle-container.enum';
 
 @Injectable()

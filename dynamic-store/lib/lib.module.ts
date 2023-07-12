@@ -27,7 +27,7 @@ import { RouteReuseStrategy } from '@angular/router';
 import { ParamChangeRouteResultStrategy } from './guards/strategy/params-change-route-strategy';
 import { SimulateBackendService } from './backend/simulate-backend.service';
 import { VehicleContainerDalService } from './backend/vehicle-container-dal.service';
-import { AbstractVehicleContainerState } from './store/app-service/abstract-vehicle-container.state';
+import { AbstractVehicleContainerState } from './store/base/abstract-vehicle-container.state';
 import { SelectorBuildersUtils } from './logic/utils/selector-builders.utils';
 import { VehicleSingleResponsibilityContainerState } from './store/single-responsibility/container/vehicle-single-responsibility-container.state';
 import { RoutingSingleResponsibilityState } from './store/single-responsibility/base/routing-single-responsibility.state';
@@ -41,7 +41,7 @@ import { FormContextVehicleContainerState } from './store/single-responsibility/
 import { LocationBuildersUtils } from './logic/utils/location-builders.utils';
 import { HostAreaAccessService } from './store/single-responsibility/area-services/host-area-access.service';
 import { CrudSrVehicleContainerState } from './store/single-responsibility/container/crud-sr-vehicle-container.state';
-import { BaseVehicleAppServiceState } from './store/app-service/base-vehicle-app-service.state';
+import { BaseVehicleAppServiceState } from './store/base/base-vehicle-app-service.state';
 import { DynamicVehicleAppServiceState } from './store/dynamic/dynamic-vehicle-app-service.state';
 import { DependencyInjectedVehicleAppServiceState } from './store/dependency-incject/dependency-injected-vehicle-app-service.state';
 import { SingleResponsibilityVehicleAppServiceState } from './store/single-responsibility/app-services/single-responsibility-vehicle-app-service.state';

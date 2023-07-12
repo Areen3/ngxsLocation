@@ -29,13 +29,13 @@ import {
   LoadVehicleContainerAppServiceAction,
   RemoveVehicleAppServiceAction,
   RemoveVehicleContainerAppServiceAction
-} from '../app-service/state.actions';
+} from '../base/state.actions';
 import { getRegisterContainerState } from '../../model/decorators/register-container-state.decorator';
 import { VehicleContainerDalService } from '../../backend/vehicle-container-dal.service';
 import { Navigate } from '@ngxs/router-plugin';
 import { RoutingPathEnum } from '../../model/enums/routing-path-enum';
 import { SetLoadedRouterAction } from '../../logic/routing/state.actions';
-import { BaseVehicleAppServiceState } from '../app-service/base-vehicle-app-service.state';
+import { BaseVehicleAppServiceState } from '../base/base-vehicle-app-service.state';
 
 @State<IEmptyObject>({
   name: StateNamesEnum.vehicleAppService

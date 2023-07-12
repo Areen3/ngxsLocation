@@ -3,7 +3,7 @@ import { from, Observable } from 'rxjs';
 import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
 import { Injectable } from '@angular/core';
 import { RangeLocations, Store } from '@ngxs/store';
-import { AddVehicleContainerAppServiceAction } from '../../store/app-service/state.actions';
+import { AddVehicleContainerAppServiceAction } from '../../store/base/state.actions';
 import { map, switchMap } from 'rxjs/operators';
 import { DashBoardState } from '../../logic/dash-board/dash-board.state';
 import { Navigate } from '@ngxs/router-plugin';

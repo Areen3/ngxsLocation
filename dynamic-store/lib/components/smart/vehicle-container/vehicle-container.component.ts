@@ -19,7 +19,7 @@ import { VehicleContainerContextModel } from '../../../logic/vehicle-container/v
 import {
   AddVehicleAppServiceAction,
   RemoveVehicleContainerAppServiceAction
-} from '../../../store/app-service/state.actions';
+} from '../../../store/base/state.actions';
 import { ActivatedRoute } from '@angular/router';
 import { DashBoardState } from '../../../logic/dash-board/dash-board.state';
 import { SelectorBuildersUtils } from '../../../logic/utils/selector-builders.utils';

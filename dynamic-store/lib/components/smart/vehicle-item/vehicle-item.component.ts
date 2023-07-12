@@ -17,7 +17,7 @@ import { VehicleDependencyInjectState } from '../../../store/dependency-incject/
 import {
   ChangeSpeedAppServiceAction,
   RemoveVehicleAppServiceAction
-} from '../../../store/app-service/state.actions';
+} from '../../../store/base/state.actions';
 
 @Component({
   selector: 'vehicle-item',

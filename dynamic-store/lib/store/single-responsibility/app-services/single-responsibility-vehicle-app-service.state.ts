@@ -13,7 +13,7 @@ import {
   LoadVehicleContainerAppServiceAction,
   RemoveVehicleAppServiceAction,
   RemoveVehicleContainerAppServiceAction
-} from '../../app-service/state.actions';
+} from '../../base/state.actions';
 import {
   DashboardAddItemAction,
   DashboardRemoveItemAction
@@ -38,7 +38,7 @@ import {
 import { SetLoadedRouterAction } from '../../../logic/routing/state.actions';
 import { DashBoardState } from '../../../logic/dash-board/dash-board.state';
 import { getRegisterContainerState } from '../../../model/decorators/register-container-state.decorator';
-import { BaseVehicleAppServiceState } from '../../app-service/base-vehicle-app-service.state';
+import { BaseVehicleAppServiceState } from '../../base/base-vehicle-app-service.state';
 
 @State<IEmptyObject>({
   name: StateNamesEnum.vehicleAppService

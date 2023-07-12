@@ -16,7 +16,7 @@ import {
 } from '../../logic/vehicle-container/state.actions';
 import { StateBuildersUtils } from '../../logic/utils/state-builders.utils';
 import { registerContainerState } from '../../model/decorators/register-container-state.decorator';
-import { AbstractVehicleContainerState } from '../app-service/abstract-vehicle-container.state';
+import { AbstractVehicleContainerState } from '../base/abstract-vehicle-container.state';
 import { registerSelectorMethod } from '../../model/decorators/register-selector-method.decorator';
 
 @State<VehicleContainerStateModel>({
