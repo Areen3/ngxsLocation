@@ -43,11 +43,6 @@ export class VehicleDependencyInjectState<T extends VehicleModel = VehicleModel>
     return {};
   }
 
-  @Selector()
-  static vehicle$(state: VehicleStateModel): VehicleModel {
-    return state.data;
-  }
-
   @Action(UpdateVehicleAction)
   UpdateVehicleAction(ctx: StateContext<VehicleStateModel>, action: UpdateVehicleAction) {
     const state = ctx.getState();

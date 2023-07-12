@@ -33,9 +33,7 @@ export class DashBoardComponent {
   context$: Observable<TabsStupidDataModel> = this.store.select(DashBoardState.formContext$);
   metaDataTabs$: Observable<TabsStupidMetaDataModel> = of({ selected: 1, isSelected: false });
 
-  constructor(private store: Store) {
-    console.log('utworzyłem dashboard');
-  }
+  constructor(private store: Store) {}
 
   outputEvents(event: DashBoardEvents): void {
     switch (event.eventType) {
