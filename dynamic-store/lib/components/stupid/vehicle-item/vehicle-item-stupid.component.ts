@@ -27,11 +27,11 @@ export class VehicleItemStupidComponent<
     BaseStupidContextInterface<TElements>
 {
   @Input()
-  context: TElements;
+  elements: TElements;
   @Input()
-  data: TModel;
+  model: TModel;
   @Input()
-  metaData: TView;
+  view: TView;
   @Output()
   eventEmitter: EventEmitter<TEvents> = new EventEmitter<TEvents>();
 
@@ -45,7 +45,7 @@ export class VehicleItemStupidComponent<
   RemoveVehicle(): void {
     this.eventEmitter.emit(<TEvents>{
       eventType: VehicleItemEventType.removeVehicle,
-      data: this.context
+      data: this.elements
     });
   }
 }

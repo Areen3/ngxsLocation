@@ -21,9 +21,9 @@ export class TabsStupidComponent<
 > implements BaseStupidInputInterface<TModel, TView>, BaseStupidOutputInterface<TEvents>
 {
   @Input()
-  data: TModel;
+  model: TModel;
   @Input()
-  metaData: TView;
+  view: TView;
   @Output()
   eventEmitter: EventEmitter<TEvents> = new EventEmitter<TEvents>();
 

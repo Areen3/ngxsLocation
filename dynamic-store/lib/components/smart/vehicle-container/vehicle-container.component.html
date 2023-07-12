@@ -1,8 +1,8 @@
 <div class="margin container-grid">
   <vehicle-container-stupid
-    [context]="context"
-    [data]="(data$ | async)!"
-    [metaData]="(metaData$ | async)!"
+    [elements]="context"
+    [model]="(data$ | async)!"
+    [view]="(metaData$ | async)!"
     (eventEmitter)="outputEvents($event)"
   >
   </vehicle-container-stupid>

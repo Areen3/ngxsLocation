@@ -5,8 +5,8 @@ export interface BaseStupidInputInterface<
   TModel extends IEmptyObject,
   TView extends IEmptyObject
 > {
-  data: TModel;
-  metaData: TView;
+  model: TModel;
+  view: TView;
 }
 
 export interface BaseStupidOutputInterface<TEvents> {
@@ -14,5 +14,5 @@ export interface BaseStupidOutputInterface<TEvents> {
 }
 
 export interface BaseStupidContextInterface<TElements> {
-  context: TElements;
+  elements: TElements;
 }

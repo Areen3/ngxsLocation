@@ -1,11 +1,11 @@
 <div class="dash-width">
   <div class="title">
     <p>Dynamic store dashboard,</p>
-    <p>number of containers: {{ this.data.count }}</p>
+    <p>number of containers: {{ this.model.count }}</p>
   </div>
   <div class="group">
     <select #teams class="select" (change)="onSelected(teams.value)">
-      <ng-container *ngFor="let item of this.metaData.dropDown">
+      <ng-container *ngFor="let item of this.view.dropDown">
         <option value="{{ item }}">{{ item }}</option>
       </ng-container>
     </select>
@@ -21,7 +21,7 @@
   <label>
     <input
       type="checkbox"
-      [checked]="this.data.simulate"
+      [checked]="this.model.simulate"
       (change)="onChange($event.target.checked)"
     />
     simulate other users

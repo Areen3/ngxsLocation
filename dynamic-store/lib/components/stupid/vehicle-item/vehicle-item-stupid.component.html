@@ -1,6 +1,6 @@
 <table class="table-veh-item">
   <tr>
-    <ng-container *ngFor="let item of data.vehicle | keyvalue">
+    <ng-container *ngFor="let item of model.vehicle | keyvalue">
       <td class="table-item table-item-number">{{ item.key }}: {{ item.value }}</td>
     </ng-container>
   </tr>

@@ -1,10 +1,10 @@
 <div>
   <ul class="tabs">
-    <ng-container *ngFor="let item of data.items">
+    <ng-container *ngFor="let item of model.items">
       <li
         class="tabs li"
         (click)="onSelected(item.id)"
-        [class.active]="item.id === metaData.selected"
+        [class.active]="item.id === view.selected"
       >
         {{ item.name }}
       </li>

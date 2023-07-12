@@ -28,11 +28,11 @@ export class VehicleContainerStupidComponent<
     BaseStupidContextInterface<TElements>
 {
   @Input()
-  context: TElements;
+  elements: TElements;
   @Input()
-  data: TModel;
+  model: TModel;
   @Input()
-  metaData: TView;
+  view: TView;
   @Output()
   eventEmitter: EventEmitter<TEvents> = new EventEmitter<TEvents>();
   isDisabled = true;
@@ -40,7 +40,7 @@ export class VehicleContainerStupidComponent<
   RemoveContainer() {
     this.eventEmitter.emit(<TEvents>{
       eventType: VehicleContainerEventType.removeContainer,
-      data: <DashBoardContextItemModel>this.context
+      data: <DashBoardContextItemModel>this.elements
     });
   }
 
