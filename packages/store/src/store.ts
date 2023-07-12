@@ -189,44 +189,43 @@ export class Store {
    * Select a observable slice of store from specified location
    */
   selectInContext<T>(selector: any, location: SingleLocation): Observable<T> {
-    const seletorMDModel: SelectorMetaDataModel =
+    const selectorMDModel: SelectorMetaDataModel =
       StoreValidators.getValidSelectorMeta(selector);
-    const containerClass = seletorMDModel.containerClass;
+    const containerClass = selectorMDModel.containerClass;
     const selectorFn = this._stateFactory.getSelectorFromState(
       containerClass,
-      seletorMDModel.originalFn,
+      selectorMDModel.originalFn,
       location
     );
     return this.select(selectorFn);
   }
 
   /** Allows to select one slice of data from the store from specified location */
-  selectOnceInContext(selector: any, filter: SingleLocation): Observable<any> {
-    return this.selectInContext(selector, filter).pipe(take(1));
+  selectOnceInContext<T>(selector: any, filter: SingleLocation): Observable<T> {
+    return this.selectInContext<T>(selector, filter).pipe(take(1));
   }
 
   /**
    * Select a snapshot from the state  from specified location
    */
 
-  selectSnapshotInContext(selector: any, location: SingleLocation): any {
-    const seletorMDModel: SelectorMetaDataModel =
+  selectSnapshotInContext<T>(selector: any, location: SingleLocation): T {
+    const selectorMDModel: SelectorMetaDataModel =
       StoreValidators.getValidSelectorMeta(selector);
-    const containerClass = seletorMDModel.containerClass;
+    const containerClass = selectorMDModel.containerClass;
     const selectorFn = this._stateFactory.getSelectorFromState(
       containerClass,
-      seletorMDModel.originalFn,
+      selectorMDModel.originalFn,
       location
     );
-    const selectorFnWraped = this.getStoreBoundSelectorFn(selectorFn);
-    //  const selectorFnWraped = this.getStoreBoundSelectorFn(selector);
-    return selectorFnWraped(this._stateStream.getValue());
+    const selectorFnWrapped = this.getStoreBoundSelectorFn(selectorFn);
+    return selectorFnWrapped(this._stateStream.getValue());
   }
 
   /**
    * like select snapshot but return all states that is specific location
    */
-  getChildrensState(location: SingleLocation): { name: string; state: any }[] {
+  getChildrenState(location: SingleLocation): { name: string; state: any }[] {
     const parentLevel = location.path.split('.').length;
     const states = this._stateFactory.states
       .filter(p => p.path.startsWith(location.path))
@@ -245,9 +244,9 @@ export class Store {
    * like select snapshot but return all one state - children that is specific location
    */
   getChildrenStateByName(location: SingleLocation, childrenName: string): any {
-    const result = this.getChildrensState(location).find(item => item.name === childrenName);
+    const result = this.getChildrenState(location).find(item => item.name === childrenName);
     StoreValidators.checkStateExists(result, location.getChildLocation(childrenName).path);
-    return this.getChildrensState(location).find(item => item.name === childrenName)!.state;
+    return this.getChildrenState(location).find(item => item.name === childrenName)!.state;
   }
 
   /**

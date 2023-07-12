@@ -1,7 +1,7 @@
 import { ActivatedRouteSnapshot, CanActivate } from '@angular/router';
 import { from, Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { Store } from '@ngxs/store';
+import { RangeLocations, Store } from '@ngxs/store';
 import { filter, map, switchMap, take } from 'rxjs/operators';
 import { DashBoardState } from '../../logic/dash-board/dash-board.state';
 import { AbstractVehicleContainerState } from '../../store/app-service/abstract-vehicle-container.state';
@@ -58,7 +58,10 @@ export class VehicleContainerGuard implements CanActivate {
     );
     return from(this.store.dispatchInLocation(new SetIsLoadingRouterAction(true), loc)).pipe(
       switchMap(() =>
-        this.store.dispatch(new LoadVehicleContainerAppServiceAction(container))
+        this.store.dispatchInLocation(
+          new LoadVehicleContainerAppServiceAction(container),
+          RangeLocations.filterByContext(container.type, container.type)
+        )
       ),
       switchMap(() =>
         this.store.selectInContext<RoutingLoadModel>(

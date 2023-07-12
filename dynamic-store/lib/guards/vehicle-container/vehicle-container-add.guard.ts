@@ -17,7 +17,7 @@ export class VehicleContainerAddGuard implements CanActivate {
     const containerType = <VehicleContainerEnum>route.paramMap.get('type');
     return from(
       this.store.dispatchInLocation(
-        new AddVehicleContainerAppServiceAction(containerType),
+        new AddVehicleContainerAppServiceAction({ vehicle: containerType, withStore: true }),
         RangeLocations.filterByContext(containerType, containerType)
       )
     ).pipe(

@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Store } from '@ngxs/store';
+import { RangeLocations, Store } from '@ngxs/store';
 import { BehaviorSubject, combineLatest, forkJoin, Observable, of, timer } from 'rxjs';
 import { DashBoardState } from '../logic/dash-board/dash-board.state';
 import { filter, map, switchMap } from 'rxjs/operators';
 import {
-  AddVehicleBackendContainerAppServiceAction,
-  RemoveVehicleBackendContainerAppServiceAction
+  AddVehicleContainerAppServiceAction,
+  RemoveVehicleContainerAppServiceAction
 } from '../store/app-service/state.actions';
 import { VehicleContainerEnum } from '../model/enums/vehicle-container.enum';
 
@@ -42,7 +42,10 @@ export class SimulateBackendService {
     const value = Object.values(VehicleContainerEnum).filter(
       (_item, index) => index === randomNumber
     );
-    return this.store.dispatch(new AddVehicleBackendContainerAppServiceAction(value[0]));
+    return this.store.dispatchInLocation(
+      new AddVehicleContainerAppServiceAction({ vehicle: value[0], withStore: false }),
+      RangeLocations.filterByContext(value[0], value[0])
+    );
   }
 
   removeContainer(): Observable<any> {
@@ -50,8 +53,9 @@ export class SimulateBackendService {
     if (values.items.length === 0) return of(false);
     const randomNumber = Math.floor(Math.random() * (values.items.length - 1));
     const vehicleContainer = values.items[randomNumber];
-    return this.store.dispatch(
-      new RemoveVehicleBackendContainerAppServiceAction(vehicleContainer)
+    return this.store.dispatchInLocation(
+      new RemoveVehicleContainerAppServiceAction(vehicleContainer),
+      RangeLocations.filterByContext(vehicleContainer.type, vehicleContainer.type)
     );
   }
 }

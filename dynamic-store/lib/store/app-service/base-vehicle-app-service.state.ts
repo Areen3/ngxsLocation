@@ -30,4 +30,7 @@ export class BaseVehicleAppServiceState {
       location: loc.getChildLocation(childName).path
     };
   }
+  protected getContainerLocalization(name: string): SingleLocation {
+    return SingleLocation.getLocation(StateNamesEnum.dashBoard).getChildLocation(name);
+  }
 }

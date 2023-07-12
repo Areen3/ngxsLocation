@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { SingleLocation, Store } from '@ngxs/store';
+import { RangeLocations, SingleLocation, Store } from '@ngxs/store';
 import {
   DashBoardContextItemModel,
   DashBoardContextModel
@@ -61,8 +61,9 @@ export class VehicleContainerComponent implements OnInit {
     switch (event.eventType) {
       case VehicleContainerEventType.addVehicle:
         const addEvent = <VehicleContainerAddVehicleEvent>event;
-        this.store.dispatch(
-          new AddVehicleAppServiceAction({ container: this.context, vehicle: addEvent.data })
+        this.store.dispatchInLocation(
+          new AddVehicleAppServiceAction({ container: this.context, vehicle: addEvent.data }),
+          RangeLocations.filterByContext(this.context.type, this.context.type)
         );
         break;
       case VehicleContainerEventType.removeContainer:
