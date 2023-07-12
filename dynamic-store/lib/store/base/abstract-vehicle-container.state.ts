@@ -24,7 +24,7 @@ export class AbstractVehicleContainerState {
   @registerSelectorMethod(VehicleContainerEnum.dependencyInjectedStore)
   @registerSelectorMethod(VehicleContainerEnum.dynamicStore)
   static formContext$(state: VehicleContainerStateModel): VehicleContainerContextModel {
-    return state.context;
+    return state.elements;
   }
 
   @Selector()

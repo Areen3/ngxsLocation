@@ -6,33 +6,46 @@ import {
 } from '../../../model/stupid/vehicle-container-stupid.model';
 import { VehicleContainerEvents, VehicleContainerEventType } from './vehicle-container.event';
 import { DashBoardContextItemModel } from '../../../logic/dash-board/dash-board-state.model';
+import {
+  BaseStupidContextInterface,
+  BaseStupidInputInterface,
+  BaseStupidOutputInterface
+} from '../base/base-stupid-input-interface';
 
 @Component({
   selector: 'vehicle-container-stupid',
   templateUrl: './vehicle-container-stupid.component.html',
   styleUrls: ['./vehicle-container-stupid.component.scss']
 })
-export class VehicleContainerStupidComponent {
+export class VehicleContainerStupidComponent<
+  TEvents extends VehicleContainerEvents,
+  TModel = VehicleContainerStupidDataModel,
+  TView = VehicleContainerStupidMetaDataModel,
+  TElements extends DashBoardContextItemModel = DashBoardContextItemModel
+> implements
+    BaseStupidInputInterface<TModel, TView>,
+    BaseStupidOutputInterface<TEvents>,
+    BaseStupidContextInterface<TElements>
+{
   @Input()
-  context: DashBoardContextItemModel;
+  context: TElements;
   @Input()
-  data: VehicleContainerStupidDataModel;
+  data: TModel;
   @Input()
-  metaData: VehicleContainerStupidMetaDataModel;
+  metaData: TView;
   @Output()
-  eventEmitter: EventEmitter<VehicleContainerEvents> =
-    new EventEmitter<VehicleContainerEvents>();
+  eventEmitter: EventEmitter<TEvents> = new EventEmitter<TEvents>();
   isDisabled = true;
 
   RemoveContainer() {
-    this.eventEmitter.emit({
+    this.eventEmitter.emit(<TEvents>{
       eventType: VehicleContainerEventType.removeContainer,
-      data: this.context
+      data: <DashBoardContextItemModel>this.context
     });
   }
 
   AddVehicle(vehicle: string): void {
-    this.eventEmitter.emit({
+    this.eventEmitter.emit(<TEvents>{
       eventType: VehicleContainerEventType.addVehicle,
       data: <VehicleEnum>vehicle
     });

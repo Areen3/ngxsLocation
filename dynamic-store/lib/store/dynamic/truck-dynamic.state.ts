@@ -12,9 +12,9 @@ import { StateBuildersUtils } from '../../logic/utils/state-builders.utils';
 @State<VehicleStateModel<VehicleModel>>({
   name: StateBuildersUtils.buildDynamicStateName(StateNamesEnum.vehicleTruck),
   defaults: {
-    data: { name: '', type: VehicleEnum.truck, speed: 0 },
-    context: { id: 0, location: '', name: '' },
-    metaData: { remove: false }
+    model: { name: '', type: VehicleEnum.truck, speed: 0 },
+    elements: { id: 0, location: '', name: '' },
+    view: { remove: false }
   }
 })
 @Injectable()

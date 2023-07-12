@@ -5,7 +5,6 @@ import { IEmptyObject } from '../../model/base/base';
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface VehicleItemDataModel extends VehicleModel {}
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface VehicleItemMetaDataModel {
   remove: boolean;
 }
@@ -18,9 +17,9 @@ export interface BaseStateModel<
   TView extends IEmptyObject,
   TList extends IEmptyObject
 > {
-  data: TModel;
-  metaData: TView;
-  context: TList;
+  model: TModel;
+  view: TView;
+  elements: TList;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

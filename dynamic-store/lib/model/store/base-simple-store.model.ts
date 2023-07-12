@@ -20,15 +20,15 @@ export interface BaseSimpleStoreModel
     ContextSingleResponsibilityStoreModel {}
 
 export interface HostDataAreaAccessModel<TData> {
-  data: StateContext<TData>;
+  model: StateContext<TData>;
 }
 
 export interface HostMetaDataAreaAccessModel<TMetaData> {
-  metaData: StateContext<TMetaData>;
+  view: StateContext<TMetaData>;
 }
 
 export interface HostContextAreaAccessModel<TContext> {
-  context: StateContext<TContext>;
+  elements: StateContext<TContext>;
 }
 
 export interface HostSingleResponsibilityAreaAccessModel<

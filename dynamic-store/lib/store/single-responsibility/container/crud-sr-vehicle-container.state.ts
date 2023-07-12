@@ -37,12 +37,12 @@ export class CrudSrVehicleContainerState extends BaseSingleResponsibilityState<H
   ): Observable<any> {
     const locData = ctx.getLocation().getNeighborLocation(StateNamesEnum.formData);
     const locMeaData = ctx.getLocation().getNeighborLocation(StateNamesEnum.formMetaData);
-    const dataState = this.host.ctx.data.getState();
+    const dataState = this.host.ctx.model.getState();
     const newData: VehicleContainerDataModel = {
       ...dataState,
       itemNumber: action.payload.id
     };
-    const metaDataState = this.host.ctx.metaData.getState();
+    const metaDataState = this.host.ctx.view.getState();
     const newMetaData: VehicleContainerMetaDataModel = {
       ...metaDataState,
       containersCount: metaDataState.containersCount + 1
@@ -62,7 +62,7 @@ export class CrudSrVehicleContainerState extends BaseSingleResponsibilityState<H
   @Action(RemoveVehicleContainerAction)
   RemoveVehicleContainer(ctx: StateContext<IEmptyObject>) {
     const locMeaData = ctx.getLocation().getNeighborLocation(StateNamesEnum.formMetaData);
-    const metaDataState = this.host.ctx.metaData.getState();
+    const metaDataState = this.host.ctx.view.getState();
     const newMetaData: VehicleContainerMetaDataModel = {
       ...metaDataState,
       containersCount: metaDataState.containersCount - 1

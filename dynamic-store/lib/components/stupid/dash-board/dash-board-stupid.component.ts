@@ -5,25 +5,34 @@ import {
 } from '../../../model/stupid/dash-board-stupid.model';
 import { DashBoardEvents, DashBoardEventType } from './dash-board.event';
 import { VehicleContainerEnum } from '../../../model/enums/vehicle-container.enum';
+import {
+  BaseStupidInputInterface,
+  BaseStupidOutputInterface
+} from '../base/base-stupid-input-interface';
 
 @Component({
   selector: 'dashboard-stupid',
   templateUrl: './dash-board-stupid.component.html',
   styleUrls: ['./dash-board-stupid.component.scss']
 })
-export class DashBoardStupidComponent {
+export class DashBoardStupidComponent<
+  TModel = DashBoardStupidDataModel,
+  TView = DashBoardStupidMetaDataModel,
+  TEvents extends DashBoardEvents = DashBoardEvents
+> implements BaseStupidInputInterface<TModel, TView>, BaseStupidOutputInterface<TEvents>
+{
   @Input()
-  data: DashBoardStupidDataModel;
+  data: TModel;
   @Input()
-  metaData: DashBoardStupidMetaDataModel;
+  metaData: TView;
   @Output()
-  eventEmitter: EventEmitter<DashBoardEvents> = new EventEmitter<DashBoardEvents>();
+  eventEmitter: EventEmitter<TEvents> = new EventEmitter<TEvents>();
   isDisabled = true;
 
   constructor() {}
 
   AddContainer(type: string) {
-    this.eventEmitter.emit({
+    this.eventEmitter.emit(<TEvents>{
       eventType: DashBoardEventType.addContainer,
       data: <VehicleContainerEnum>type
     });
@@ -34,7 +43,7 @@ export class DashBoardStupidComponent {
   }
 
   onChange(value: boolean) {
-    this.eventEmitter.emit({
+    this.eventEmitter.emit(<TEvents>{
       eventType: DashBoardEventType.simulateUsers,
       data: value
     });

@@ -15,9 +15,9 @@ import { StateBuildersUtils } from '../../logic/utils/state-builders.utils';
 @State<VehicleStateModel>({
   name: StateBuildersUtils.buildDependencyInjectStateName(StateNamesEnum.vehicle),
   defaults: {
-    data: { name: '', type: VehicleEnum.bike, speed: 0 },
-    context: { location: '', id: 0, name: '' },
-    metaData: { remove: false }
+    model: { name: '', type: VehicleEnum.bike, speed: 0 },
+    elements: { location: '', id: 0, name: '' },
+    view: { remove: false }
   },
   creationMode: {
     providers: [
@@ -34,7 +34,7 @@ export class VehicleDependencyInjectState<T extends VehicleModel = VehicleModel>
   @Selector()
   static formData$(state: VehicleStateModel): VehicleItemStupidDataModel {
     return {
-      vehicle: state.data
+      vehicle: state.model
     };
   }
 
@@ -47,8 +47,8 @@ export class VehicleDependencyInjectState<T extends VehicleModel = VehicleModel>
   UpdateVehicleAction(ctx: StateContext<VehicleStateModel>, action: UpdateVehicleAction) {
     const state = ctx.getState();
     ctx.patchState({
-      data: {
-        ...state.data,
+      model: {
+        ...state.model,
         type: action.payload.type,
         name: action.payload.name
       }
@@ -62,8 +62,8 @@ export class VehicleDependencyInjectState<T extends VehicleModel = VehicleModel>
   ) {
     const state: VehicleStateModel = ctx.getState();
     ctx.patchState({
-      data: {
-        ...state.data,
+      model: {
+        ...state.model,
         speed: action.payload
       }
     });
@@ -71,6 +71,6 @@ export class VehicleDependencyInjectState<T extends VehicleModel = VehicleModel>
 
   ngxsOnInit(ctx: StateContext<VehicleStateModel>) {
     const data = this.speedSrv.getEmptyData();
-    ctx.patchState({ data });
+    ctx.patchState({ model: data });
   }
 }

@@ -6,7 +6,6 @@ export interface VehicleContainerStupidDataModel extends IEntity {
   items: Array<VehicleItemModel>;
   name: string;
 }
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface VehicleContainerStupidMetaDataModel
   extends Pick<VehicleContainerMetaDataModel, 'dropDown'> {
   remove: boolean;

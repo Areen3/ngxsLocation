@@ -33,6 +33,6 @@ export class FormMetaDataSingleResponsibilityState<
   }
 
   ngxsOnInit(ctx: StateContext<T>): void {
-    this.host.ctx.metaData = ctx;
+    this.host.ctx.view = ctx;
   }
 }

@@ -8,11 +8,11 @@ export enum VehicleContainerEventType {
 }
 
 export type VehicleContainerAddVehicleEvent = BaseEventsAbstract<
-  VehicleContainerEventType,
+  VehicleContainerEventType.addVehicle,
   VehicleEnum
 >;
 export type VehicleContainerRemoveContainerEvent = BaseEventsAbstract<
-  VehicleContainerEventType,
+  VehicleContainerEventType.removeContainer,
   DashBoardContextItemModel
 >;
 export type VehicleContainerEvents =

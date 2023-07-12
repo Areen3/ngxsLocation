@@ -23,9 +23,9 @@ import { registerSelectorMethod } from '../../model/decorators/register-selector
   name: StateBuildersUtils.buildDependencyInjectStateName(StateNamesEnum.vehicleContainer),
   defaults: {
     routing: { isLoading: false, loaded: false },
-    data: { lastId: 0, type: VehicleContainerEnum.dependencyInjectedStore, itemNumber: 0 },
-    metaData: { dropDown: Object.values(VehicleEnum), containersCount: 0 },
-    context: { items: [] }
+    model: { lastId: 0, type: VehicleContainerEnum.dependencyInjectedStore, itemNumber: 0 },
+    view: { dropDown: Object.values(VehicleEnum), containersCount: 0 },
+    elements: { items: [] }
   }
 })
 @registerContainerState(VehicleContainerEnum.dependencyInjectedStore)
@@ -35,9 +35,9 @@ export class VehicleDependencyInjectContainerState extends AbstractVehicleContai
   @registerSelectorMethod(VehicleContainerEnum.dependencyInjectedStore)
   static formData$(state: VehicleContainerStateModel): VehicleContainerStupidDataModel {
     return {
-      items: state.context.items,
-      name: state.data.type.toString(),
-      id: state.data.lastId
+      items: state.elements.items,
+      name: state.model.type.toString(),
+      id: state.model.lastId
     };
   }
 
@@ -47,8 +47,8 @@ export class VehicleDependencyInjectContainerState extends AbstractVehicleContai
     state: VehicleContainerStateModel
   ): VehicleContainerStupidMetaDataModel {
     return {
-      dropDown: state.metaData.dropDown,
-      remove: state.metaData.containersCount > 0
+      dropDown: state.view.dropDown,
+      remove: state.view.containersCount > 0
     };
   }
 
@@ -59,8 +59,8 @@ export class VehicleDependencyInjectContainerState extends AbstractVehicleContai
   ) {
     const state = ctx.getState();
     ctx.patchState({
-      data: { ...state.data, itemNumber: action.payload.id },
-      metaData: { ...state.metaData, containersCount: state.metaData.containersCount + 1 }
+      model: { ...state.model, itemNumber: action.payload.id },
+      view: { ...state.view, containersCount: state.view.containersCount + 1 }
     });
   }
 
@@ -68,7 +68,7 @@ export class VehicleDependencyInjectContainerState extends AbstractVehicleContai
   RemoveVehicleContainer(ctx: StateContext<VehicleContainerStateModel>) {
     const state: VehicleContainerStateModel = ctx.getState();
     ctx.patchState({
-      metaData: { ...state.metaData, containersCount: state.metaData.containersCount - 1 }
+      view: { ...state.view, containersCount: state.view.containersCount - 1 }
     });
   }
 
@@ -76,14 +76,14 @@ export class VehicleDependencyInjectContainerState extends AbstractVehicleContai
   AddVehicleAction(ctx: StateContext<VehicleContainerStateModel>, action: AddVehicleAction) {
     const state = ctx.getState();
     ctx.patchState({
-      data: {
-        ...state.data,
+      model: {
+        ...state.model,
         lastId: action.payload.id
       },
-      context: {
-        ...state.context,
+      elements: {
+        ...state.elements,
         items: [
-          ...state.context.items,
+          ...state.elements.items,
           {
             id: action.payload.id,
             name: action.payload.name,
@@ -101,9 +101,9 @@ export class VehicleDependencyInjectContainerState extends AbstractVehicleContai
   ) {
     const state: VehicleContainerStateModel = ctx.getState();
     ctx.patchState({
-      context: {
-        ...state.context,
-        items: state.context.items.filter(item => item.id !== action.payload)
+      elements: {
+        ...state.elements,
+        items: state.elements.items.filter(item => item.id !== action.payload)
       }
     });
   }

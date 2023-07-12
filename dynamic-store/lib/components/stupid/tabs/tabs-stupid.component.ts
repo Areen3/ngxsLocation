@@ -4,22 +4,31 @@ import {
   TabsStupidDataModel,
   TabsStupidMetaDataModel
 } from '../../../model/stupid/tabs-stupid.model';
+import {
+  BaseStupidInputInterface,
+  BaseStupidOutputInterface
+} from '../base/base-stupid-input-interface';
 
 @Component({
   selector: 'tabs-stupid',
   templateUrl: './tabs-stupid.component.html',
   styleUrls: ['./tabs-stupid.component.scss']
 })
-export class TabsStupidComponent {
+export class TabsStupidComponent<
+  TModel = TabsStupidDataModel,
+  TView = TabsStupidMetaDataModel,
+  TEvents extends TabEvents = TabEvents
+> implements BaseStupidInputInterface<TModel, TView>, BaseStupidOutputInterface<TEvents>
+{
   @Input()
-  data: TabsStupidDataModel;
+  data: TModel;
   @Input()
-  metaData: TabsStupidMetaDataModel;
+  metaData: TView;
   @Output()
-  eventEmitter: EventEmitter<TabEvents> = new EventEmitter<TabEvents>();
+  eventEmitter: EventEmitter<TEvents> = new EventEmitter<TEvents>();
 
   onSelected(value: number) {
-    this.eventEmitter.emit({
+    this.eventEmitter.emit(<TEvents>{
       eventType: TabsEventType.tabClicked,
       data: value
     });

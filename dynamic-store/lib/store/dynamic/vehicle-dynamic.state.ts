@@ -13,9 +13,9 @@ import { ChangeSpeedVehicleAction, UpdateVehicleAction } from '../../logic/base/
 @State<VehicleStateModel>({
   name: StateNamesEnum.vehicle,
   defaults: {
-    data: { name: '', type: VehicleEnum.bike, speed: 0 },
-    context: { location: '', id: 0, name: '' },
-    metaData: { remove: false }
+    model: { name: '', type: VehicleEnum.bike, speed: 0 },
+    elements: { location: '', id: 0, name: '' },
+    view: { remove: false }
   }
 })
 @Injectable()
@@ -23,7 +23,7 @@ export class VehicleDynamicState implements NgxsOnInit {
   @Selector()
   static formData$(state: VehicleStateModel): VehicleItemStupidDataModel {
     return {
-      vehicle: state.data
+      vehicle: state.model
     };
   }
 
@@ -34,15 +34,15 @@ export class VehicleDynamicState implements NgxsOnInit {
 
   @Selector()
   static vehicle$(state: VehicleStateModel): VehicleModel {
-    return state.data;
+    return state.model;
   }
 
   @Action(UpdateVehicleAction)
   UpdateVehicleAction(ctx: StateContext<VehicleStateModel>, action: UpdateVehicleAction) {
     const state = ctx.getState();
     ctx.patchState({
-      data: {
-        ...state.data,
+      model: {
+        ...state.model,
         type: action.payload.type,
         name: action.payload.name
       }
@@ -56,8 +56,8 @@ export class VehicleDynamicState implements NgxsOnInit {
   ) {
     const state: VehicleStateModel = ctx.getState();
     ctx.patchState({
-      data: {
-        ...state.data,
+      model: {
+        ...state.model,
         speed: action.payload
       }
     });
@@ -65,7 +65,7 @@ export class VehicleDynamicState implements NgxsOnInit {
 
   ngxsOnInit(ctx: StateContext<VehicleStateModel>) {
     const data = this.getEmptyData();
-    ctx.patchState({ data });
+    ctx.patchState({ model: data });
   }
 
   protected getEmptyData<T extends VehicleModel>(): T {

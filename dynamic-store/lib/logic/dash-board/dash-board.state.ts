@@ -33,9 +33,9 @@ import { DynamicVehicleAppServiceState } from '../../store/dynamic/dynamic-vehic
 @State<DashBoardStateModel>({
   name: StateNamesEnum.dashBoard,
   defaults: {
-    data: { lastId: 0, id: 0, simulate: false },
-    context: { items: [] },
-    metaData: { dropDown: Object.values(VehicleContainerEnum), remove: false }
+    model: { lastId: 0, id: 0, simulate: false },
+    elements: { items: [] },
+    view: { dropDown: Object.values(VehicleContainerEnum), remove: false }
   }
 })
 @Injectable()
@@ -45,23 +45,23 @@ export class DashBoardState implements NgxsOnInit {
   @Selector()
   static formData$(state: DashBoardStateModel): DashBoardStupidDataModel {
     return {
-      items: state.context.items,
-      count: state.context.items.length,
-      simulate: state.data.simulate
+      items: state.elements.items,
+      count: state.elements.items.length,
+      simulate: state.model.simulate
     };
   }
 
   @Selector()
   static formMetaData$(state: DashBoardStateModel): DashBoardStupidMetaDataModel {
     return {
-      remove: state.context.items.length > 0,
-      dropDown: state.metaData.dropDown
+      remove: state.elements.items.length > 0,
+      dropDown: state.view.dropDown
     };
   }
 
   @Selector()
   static formContext$(state: DashBoardStateModel): DashBoardContextModel {
-    return state.context;
+    return state.elements;
   }
 
   @Selector()
@@ -71,12 +71,12 @@ export class DashBoardState implements NgxsOnInit {
 
   @Selector()
   static data$(state: DashBoardStateModel): DashBoardDataModel {
-    return state.data;
+    return state.model;
   }
 
   @Selector()
   static simulate$(state: DashBoardStateModel): boolean {
-    return state.data.simulate;
+    return state.model.simulate;
   }
 
   @Action(DashboardAddItemAction)
@@ -86,10 +86,10 @@ export class DashBoardState implements NgxsOnInit {
   ) {
     const state = ctx.getState();
     ctx.patchState({
-      context: {
-        ...state.context,
+      elements: {
+        ...state.elements,
         items: [
-          ...state.context.items,
+          ...state.elements.items,
           {
             type: action.payload.type,
             name: action.payload.name,
@@ -98,8 +98,8 @@ export class DashBoardState implements NgxsOnInit {
           }
         ]
       },
-      data: {
-        ...state.data,
+      model: {
+        ...state.model,
         lastId: action.payload.id
       }
     });
@@ -112,8 +112,8 @@ export class DashBoardState implements NgxsOnInit {
   ): void {
     const state = ctx.getState();
     ctx.patchState({
-      data: {
-        ...state.data,
+      model: {
+        ...state.model,
         simulate: action.payload
       }
     });
@@ -125,8 +125,8 @@ export class DashBoardState implements NgxsOnInit {
     action: DashboardRemoveItemAction
   ) {
     const state = ctx.getState();
-    const items = state.context.items.filter(item => item.id !== action.payload.id);
-    ctx.patchState({ context: { ...state.context, items } });
+    const items = state.elements.items.filter(item => item.id !== action.payload.id);
+    ctx.patchState({ elements: { ...state.elements, items } });
   }
 
   ngxsOnInit(): void {

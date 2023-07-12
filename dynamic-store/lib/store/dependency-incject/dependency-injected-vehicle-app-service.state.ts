@@ -58,7 +58,7 @@ export class DependencyInjectedVehicleAppServiceState extends BaseVehicleAppServ
     const containerEnum = action.payload.vehicle;
     return this.store.selectOnce(DashBoardState.state$).pipe(
       map((data: DashBoardStateModel) => {
-        const context = this.buildDashBoardContextItem(data.data.lastId, containerEnum);
+        const context = this.buildDashBoardContextItem(data.model.lastId, containerEnum);
         const type = getRegisterContainerState(containerEnum);
         const loc = SingleLocation.getLocation(context.location);
         const parent = loc.getParentPath();
@@ -123,7 +123,7 @@ export class DependencyInjectedVehicleAppServiceState extends BaseVehicleAppServ
       )
       .pipe(
         map(state => {
-          const newLastId = state.data.lastId + 1;
+          const newLastId = state.model.lastId + 1;
           const childName = this.storeBuilder.buildStateName(
             StateNamesEnum.vehicle,
             newLastId

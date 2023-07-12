@@ -30,6 +30,6 @@ export class FormDataSingleResponsibilityState<
   }
 
   ngxsOnInit(ctx: StateContext<T>): void {
-    this.host.ctx.data = ctx;
+    this.host.ctx.model = ctx;
   }
 }

@@ -57,6 +57,6 @@ export class FormContextSingleResponsibilityState<
   }
 
   ngxsOnInit(ctx: StateContext<T>): void {
-    this.host.ctx.context = ctx;
+    this.host.ctx.elements = ctx;
   }
 }

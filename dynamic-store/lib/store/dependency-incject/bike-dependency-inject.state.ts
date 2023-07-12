@@ -15,9 +15,9 @@ import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
 @State<VehicleStateModel<BikeModel>>({
   name: StateBuildersUtils.buildDependencyInjectStateName(StateNamesEnum.vehicleBike),
   defaults: {
-    data: { name: '', type: VehicleEnum.motorBike, speed: 0, seats: 1 },
-    context: { id: 0, location: '', name: '' },
-    metaData: { remove: false }
+    model: { name: '', type: VehicleEnum.motorBike, speed: 0, seats: 1 },
+    elements: { id: 0, location: '', name: '' },
+    view: { remove: false }
   },
   creationMode: {
     providers: [
