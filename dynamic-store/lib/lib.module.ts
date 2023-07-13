@@ -45,6 +45,15 @@ import { BaseVehicleAppServiceState } from './store/base/base-vehicle-app-servic
 import { DynamicVehicleAppServiceState } from './store/dynamic/dynamic-vehicle-app-service.state';
 import { DependencyInjectedVehicleAppServiceState } from './store/dependency-incject/dependency-injected-vehicle-app-service.state';
 import { SingleResponsibilityVehicleAppServiceState } from './store/single-responsibility/app-services/single-responsibility-vehicle-app-service.state';
+import { VehicleSingleResponsibilityState } from './store/single-responsibility/vehicles/vehicle-single-responsibility.state';
+import { FormModelVehicleStateService } from './store/single-responsibility/vehicles/form-model-vehicle-state.service';
+import { FormViewVehicleStateService } from './store/single-responsibility/vehicles/form-view-vehicle-state.service';
+import { FormElementsVehicleStateService } from './store/single-responsibility/vehicles/form-elements-vehicle-state.service';
+import { SpeedSrVehicleState } from './store/single-responsibility/vehicles/speed-sr-vehicle.state';
+import { BikeSingleResponsibilityState } from './store/single-responsibility/vehicles/bike-single-responsibility.state';
+import { MotoBikeSingleResponsibilityState } from './store/single-responsibility/vehicles/moto-bike-single-responsibility.state';
+import { CarSingleResponsibilityState } from './store/single-responsibility/vehicles/car-single-responsibility.state';
+import { TruckSingleResponsibilityState } from './store/single-responsibility/vehicles/truck-single-responsibility.state';
 
 @NgModule({
   declarations: [
@@ -101,7 +110,16 @@ import { SingleResponsibilityVehicleAppServiceState } from './store/single-respo
     BaseVehicleAppServiceState,
     DynamicVehicleAppServiceState,
     DependencyInjectedVehicleAppServiceState,
-    SingleResponsibilityVehicleAppServiceState
+    SingleResponsibilityVehicleAppServiceState,
+    VehicleSingleResponsibilityState,
+    FormModelVehicleStateService,
+    FormViewVehicleStateService,
+    SpeedSrVehicleState,
+    FormElementsVehicleStateService,
+    BikeSingleResponsibilityState,
+    CarSingleResponsibilityState,
+    MotoBikeSingleResponsibilityState,
+    TruckSingleResponsibilityState
   ]
 })
 export class LibModule {

@@ -14,7 +14,7 @@ import { HostVehicleContainerAccessModel } from '../../../model/store/host-area.
 import { CrudSrVehicleContainerState } from './crud-sr-vehicle-container.state';
 
 @State<IEmptyObject>({
-  name: StateBuildersUtils.buildDependencyInjectStateName(StateNamesEnum.vehicleContainer),
+  name: StateBuildersUtils.buildSingleResponsibilityStateName(StateNamesEnum.vehicleContainer),
   defaults: {},
   creationMode: {
     providers: [

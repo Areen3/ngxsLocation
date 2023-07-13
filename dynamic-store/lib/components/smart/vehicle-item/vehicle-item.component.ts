@@ -20,6 +20,8 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { DashBoardState } from '../../../logic/dash-board/dash-board.state';
 import { SelectorBuildersUtils } from '../../../logic/utils/selector-builders.utils';
+import { DashBoardElementsItemModel } from '../../../logic/dash-board/dash-board-state.model';
+import { StateNamesEnum } from '../../../model/store/state-names.enum';
 
 @Component({
   selector: 'vehicle-item',
@@ -31,6 +33,7 @@ export class VehicleItemComponent implements OnInit {
   elements: VehicleItemModel;
   model$: Observable<VehicleItemStupidModelModel>;
   view$: Observable<VehicleItemStupidViewModel>;
+  dashBoard: DashBoardElementsItemModel;
 
   constructor(
     private readonly store: Store,
@@ -41,11 +44,21 @@ export class VehicleItemComponent implements OnInit {
   outputEvents(event: VehicleItemEvents): void {
     switch (event.eventType) {
       case VehicleItemEventType.changeSpeed:
-        this.store.dispatch(new ChangeSpeedAppServiceAction(this.elements));
+        this.store.dispatchInLocation(
+          new ChangeSpeedAppServiceAction(this.elements),
+          SingleLocation.getLocation(StateNamesEnum.dashBoard).getChildLocation(
+            this.dashBoard.type
+          )
+        );
         break;
       case VehicleItemEventType.removeVehicle:
         const removeEvent = <VehicleItemRemoveVehicleEvent>event;
-        this.store.dispatch(new RemoveVehicleAppServiceAction(removeEvent.data));
+        this.store.dispatchInLocation(
+          new RemoveVehicleAppServiceAction(removeEvent.data),
+          SingleLocation.getLocation(StateNamesEnum.dashBoard).getChildLocation(
+            this.dashBoard.type
+          )
+        );
         break;
     }
   }
@@ -53,9 +66,9 @@ export class VehicleItemComponent implements OnInit {
   ngOnInit(): void {
     const containerId = Number(this.route.snapshot.paramMap.get('id'));
     const dashBoard = this.store.selectSnapshot(DashBoardState.formElements$);
-    const item = dashBoard.items.find(item => item.id === containerId)!;
+    this.dashBoard = dashBoard.items.find(item => item.id === containerId)!;
     const loc = SingleLocation.getLocation(this.elements.location);
-    this.model$ = this.selectorBuilder.getFormModelVehicle$(item.type, loc);
-    this.view$ = this.selectorBuilder.getFormViewVehicle$(item.type, loc);
+    this.model$ = this.selectorBuilder.getFormModelVehicle$(this.dashBoard.type, loc);
+    this.view$ = this.selectorBuilder.getFormViewVehicle$(this.dashBoard.type, loc);
   }
 }

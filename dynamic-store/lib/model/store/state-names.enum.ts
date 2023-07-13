@@ -12,5 +12,6 @@ export enum StateNamesEnum {
   formModel = 'formModel',
   formView = 'formView',
   routing = 'routing',
-  crudSrState = 'crudSrState'
+  crudSrState = 'crudSrState',
+  speedSrState = 'speedSrState'
 }

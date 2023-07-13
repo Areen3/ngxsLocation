@@ -18,26 +18,23 @@ import {
   DashboardAddItemAction,
   DashboardRemoveItemAction
 } from '../../../logic/dash-board/state.actions';
-import {
-  AddVehicleAction,
-  AddVehicleContainerAction,
-  RemoveVehicleAction
-} from '../../../logic/vehicle-container/state.actions';
+import { AddVehicleContainerAction } from '../../../logic/vehicle-container/state.actions';
 import { Navigate } from '@ngxs/router-plugin';
 import { RoutingPathEnum } from '../../../model/enums/routing-path-enum';
 import { getRegisterVehicleState } from '../../../model/decorators/register-vehicle-state.decorator';
 import { VehicleContainerEnum } from '../../../model/enums/vehicle-container.enum';
 import { DashBoardStateModel } from '../../../logic/dash-board/dash-board-state.model';
-import {
-  ChangeSpeedVehicleAction,
-  UpdateVehicleAction
-} from '../../../logic/base/state.actions';
+import { ChangeSpeedVehicleAction } from '../../../logic/base/state.actions';
 import { SetLoadedRouterAction } from '../../../logic/routing/state.actions';
 import { DashBoardState } from '../../../logic/dash-board/dash-board.state';
 import { getRegisterContainerState } from '../../../model/decorators/register-container-state.decorator';
 import { BaseVehicleAppServiceState } from '../../base/base-vehicle-app-service.state';
 import { FormModelVehicleContainerState } from '../container/form-model-vehicle-container-state.service';
 import { VehicleContainerStupidModelModel } from '../../../model/stupid/vehicle-container-stupid.model';
+import { UpdateModelAction } from '../base/data-state.actions';
+import { VehicleModel } from '../../../model/domain/vehicle.model';
+import { AddToElementsAction, RemoveFromElementsAction } from '../base/elements-state.actions';
+import { VehicleContainerModelModel } from '../../../logic/vehicle-container/vehicle-container-state.model';
 
 @State<IEmptyObject>({
   name: StateNamesEnum.vehicleAppService
@@ -136,7 +133,7 @@ export class SingleResponsibilityVehicleAppServiceState extends BaseVehicleAppSe
             newLastId
           );
           const type = getRegisterVehicleState(
-            VehicleContainerEnum.dependencyInjectedStore,
+            VehicleContainerEnum.singleResponsibilityStore,
             action.payload.vehicle
           );
           const loc: SingleLocation = this.getContainerLocalization(
@@ -156,20 +153,30 @@ export class SingleResponsibilityVehicleAppServiceState extends BaseVehicleAppSe
           forkJoin([
             of(data),
             this.store.dispatchInLocation(
-              new AddVehicleAction({
-                id: data.newLastId,
-                vehicle: action.payload.vehicle,
+              new AddToElementsAction({
                 name: data.childName,
+                id: data.newLastId,
                 location: data.loc.getChildLocation(data.childName).path
               }),
-              data.loc
+              data.loc.getChildLocation(StateNamesEnum.formElements)
+            ),
+            this.store.dispatchInLocation(
+              new UpdateModelAction<Partial<VehicleContainerModelModel>>({
+                lastId: data.newLastId
+              }),
+              data.loc.getChildLocation(StateNamesEnum.formModel)
             )
           ])
         ),
         switchMap(([data]) =>
           this.store.dispatchInLocation(
-            new UpdateVehicleAction({ name: data.childName, type: action.payload.vehicle }),
-            data.loc.getChildLocation(data.childName)
+            new UpdateModelAction<Partial<VehicleModel>>({
+              name: data.childName,
+              type: action.payload.vehicle
+            }),
+            data.loc
+              .getChildLocation(data.childName)
+              .getChildLocation(StateNamesEnum.formModel)
           )
         )
       );
@@ -180,9 +187,11 @@ export class SingleResponsibilityVehicleAppServiceState extends BaseVehicleAppSe
     _ctx: StateContext<IEmptyObject>,
     action: RemoveVehicleAppServiceAction
   ): Observable<any> {
-    const parentLoc = SingleLocation.getLocation(action.payload.location).getParentPath();
+    const parentLoc = SingleLocation.getLocation(action.payload.location).getNeighborLocation(
+      StateNamesEnum.formElements
+    );
     return this.store
-      .dispatchInLocation(new RemoveVehicleAction(action.payload.id), parentLoc)
+      .dispatchInLocation(new RemoveFromElementsAction(action.payload), parentLoc)
       .pipe(
         switchMap(() =>
           this.store.removeChildInLocalization(
@@ -227,7 +236,9 @@ export class SingleResponsibilityVehicleAppServiceState extends BaseVehicleAppSe
     const newSpeed = Math.floor(Math.random() * 100);
     return this.store.dispatchInLocation(
       new ChangeSpeedVehicleAction(newSpeed),
-      SingleLocation.getLocation(action.payload.location)
+      SingleLocation.getLocation(action.payload.location).getChildLocation(
+        StateNamesEnum.speedSrState
+      )
     );
   }
 }

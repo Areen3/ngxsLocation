@@ -16,6 +16,10 @@ export class StateBuildersUtils {
     return `${VehicleContainerEnum.dependencyInjectedStore}${name}`;
   }
 
+  static buildSingleResponsibilityStateName(name: StateNamesEnum): string {
+    return `${VehicleContainerEnum.singleResponsibilityStore}${name}`;
+  }
+
   static buildRegisterStateName(container: VehicleContainerEnum, name: VehicleEnum): string {
     return `${container}_${name}`;
   }

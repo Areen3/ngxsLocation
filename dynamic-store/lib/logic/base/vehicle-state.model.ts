@@ -9,9 +9,6 @@ export interface VehicleItemViewModel {
   remove: boolean;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface VehicleItemElementsModel extends VehicleItemModel {}
-
 export interface BaseStateModel<
   TModel extends IEmptyObject,
   TView extends IEmptyObject,
@@ -24,4 +21,4 @@ export interface BaseStateModel<
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface VehicleStateModel<T extends VehicleModel = VehicleModel>
-  extends BaseStateModel<T, VehicleItemViewModel, VehicleItemElementsModel> {}
+  extends BaseStateModel<T, VehicleItemViewModel, VehicleItemModel> {}
