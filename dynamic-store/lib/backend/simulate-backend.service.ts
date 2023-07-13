@@ -38,7 +38,7 @@ export class SimulateBackendService {
   addContainer(): Observable<any> {
     const values = this.store.selectSnapshot(DashBoardState.formElements$);
     if (values.items.length > 5) return of(false);
-    const randomNumber = Math.floor(Math.random() * 2) + 1;
+    const randomNumber = Math.floor(Math.random() * 3) + 1;
     const value = Object.values(VehicleContainerEnum).filter(
       (_item, index) => index === randomNumber
     );
