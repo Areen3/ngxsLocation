@@ -3,16 +3,16 @@ import { from, Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { RangeLocations, Store } from '@ngxs/store';
 import { filter, map, switchMap, take } from 'rxjs/operators';
-import { DashBoardState } from '../../logic/dash-board/dash-board.state';
-import { AbstractVehicleContainerState } from '../../store/base/abstract-vehicle-container.state';
-import { RoutingLoadModel } from '../../model/store/routing-load.model';
-import { DashBoardElementsItemModel } from '../../logic/dash-board/dash-board-state.model';
-import { SetIsLoadingRouterAction } from '../../logic/routing/state.actions';
-import { LoadVehicleContainerAppServiceAction } from '../../store/base/state.actions';
-import { LocationBuildersUtils } from '../../logic/utils/location-builders.utils';
-import { StateNamesEnum } from '../../model/store/state-names.enum';
-import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
-import { RoutingSingleResponsibilityState } from '../../store/single-responsibility/base/routing-single-responsibility.state';
+import { StateNamesEnum } from '../model/enums/state-names.enum';
+import { RoutingLoadModel } from '../model/store/routing-load.model';
+import { VehicleContainerEnum } from '../model/enums/vehicle-container.enum';
+import { RoutingSingleResponsibilityState } from '../store/single-responsibility/base/routing-single-responsibility.state';
+import { AbstractVehicleContainerState } from '../store/base/abstract-vehicle-container.state';
+import { LoadVehicleContainerAppServiceAction } from '../store/base/state.actions';
+import { LocationBuildersUtils } from '../store/utils/location-builders.utils';
+import { DashBoardState } from '../store/dash-board/dash-board.state';
+import { DashBoardElementsItemModel } from '../store/dash-board/dash-board-state.model';
+import { SetIsLoadingRouterAction } from '../store/routing/routing-state.actions';
 
 @Injectable({ providedIn: 'root' })
 export class VehicleContainerGuard implements CanActivate {

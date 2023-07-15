@@ -1,8 +1,8 @@
 import { BaseActionWithPayload } from '../../model/store/actions';
-import { DashBoardElementsItemModel } from '../../logic/dash-board/dash-board-state.model';
-import { VehicleEnum } from '../../model/domain/vehicle.enum';
+import { VehicleEnum } from '../../model/enums/vehicle.enum';
 import { VehicleItemModel } from '../../model/store/vehicle-item.model';
 import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
+import { DashBoardElementsItemModel } from '../dash-board/dash-board-state.model';
 
 enum VehicleAppActionType {
   addContainer = '[vehicle-app-store] add vehicle container',

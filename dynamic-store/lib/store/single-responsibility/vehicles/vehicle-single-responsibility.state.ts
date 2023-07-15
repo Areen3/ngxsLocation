@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { State } from '@ngxs/store';
 import { IEmptyObject } from '../../../model/base/base';
-import { StateBuildersUtils } from '../../../logic/utils/state-builders.utils';
-import { StateNamesEnum } from '../../../model/store/state-names.enum';
+
+import { StateNamesEnum } from '../../../model/enums/state-names.enum';
+import { StateBuildersUtils } from '../../utils/state-builders.utils';
 
 @State<IEmptyObject>({
   name: StateBuildersUtils.buildSingleResponsibilityStateName(StateNamesEnum.vehicle),

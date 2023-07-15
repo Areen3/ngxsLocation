@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
 import { State } from '@ngxs/store';
-import { StateNamesEnum } from '../../model/store/state-names.enum';
+import { StateNamesEnum } from '../../model/enums/state-names.enum';
 import { AbstractVehicleSpeedService } from '../../model/abstract/abstract-vehicle-speed.service';
-import { VehicleEnum } from '../../model/domain/vehicle.enum';
+import { VehicleEnum } from '../../model/enums/vehicle.enum';
 import { BikeModel } from '../../model/domain/bike.model';
 import { registerVehicleState } from '../../model/decorators/register-vehicle-state.decorator';
 import { AbstractSpeedMultiplierService } from '../../model/abstract/abstract-speed-multiplier-.service';
-import { BikeVehicleSpeedService } from '../../logic/services/bike-vehicle-speed.service';
-import { VehicleStateModel } from '../../logic/base/vehicle-state.model';
-import { MuscleMultiplierService } from '../../logic/services/muscle-multiplier.service';
-import { VehicleDependencyInjectState } from './vehicle-dependency-inject.state';
-import { StateBuildersUtils } from '../../logic/utils/state-builders.utils';
 import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
+import { VehicleStateModel } from '../base/vehicle-state.model';
+import { StateBuildersUtils } from '../utils/state-builders.utils';
+import { BikeVehicleSpeedService } from '../services/bike-vehicle-speed.service';
+import { MuscleMultiplierService } from '../services/muscle-multiplier.service';
+import { VehicleDependencyInjectState } from './vehicle-dependency-inject.state';
+
 @State<VehicleStateModel<BikeModel>>({
   name: StateBuildersUtils.buildDependencyInjectStateName(StateNamesEnum.vehicleBike),
   defaults: {

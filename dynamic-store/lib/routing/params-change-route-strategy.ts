@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, RouteReuseStrategy } from '@angular/router';
-import { IEmptyObject } from '../../model/base/base';
+import { IEmptyObject } from '../model/base/base';
 
 @Injectable()
 export class ParamChangeRouteResultStrategy extends RouteReuseStrategy {

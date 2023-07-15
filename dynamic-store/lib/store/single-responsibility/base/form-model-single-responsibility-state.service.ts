@@ -4,7 +4,7 @@ import { BaseSingleResponsibilityState } from './base-single-responsibility.stat
 import { UpdateModelAction } from './data-state.actions';
 import { HostSingleResponsibilityAreaAccessModel } from '../../../model/store/base-simple-store.model';
 import { IEmptyObject } from '../../../model/base/base';
-import { StateNamesEnum } from '../../../model/store/state-names.enum';
+import { StateNamesEnum } from '../../../model/enums/state-names.enum';
 
 @State<IEmptyObject>({
   name: StateNamesEnum.formModel,

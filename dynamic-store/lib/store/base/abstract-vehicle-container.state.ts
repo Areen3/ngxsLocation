@@ -1,18 +1,18 @@
 import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { StateNamesEnum } from '../../model/enums/state-names.enum';
+import { Injectable } from '@angular/core';
+import { RoutingLoadModel } from '../../model/store/routing-load.model';
+import { registerSelectorVehicleContainerMethod } from '../../model/decorators/register-selector-vehicle-container-method.decorator';
+import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
 import {
   VehicleContainerElementsModel,
   VehicleContainerStateModel
-} from '../../logic/vehicle-container/vehicle-container-state.model';
-import { StateBuildersUtils } from '../../logic/utils/state-builders.utils';
-import { StateNamesEnum } from '../../model/store/state-names.enum';
-import { Injectable } from '@angular/core';
-import { RoutingLoadModel } from '../../model/store/routing-load.model';
+} from './vehicle-container-state.model';
+import { StateBuildersUtils } from '../utils/state-builders.utils';
 import {
   SetIsLoadingRouterAction,
   SetLoadedRouterAction
-} from '../../logic/routing/state.actions';
-import { registerSelectorVehicleContainerMethod } from '../../model/decorators/register-selector-vehicle-container-method.decorator';
-import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
+} from '../routing/routing-state.actions';
 
 @State<VehicleContainerStateModel>({
   name: StateBuildersUtils.buildDependencyInjectStateName(StateNamesEnum.vehicleContainer),
@@ -39,14 +39,14 @@ export class AbstractVehicleContainerState {
     return state.routing;
   }
   @Action(SetLoadedRouterAction)
-  SetLoadedRouterAction(
+  SetLoadedRouter(
     ctx: StateContext<VehicleContainerStateModel>,
     action: SetLoadedRouterAction
   ) {
     ctx.patchState({ routing: { isLoading: false, loaded: action.payload } });
   }
   @Action(SetIsLoadingRouterAction)
-  SetIsLoadingRouterAction(
+  SetIsLoadingRouter(
     ctx: StateContext<VehicleContainerStateModel>,
     action: SetIsLoadingRouterAction
   ) {

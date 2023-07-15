@@ -1,4 +1,4 @@
-import { VehicleEnum } from './vehicle.enum';
+import { VehicleEnum } from '../enums/vehicle.enum';
 
 export interface VehicleModel {
   type: VehicleEnum;

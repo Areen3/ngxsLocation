@@ -1,4 +1,4 @@
-import { BaseEventsAbstract } from '../../../model/events/base.event';
+import { BaseEventsAbstract } from '../../../model/base/base.event';
 
 export enum TabsEventType {
   tabClicked = 'tabClicked'

@@ -1,6 +1,6 @@
 import { VehicleContainerEnum } from '../enums/vehicle-container.enum';
-import { StateBuildersUtils } from '../../logic/utils/state-builders.utils';
-import { VehicleEnum } from '../domain/vehicle.enum';
+import { VehicleEnum } from '../enums/vehicle.enum';
+import { StateBuildersUtils } from '../../store/utils/state-builders.utils';
 
 type Type<T> = new (...args: Array<T>) => T;
 

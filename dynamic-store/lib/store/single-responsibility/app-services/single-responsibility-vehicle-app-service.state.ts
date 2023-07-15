@@ -3,8 +3,7 @@ import { forkJoin, from, Observable, of } from 'rxjs';
 import { concatMap, map, switchMap } from 'rxjs/operators';
 import { Action, SingleLocation, State, StateContext, Store } from '@ngxs/store';
 import { IEmptyObject } from '../../../model/base/base';
-import { StateNamesEnum } from '../../../model/store/state-names.enum';
-import { StateBuildersUtils } from '../../../logic/utils/state-builders.utils';
+import { StateNamesEnum } from '../../../model/enums/state-names.enum';
 import { VehicleContainerDalService } from '../../../backend/vehicle-container-dal.service';
 import {
   AddVehicleAppServiceAction,
@@ -14,19 +13,10 @@ import {
   RemoveVehicleAppServiceAction,
   RemoveVehicleContainerAppServiceAction
 } from '../../base/state.actions';
-import {
-  DashboardAddItemAction,
-  DashboardRemoveItemAction
-} from '../../../logic/dash-board/state.actions';
-import { AddVehicleContainerAction } from '../../../logic/vehicle-container/state.actions';
 import { Navigate } from '@ngxs/router-plugin';
 import { RoutingPathEnum } from '../../../model/enums/routing-path-enum';
 import { getRegisterVehicleState } from '../../../model/decorators/register-vehicle-state.decorator';
 import { VehicleContainerEnum } from '../../../model/enums/vehicle-container.enum';
-import { DashBoardStateModel } from '../../../logic/dash-board/dash-board-state.model';
-import { ChangeSpeedVehicleAction } from '../../../logic/base/state.actions';
-import { SetLoadedRouterAction } from '../../../logic/routing/state.actions';
-import { DashBoardState } from '../../../logic/dash-board/dash-board.state';
 import { getRegisterContainerState } from '../../../model/decorators/register-container-state.decorator';
 import { BaseVehicleAppServiceState } from '../../base/base-vehicle-app-service.state';
 import { FormModelVehicleContainerState } from '../container/form-model-vehicle-container-state.service';
@@ -34,7 +24,17 @@ import { VehicleContainerStupidModelModel } from '../../../model/stupid/vehicle-
 import { UpdateModelAction } from '../base/data-state.actions';
 import { VehicleModel } from '../../../model/domain/vehicle.model';
 import { AddToElementsAction, RemoveFromElementsAction } from '../base/elements-state.actions';
-import { VehicleContainerModelModel } from '../../../logic/vehicle-container/vehicle-container-state.model';
+import { DashBoardState } from '../../dash-board/dash-board.state';
+import { DashBoardStateModel } from '../../dash-board/dash-board-state.model';
+import { SetLoadedRouterAction } from '../../routing/routing-state.actions';
+import { VehicleContainerModelModel } from '../../base/vehicle-container-state.model';
+import { ChangeSpeedVehicleAction } from '../../base/vehicle-state.actions';
+import { StateBuildersUtils } from '../../utils/state-builders.utils';
+import {
+  DashboardAddItemAction,
+  DashboardRemoveItemAction
+} from '../../dash-board/dahs-board-state.actions';
+import { AddVehicleContainerAction } from '../../base/vehicle-container.state.actions';
 
 @State<IEmptyObject>({
   name: StateNamesEnum.vehicleAppService

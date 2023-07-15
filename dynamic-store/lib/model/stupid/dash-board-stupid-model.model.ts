@@ -2,7 +2,7 @@ import {
   DashBoardElementsModel,
   DashBoardModelModel,
   DashBoardViewModel
-} from '../../logic/dash-board/dash-board-state.model';
+} from '../../store/dash-board/dash-board-state.model';
 
 export interface DashBoardStupidModelModel
   extends Pick<DashBoardElementsModel, 'items'>,

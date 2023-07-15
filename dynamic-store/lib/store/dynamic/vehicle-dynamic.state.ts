@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Action, NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
-import { StateNamesEnum } from '../../model/store/state-names.enum';
-import { VehicleEnum } from '../../model/domain/vehicle.enum';
+import { StateNamesEnum } from '../../model/enums/state-names.enum';
+import { VehicleEnum } from '../../model/enums/vehicle.enum';
 import { VehicleModel } from '../../model/domain/vehicle.model';
 import {
   VehicleItemStupidModelModel,
   VehicleItemStupidViewModel
 } from '../../model/stupid/vehicle-item-stupid.model';
-import { VehicleStateModel } from '../../logic/base/vehicle-state.model';
-import { ChangeSpeedVehicleAction, UpdateVehicleAction } from '../../logic/base/state.actions';
 import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
 import { registerSelectorVehicleMethod } from '../../model/decorators/register-selector-vehicle-method.decorator';
+import { VehicleStateModel } from '../base/vehicle-state.model';
+import { ChangeSpeedVehicleAction, UpdateVehicleAction } from '../base/vehicle-state.actions';
 
 @State<VehicleStateModel>({
   name: StateNamesEnum.vehicle,
@@ -42,7 +42,7 @@ export class VehicleDynamicState implements NgxsOnInit {
   }
 
   @Action(UpdateVehicleAction)
-  UpdateVehicleAction(ctx: StateContext<VehicleStateModel>, action: UpdateVehicleAction) {
+  UpdateVehicle(ctx: StateContext<VehicleStateModel>, action: UpdateVehicleAction) {
     const state = ctx.getState();
     ctx.patchState({
       model: {
@@ -54,10 +54,7 @@ export class VehicleDynamicState implements NgxsOnInit {
   }
 
   @Action(ChangeSpeedVehicleAction)
-  changeSpeedVehicleAction(
-    ctx: StateContext<VehicleStateModel>,
-    action: ChangeSpeedVehicleAction
-  ) {
+  changeSpeedVehicle(ctx: StateContext<VehicleStateModel>, action: ChangeSpeedVehicleAction) {
     const state: VehicleStateModel = ctx.getState();
     ctx.patchState({
       model: {

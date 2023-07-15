@@ -9,14 +9,14 @@ import {
 import { getRegisterContainerState } from '../../model/decorators/register-container-state.decorator';
 import { getRegisterSelectedVehicleContainerMethod } from '../../model/decorators/register-selector-vehicle-container-method.decorator';
 import { MethodSelectorEnum } from '../../model/enums/method-selector.enum';
-import { VehicleContainerElementsModel } from '../vehicle-container/vehicle-container-state.model';
 import { LocationBuildersUtils } from './location-builders.utils';
-import { StateNamesEnum } from '../../model/store/state-names.enum';
+import { StateNamesEnum } from '../../model/enums/state-names.enum';
 import { getRegisterSelectedVehicleMethod } from '../../model/decorators/register-selector-vehicle-method.decorator';
 import {
   VehicleItemStupidModelModel,
   VehicleItemStupidViewModel
 } from '../../model/stupid/vehicle-item-stupid.model';
+import { VehicleContainerElementsModel } from '../base/vehicle-container-state.model';
 
 @Injectable()
 export class SelectorBuildersUtils {

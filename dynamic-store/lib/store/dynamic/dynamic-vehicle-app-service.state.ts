@@ -2,23 +2,9 @@ import { Injectable } from '@angular/core';
 import { forkJoin, from, Observable, of } from 'rxjs';
 import { concatMap, map, switchMap } from 'rxjs/operators';
 import { Action, SingleLocation, State, StateContext, Store } from '@ngxs/store';
-import { StateNamesEnum } from '../../model/store/state-names.enum';
+import { StateNamesEnum } from '../../model/enums/state-names.enum';
 import { getRegisterVehicleState } from '../../model/decorators/register-vehicle-state.decorator';
 import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
-import { StateBuildersUtils } from '../../logic/utils/state-builders.utils';
-import { DashBoardStateModel } from '../../logic/dash-board/dash-board-state.model';
-import {
-  DashboardAddItemAction,
-  DashboardRemoveItemAction
-} from '../../logic/dash-board/state.actions';
-import { VehicleContainerStateModel } from '../../logic/vehicle-container/vehicle-container-state.model';
-import {
-  AddVehicleAction,
-  AddVehicleContainerAction,
-  RemoveVehicleAction
-} from '../../logic/vehicle-container/state.actions';
-import { DashBoardState } from '../../logic/dash-board/dash-board.state';
-import { ChangeSpeedVehicleAction, UpdateVehicleAction } from '../../logic/base/state.actions';
 import { VehicleDependencyInjectContainerState } from '../dependency-incject/vehicle-dependency-inject-container.state';
 import { IEmptyObject } from '../../model/base/base';
 import {
@@ -33,8 +19,22 @@ import { getRegisterContainerState } from '../../model/decorators/register-conta
 import { VehicleContainerDalService } from '../../backend/vehicle-container-dal.service';
 import { Navigate } from '@ngxs/router-plugin';
 import { RoutingPathEnum } from '../../model/enums/routing-path-enum';
-import { SetLoadedRouterAction } from '../../logic/routing/state.actions';
 import { BaseVehicleAppServiceState } from '../base/base-vehicle-app-service.state';
+import { SetLoadedRouterAction } from '../routing/routing-state.actions';
+import { StateBuildersUtils } from '../utils/state-builders.utils';
+import { DashBoardState } from '../dash-board/dash-board.state';
+import { DashBoardStateModel } from '../dash-board/dash-board-state.model';
+import {
+  DashboardAddItemAction,
+  DashboardRemoveItemAction
+} from '../dash-board/dahs-board-state.actions';
+import {
+  AddVehicleAction,
+  AddVehicleContainerAction,
+  RemoveVehicleAction
+} from '../base/vehicle-container.state.actions';
+import { VehicleContainerStateModel } from '../base/vehicle-container-state.model';
+import { ChangeSpeedVehicleAction, UpdateVehicleAction } from '../base/vehicle-state.actions';
 
 @State<IEmptyObject>({
   name: StateNamesEnum.vehicleAppService

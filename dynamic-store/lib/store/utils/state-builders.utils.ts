@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { StateNamesEnum } from '../../model/store/state-names.enum';
+import { StateNamesEnum } from '../../model/enums/state-names.enum';
 import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
-import { VehicleEnum } from '../../model/domain/vehicle.enum';
+import { VehicleEnum } from '../../model/enums/vehicle.enum';
 
 @Injectable()
 export class StateBuildersUtils {

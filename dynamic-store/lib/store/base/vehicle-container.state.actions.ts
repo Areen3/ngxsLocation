@@ -1,5 +1,5 @@
 import { BaseActionWithPayload } from '../../model/store/actions';
-import { VehicleEnum } from '../../model/domain/vehicle.enum';
+import { VehicleEnum } from '../../model/enums/vehicle.enum';
 import { ElementLocationModel, ElementNameModel, IEntity } from '../../model/base/base';
 import { DashBoardElementsItemModel } from '../dash-board/dash-board-state.model';
 

@@ -18,10 +18,10 @@ import {
   RemoveVehicleAppServiceAction
 } from '../../../store/base/state.actions';
 import { ActivatedRoute } from '@angular/router';
-import { DashBoardState } from '../../../logic/dash-board/dash-board.state';
-import { SelectorBuildersUtils } from '../../../logic/utils/selector-builders.utils';
-import { DashBoardElementsItemModel } from '../../../logic/dash-board/dash-board-state.model';
-import { StateNamesEnum } from '../../../model/store/state-names.enum';
+import { StateNamesEnum } from '../../../model/enums/state-names.enum';
+import { DashBoardState } from '../../../store/dash-board/dash-board.state';
+import { DashBoardElementsItemModel } from '../../../store/dash-board/dash-board-state.model';
+import { SelectorBuildersUtils } from '../../../store/utils/selector-builders.utils';
 
 @Component({
   selector: 'vehicle-item',

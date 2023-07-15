@@ -7,7 +7,7 @@ import {
   ElementElementsDataModel,
   ElementsDataModel
 } from '../../../model/domain/elementDataModel';
-import { StateNamesEnum } from '../../../model/store/state-names.enum';
+import { StateNamesEnum } from '../../../model/enums/state-names.enum';
 import { registerSelectorVehicleContainerMethod } from '../../../model/decorators/register-selector-vehicle-container-method.decorator';
 
 @State<ElementsDataModel<ElementElementsDataModel>>({

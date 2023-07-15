@@ -7,7 +7,7 @@ import {
   ViewSingleResponsibilityStoreModel
 } from '../../../model/store/base-simple-store.model';
 import { IEmptyObject } from '../../../model/base/base';
-import { StateNamesEnum } from '../../../model/store/state-names.enum';
+import { StateNamesEnum } from '../../../model/enums/state-names.enum';
 
 @State<ViewSingleResponsibilityStoreModel>({
   name: StateNamesEnum.formView,

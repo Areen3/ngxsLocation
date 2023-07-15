@@ -1,4 +1,4 @@
-import { BaseEventsAbstract } from '../../../model/events/base.event';
+import { BaseEventsAbstract } from '../../../model/base/base.event';
 import { VehicleContainerEnum } from '../../../model/enums/vehicle-container.enum';
 
 export enum DashBoardEventType {

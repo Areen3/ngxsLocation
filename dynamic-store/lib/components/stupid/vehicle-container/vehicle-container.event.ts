@@ -1,6 +1,6 @@
-import { BaseEventsAbstract } from '../../../model/events/base.event';
-import { VehicleEnum } from '../../../model/domain/vehicle.enum';
-import { DashBoardElementsItemModel } from '../../../logic/dash-board/dash-board-state.model';
+import { BaseEventsAbstract } from '../../../model/base/base.event';
+import { VehicleEnum } from '../../../model/enums/vehicle.enum';
+import { DashBoardElementsItemModel } from '../../../store/dash-board/dash-board-state.model';
 
 export enum VehicleContainerEventType {
   addVehicle = 'addVehicle',

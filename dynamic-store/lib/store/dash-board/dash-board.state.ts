@@ -13,12 +13,12 @@ import {
   DashBoardModelModel,
   DashBoardStateModel
 } from './dash-board-state.model';
-import { StateNamesEnum } from '../../model/store/state-names.enum';
+import { StateNamesEnum } from '../../model/enums/state-names.enum';
 import {
   DashboardAddItemAction,
   DashboardRemoveItemAction,
   DashboardSimulateUsersAction
-} from './state.actions';
+} from './dahs-board-state.actions';
 import {
   DashBoardStupidModelModel,
   DashBoardStupidViewModel
@@ -26,9 +26,9 @@ import {
 import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
 import { forkJoin } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { DependencyInjectedVehicleAppServiceState } from '../../store/dependency-incject/dependency-injected-vehicle-app-service.state';
-import { SingleResponsibilityVehicleAppServiceState } from '../../store/single-responsibility/app-services/single-responsibility-vehicle-app-service.state';
-import { DynamicVehicleAppServiceState } from '../../store/dynamic/dynamic-vehicle-app-service.state';
+import { DependencyInjectedVehicleAppServiceState } from '../dependency-incject/dependency-injected-vehicle-app-service.state';
+import { SingleResponsibilityVehicleAppServiceState } from '../single-responsibility/app-services/single-responsibility-vehicle-app-service.state';
+import { DynamicVehicleAppServiceState } from '../dynamic/dynamic-vehicle-app-service.state';
 
 @State<DashBoardStateModel>({
   name: StateNamesEnum.dashBoard,

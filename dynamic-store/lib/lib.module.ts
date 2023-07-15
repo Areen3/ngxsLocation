@@ -2,8 +2,6 @@ import { NgModule } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 import { NgxsModule } from '@ngxs/store';
-import { DashBoardState } from './logic/dash-board/dash-board.state';
-import { StateBuildersUtils } from './logic/utils/state-builders.utils';
 import { VehicleContainerComponent } from './components/smart/vehicle-container/vehicle-container.component';
 import { VehicleItemComponent } from './components/smart/vehicle-item/vehicle-item.component';
 import { DashBoardComponent } from './components/smart/dash-board/dash-board.component';
@@ -21,14 +19,11 @@ import { MotoBikeDynamicState } from './store/dynamic/moto-bike-dynamic.state';
 import { TruckDynamicState } from './store/dynamic/truck-dynamic.state';
 import { VehicleDynamicState } from './store/dynamic/vehicle-dynamic.state';
 import { VehicleDynamicContainerState } from './store/dynamic/vehicle-dynamic-container.state';
-import { FeRouteModule } from './fe-route.module';
 import { TabsStupidComponent } from './components/stupid/tabs/tabs-stupid.component';
 import { RouteReuseStrategy } from '@angular/router';
-import { ParamChangeRouteResultStrategy } from './guards/strategy/params-change-route-strategy';
 import { SimulateBackendService } from './backend/simulate-backend.service';
 import { VehicleContainerDalService } from './backend/vehicle-container-dal.service';
 import { AbstractVehicleContainerState } from './store/base/abstract-vehicle-container.state';
-import { SelectorBuildersUtils } from './logic/utils/selector-builders.utils';
 import { VehicleSingleResponsibilityContainerState } from './store/single-responsibility/container/vehicle-single-responsibility-container.state';
 import { RoutingSingleResponsibilityState } from './store/single-responsibility/base/routing-single-responsibility.state';
 import { FormModelSingleResponsibilityState } from './store/single-responsibility/base/form-model-single-responsibility-state.service';
@@ -38,7 +33,6 @@ import { ItemElementsSingleResponsibilityState } from './store/single-responsibi
 import { FormModelVehicleContainerState } from './store/single-responsibility/container/form-model-vehicle-container-state.service';
 import { FormViewVehicleContainerState } from './store/single-responsibility/container/form-view-vehicle-container-state.service';
 import { FormElementsVehicleContainerState } from './store/single-responsibility/container/formelements-vehicle-container-state.service';
-import { LocationBuildersUtils } from './logic/utils/location-builders.utils';
 import { HostAreaAccessService } from './store/single-responsibility/area-services/host-area-access.service';
 import { CrudSrVehicleContainerState } from './store/single-responsibility/container/crud-sr-vehicle-container.state';
 import { BaseVehicleAppServiceState } from './store/base/base-vehicle-app-service.state';
@@ -54,6 +48,12 @@ import { BikeSingleResponsibilityState } from './store/single-responsibility/veh
 import { MotoBikeSingleResponsibilityState } from './store/single-responsibility/vehicles/moto-bike-single-responsibility.state';
 import { CarSingleResponsibilityState } from './store/single-responsibility/vehicles/car-single-responsibility.state';
 import { TruckSingleResponsibilityState } from './store/single-responsibility/vehicles/truck-single-responsibility.state';
+import { FeRouteModule } from './routing/fe-route.module';
+import { ParamChangeRouteResultStrategy } from './routing/params-change-route-strategy';
+import { SelectorBuildersUtils } from './store/utils/selector-builders.utils';
+import { LocationBuildersUtils } from './store/utils/location-builders.utils';
+import { DashBoardState } from './store/dash-board/dash-board.state';
+import { StateBuildersUtils } from './store/utils/state-builders.utils';
 
 @NgModule({
   declarations: [

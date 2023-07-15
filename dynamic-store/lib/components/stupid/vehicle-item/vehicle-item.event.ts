@@ -1,4 +1,4 @@
-import { BaseEventsAbstract } from '../../../model/events/base.event';
+import { BaseEventsAbstract } from '../../../model/base/base.event';
 import { VehicleItemModel } from '../../../model/store/vehicle-item.model';
 
 export enum VehicleItemEventType {

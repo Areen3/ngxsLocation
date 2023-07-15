@@ -1,9 +1,9 @@
 import { BackedDataAccessLayerService } from './backed-data-access-layer.service';
 import { Injectable } from '@angular/core';
-import { DashBoardElementsItemModel } from '../logic/dash-board/dash-board-state.model';
 import { from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { VehicleEnum } from '../model/domain/vehicle.enum';
+import { VehicleEnum } from '../model/enums/vehicle.enum';
+import { DashBoardElementsItemModel } from '../store/dash-board/dash-board-state.model';
 
 interface ContainerDto {
   container: DashBoardElementsItemModel;

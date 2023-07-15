@@ -1,16 +1,16 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { VehicleEnum } from '../../../model/domain/vehicle.enum';
+import { VehicleEnum } from '../../../model/enums/vehicle.enum';
 import {
   VehicleContainerStupidModelModel,
   VehicleContainerStupidViewModel
 } from '../../../model/stupid/vehicle-container-stupid.model';
 import { VehicleContainerEvents, VehicleContainerEventType } from './vehicle-container.event';
-import { DashBoardElementsItemModel } from '../../../logic/dash-board/dash-board-state.model';
 import {
   BaseStupidElementsInterface,
   BaseStupidInputInterface,
   BaseStupidOutputInterface
 } from '../base/base-stupid-input-interface';
+import { DashBoardElementsItemModel } from '../../../store/dash-board/dash-board-state.model';
 
 @Component({
   selector: 'vehicle-container-stupid',

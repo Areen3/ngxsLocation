@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { RangeLocations, Store } from '@ngxs/store';
 import { BehaviorSubject, combineLatest, forkJoin, Observable, of, timer } from 'rxjs';
-import { DashBoardState } from '../logic/dash-board/dash-board.state';
 import { filter, map, switchMap } from 'rxjs/operators';
 import {
   AddVehicleContainerAppServiceAction,
   RemoveVehicleContainerAppServiceAction
 } from '../store/base/state.actions';
 import { VehicleContainerEnum } from '../model/enums/vehicle-container.enum';
+import { DashBoardState } from '../store/dash-board/dash-board.state';
 
 @Injectable()
 export class SimulateBackendService {

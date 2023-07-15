@@ -2,10 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RangeLocations, SingleLocation, Store } from '@ngxs/store';
 import {
-  DashBoardElementsItemModel,
-  DashBoardElementsModel
-} from '../../../logic/dash-board/dash-board-state.model';
-import {
   VehicleContainerStupidModelModel,
   VehicleContainerStupidViewModel
 } from '../../../model/stupid/vehicle-container-stupid.model';
@@ -15,14 +11,18 @@ import {
   VehicleContainerEventType,
   VehicleContainerRemoveContainerEvent
 } from '../../stupid/vehicle-container/vehicle-container.event';
-import { VehicleContainerElementsModel } from '../../../logic/vehicle-container/vehicle-container-state.model';
 import {
   AddVehicleAppServiceAction,
   RemoveVehicleContainerAppServiceAction
 } from '../../../store/base/state.actions';
 import { ActivatedRoute } from '@angular/router';
-import { DashBoardState } from '../../../logic/dash-board/dash-board.state';
-import { SelectorBuildersUtils } from '../../../logic/utils/selector-builders.utils';
+import {
+  DashBoardElementsItemModel,
+  DashBoardElementsModel
+} from '../../../store/dash-board/dash-board-state.model';
+import { VehicleContainerElementsModel } from '../../../store/base/vehicle-container-state.model';
+import { SelectorBuildersUtils } from '../../../store/utils/selector-builders.utils';
+import { DashBoardState } from '../../../store/dash-board/dash-board.state';
 
 @Component({
   selector: 'vehicle-container',

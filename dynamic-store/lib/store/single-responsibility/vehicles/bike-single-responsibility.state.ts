@@ -1,12 +1,9 @@
 import { Injectable, Self } from '@angular/core';
 import { State } from '@ngxs/store';
-import { StateBuildersUtils } from '../../../logic/utils/state-builders.utils';
-import { StateNamesEnum } from '../../../model/store/state-names.enum';
-import { VehicleEnum } from '../../../model/domain/vehicle.enum';
+import { StateNamesEnum } from '../../../model/enums/state-names.enum';
+import { VehicleEnum } from '../../../model/enums/vehicle.enum';
 import { AbstractVehicleSpeedService } from '../../../model/abstract/abstract-vehicle-speed.service';
-import { BikeVehicleSpeedService } from '../../../logic/services/bike-vehicle-speed.service';
 import { AbstractSpeedMultiplierService } from '../../../model/abstract/abstract-speed-multiplier-.service';
-import { MuscleMultiplierService } from '../../../logic/services/muscle-multiplier.service';
 import { registerVehicleState } from '../../../model/decorators/register-vehicle-state.decorator';
 import { VehicleContainerEnum } from '../../../model/enums/vehicle-container.enum';
 import { IEmptyObject } from '../../../model/base/base';
@@ -16,6 +13,9 @@ import { HostVehicleAccessModel } from '../../../model/store/host-area.model';
 import { FormModelVehicleStateService } from './form-model-vehicle-state.service';
 import { FormViewVehicleStateService } from './form-view-vehicle-state.service';
 import { SpeedSrVehicleState } from './speed-sr-vehicle.state';
+import { StateBuildersUtils } from '../../utils/state-builders.utils';
+import { BikeVehicleSpeedService } from '../../services/bike-vehicle-speed.service';
+import { MuscleMultiplierService } from '../../services/muscle-multiplier.service';
 
 @State<IEmptyObject>({
   name: StateBuildersUtils.buildSingleResponsibilityStateName(StateNamesEnum.vehicleBike),

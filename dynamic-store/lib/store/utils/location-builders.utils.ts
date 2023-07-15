@@ -1,5 +1,5 @@
 import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
-import { StateNamesEnum } from '../../model/store/state-names.enum';
+import { StateNamesEnum } from '../../model/enums/state-names.enum';
 import { SingleLocation } from '@ngxs/store';
 import { Injectable } from '@angular/core';
 

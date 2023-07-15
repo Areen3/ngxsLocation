@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { SingleLocation, State } from '@ngxs/store';
-import { StateNamesEnum } from '../../model/store/state-names.enum';
+import { StateNamesEnum } from '../../model/enums/state-names.enum';
 import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
-import { StateBuildersUtils } from '../../logic/utils/state-builders.utils';
-import { DashBoardElementsItemModel } from '../../logic/dash-board/dash-board-state.model';
 import { IEmptyObject } from '../../model/base/base';
+import { StateBuildersUtils } from '../utils/state-builders.utils';
+import { DashBoardElementsItemModel } from '../dash-board/dash-board-state.model';
 
 @State<IEmptyObject>({
   name: StateNamesEnum.vehicleAppService

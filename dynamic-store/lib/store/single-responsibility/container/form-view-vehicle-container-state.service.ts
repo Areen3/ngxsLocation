@@ -1,13 +1,13 @@
 import { Injectable, Self } from '@angular/core';
 import { Selector, State } from '@ngxs/store';
-import { StateNamesEnum } from '../../../model/store/state-names.enum';
+import { StateNamesEnum } from '../../../model/enums/state-names.enum';
 import { FormViewSingleResponsibilityState } from '../base/form-view-single-responsibility-state.service';
-import { VehicleContainerViewModel } from '../../../logic/vehicle-container/vehicle-container-state.model';
-import { VehicleEnum } from '../../../model/domain/vehicle.enum';
+import { VehicleEnum } from '../../../model/enums/vehicle.enum';
 import { registerSelectorVehicleContainerMethod } from '../../../model/decorators/register-selector-vehicle-container-method.decorator';
 import { VehicleContainerStupidViewModel } from '../../../model/stupid/vehicle-container-stupid.model';
 import { HostAreaAccessService } from '../area-services/host-area-access.service';
 import { HostVehicleContainerAccessModel } from '../../../model/store/host-area.model';
+import { VehicleContainerViewModel } from '../../base/vehicle-container-state.model';
 
 @State<VehicleContainerViewModel>({
   name: StateNamesEnum.formView,

@@ -1,21 +1,21 @@
 import { Injectable, Self } from '@angular/core';
 import { Action, State, StateContext, Store } from '@ngxs/store';
-import { StateNamesEnum } from '../../../model/store/state-names.enum';
-import {
-  AddVehicleContainerAction,
-  RemoveVehicleContainerAction
-} from '../../../logic/vehicle-container/state.actions';
+import { StateNamesEnum } from '../../../model/enums/state-names.enum';
 import { IEmptyObject } from '../../../model/base/base';
 import { BaseSingleResponsibilityState } from '../base/base-single-responsibility.state';
 import { HostAreaAccessService } from '../area-services/host-area-access.service';
 import { HostVehicleContainerAccessModel } from '../../../model/store/host-area.model';
-import {
-  VehicleContainerModelModel,
-  VehicleContainerViewModel
-} from '../../../logic/vehicle-container/vehicle-container-state.model';
 import { UpdateViewAction } from '../base/view-state.actions';
 import { from, Observable } from 'rxjs';
 import { UpdateModelAction } from '../base/data-state.actions';
+import {
+  AddVehicleContainerAction,
+  RemoveVehicleContainerAction
+} from '../../base/vehicle-container.state.actions';
+import {
+  VehicleContainerModelModel,
+  VehicleContainerViewModel
+} from '../../base/vehicle-container-state.model';
 
 @State<IEmptyObject>({
   name: StateNamesEnum.crudSrState,

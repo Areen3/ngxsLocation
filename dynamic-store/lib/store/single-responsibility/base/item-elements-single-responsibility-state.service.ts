@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { BaseSingleResponsibilityState } from './base-single-responsibility.state';
 import { UpdateItemElementsAction } from './elements-state.actions';
-import { StateNamesEnum } from '../../../model/store/state-names.enum';
+import { StateNamesEnum } from '../../../model/enums/state-names.enum';
 import { HostSingleResponsibilityAreaAccessModel } from '../../../model/store/base-simple-store.model';
 import { ElementElementsDataModel } from '../../../model/domain/elementDataModel';
 

@@ -1,6 +1,6 @@
 import { VehicleItemModel } from '../store/vehicle-item.model';
-import { VehicleContainerViewModel } from '../../logic/vehicle-container/vehicle-container-state.model';
 import { IEntity } from '../base/base';
+import { VehicleContainerViewModel } from '../../store/base/vehicle-container-state.model';
 
 export interface VehicleContainerStupidModelModel extends IEntity {
   items: Array<VehicleItemModel>;

@@ -1,4 +1,4 @@
-import { VehicleEnum } from '../domain/vehicle.enum';
+import { VehicleEnum } from '../enums/vehicle.enum';
 
 type Type<T> = new (...args: Array<T>) => T;
 

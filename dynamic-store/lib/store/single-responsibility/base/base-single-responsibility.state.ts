@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { State } from '@ngxs/store';
 import { IEmptyObject } from '../../../model/base/base';
-import { StateNamesEnum } from '../../../model/store/state-names.enum';
+import { StateNamesEnum } from '../../../model/enums/state-names.enum';
 import { HostAreaAccessService } from '../area-services/host-area-access.service';
 import { HostSingleResponsibilityAreaAccessModel } from '../../../model/store/base-simple-store.model';
 

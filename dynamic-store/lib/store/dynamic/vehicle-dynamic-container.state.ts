@@ -1,23 +1,23 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { StateNamesEnum } from '../../model/store/state-names.enum';
+import { StateNamesEnum } from '../../model/enums/state-names.enum';
 import { VehicleContainerEnum } from '../../model/enums/vehicle-container.enum';
 import {
   VehicleContainerStupidModelModel,
   VehicleContainerStupidViewModel
 } from '../../model/stupid/vehicle-container-stupid.model';
-import { VehicleEnum } from '../../model/domain/vehicle.enum';
-import { VehicleContainerStateModel } from '../../logic/vehicle-container/vehicle-container-state.model';
+import { VehicleEnum } from '../../model/enums/vehicle.enum';
+import { registerContainerState } from '../../model/decorators/register-container-state.decorator';
+import { AbstractVehicleContainerState } from '../base/abstract-vehicle-container.state';
+import { registerSelectorVehicleContainerMethod } from '../../model/decorators/register-selector-vehicle-container-method.decorator';
+import { VehicleContainerStateModel } from '../base/vehicle-container-state.model';
+import { StateBuildersUtils } from '../utils/state-builders.utils';
 import {
   AddVehicleAction,
   AddVehicleContainerAction,
   RemoveVehicleAction,
   RemoveVehicleContainerAction
-} from '../../logic/vehicle-container/state.actions';
-import { StateBuildersUtils } from '../../logic/utils/state-builders.utils';
-import { registerContainerState } from '../../model/decorators/register-container-state.decorator';
-import { AbstractVehicleContainerState } from '../base/abstract-vehicle-container.state';
-import { registerSelectorVehicleContainerMethod } from '../../model/decorators/register-selector-vehicle-container-method.decorator';
+} from '../base/vehicle-container.state.actions';
 
 @State<VehicleContainerStateModel>({
   name: StateBuildersUtils.buildDynamicStateName(StateNamesEnum.vehicleContainer),
@@ -71,7 +71,7 @@ export class VehicleDynamicContainerState extends AbstractVehicleContainerState 
   }
 
   @Action(AddVehicleAction)
-  AddVehicleAction(ctx: StateContext<VehicleContainerStateModel>, action: AddVehicleAction) {
+  AddVehicle(ctx: StateContext<VehicleContainerStateModel>, action: AddVehicleAction) {
     const state = ctx.getState();
     ctx.patchState({
       model: {
@@ -93,10 +93,7 @@ export class VehicleDynamicContainerState extends AbstractVehicleContainerState 
   }
 
   @Action(RemoveVehicleAction)
-  RemoveVehicleAction(
-    ctx: StateContext<VehicleContainerStateModel>,
-    action: RemoveVehicleAction
-  ) {
+  RemoveVehicle(ctx: StateContext<VehicleContainerStateModel>, action: RemoveVehicleAction) {
     const state: VehicleContainerStateModel = ctx.getState();
     ctx.patchState({
       elements: {

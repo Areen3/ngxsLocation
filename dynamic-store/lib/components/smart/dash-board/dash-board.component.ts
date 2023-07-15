@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
-
 import { Observable, of } from 'rxjs';
 import { Store } from '@ngxs/store';
-import { DashBoardState } from '../../../logic/dash-board/dash-board.state';
 import {
   DashBoardEvents,
   DashBoardEventType,
@@ -19,7 +17,8 @@ import {
 import { TabEvents, TabsEventType } from '../../stupid/tabs/tabs.event';
 import { Navigate } from '@ngxs/router-plugin';
 import { RoutingPathEnum } from '../../../model/enums/routing-path-enum';
-import { DashboardSimulateUsersAction } from '../../../logic/dash-board/state.actions';
+import { DashBoardState } from '../../../store/dash-board/dash-board.state';
+import { DashboardSimulateUsersAction } from '../../../store/dash-board/dahs-board-state.actions';
 
 @Component({
   selector: 'dashboard',
