@@ -1,0 +1,9 @@
+<div class="veh-item veh-div-flex veh-item-align">
+  <vehicle-item-stupid
+    [elements]="elements"
+    [model]="(this.model$ | async)!"
+    [view]="(view$ | async)!"
+    (eventEmitter)="outputEvents($event)"
+  >
+  </vehicle-item-stupid>
+</div>

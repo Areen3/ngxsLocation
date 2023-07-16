@@ -1,0 +1,16 @@
+@import '../../../../assets/scss/variables/variables';
+.dash-width {
+  grid-area: header;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  @media (max-width: 640px) {
+    justify-content: center;
+  }
+}
+.title {
+  font-size: $title-fint-size;
+  margin: 1rem;
+  font-weight: bold;
+  text-align: center;
+}

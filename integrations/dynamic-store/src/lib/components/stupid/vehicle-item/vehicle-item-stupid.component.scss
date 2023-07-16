@@ -1,0 +1,24 @@
+@import '../../../../assets/scss/variables/variables';
+.table-item {
+  text-align: center;
+}
+.table-item-speed,
+.table-item-number,
+.table-item-seats {
+  width: 160px;
+}
+.table-item-type {
+  width: 200px;
+}
+.veh-div-flex {
+  justify-content: end;
+}
+.table-item {
+  padding: $margin;
+  border: $border-style;
+}
+.table-veh-item {
+  font-size: $font-size;
+  margin: 0;
+  box-sizing: border-box;
+}
