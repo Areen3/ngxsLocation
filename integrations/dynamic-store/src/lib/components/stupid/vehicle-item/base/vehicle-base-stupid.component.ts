@@ -1,22 +1,20 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { VehicleItemModel } from '../../../model/store/vehicle-item.model';
+import { Directive, EventEmitter, Input, Output } from '@angular/core';
+import { VehicleItemModel } from '../../../../model/store/vehicle-item.model';
 import { VehicleItemEvents, VehicleItemEventType } from './vehicle-item.event';
 import {
   VehicleItemStupidModelModel,
   VehicleItemStupidViewModel
-} from '../../../model/stupid/vehicle-item-stupid.model';
+} from '../../../../model/stupid/vehicle-item-stupid.model';
 import {
   BaseStupidElementsInterface,
   BaseStupidInputInterface,
   BaseStupidOutputInterface
-} from '../base/base-stupid-input-interface';
+} from '../../base/base-stupid-input-interface';
 
-@Component({
-  selector: 'vehicle-item-stupid',
-  templateUrl: './vehicle-item-stupid.component.html',
-  styleUrls: ['./vehicle-item-stupid.component.scss']
+@Directive({
+  selector: 'vehicle-base-stupid'
 })
-export class VehicleItemStupidComponent<
+export class VehicleBaseStupidComponent<
   TEvents extends VehicleItemEvents,
   TModel extends VehicleItemStupidModelModel,
   TView extends VehicleItemStupidViewModel,

@@ -7,7 +7,7 @@ import { VehicleItemComponent } from './components/smart/vehicle-item/vehicle-it
 import { DashBoardComponent } from './components/smart/dash-board/dash-board.component';
 import { DashBoardStupidComponent } from './components/stupid/dash-board/dash-board-stupid.component';
 import { VehicleContainerStupidComponent } from './components/stupid/vehicle-container/vehicle-container-stupid.component';
-import { VehicleItemStupidComponent } from './components/stupid/vehicle-item/vehicle-item-stupid.component';
+import { VehicleItemStupidComponent } from './components/stupid/vehicle-item/rest/vehicle-item-stupid.component';
 import { VehicleDependencyInjectContainerState } from './store/dependency-incject/vehicle-dependency-inject-container.state';
 import { CarDependencyInjectState } from './store/dependency-incject/car-dependency-inject.state';
 import { MotoBikeDependencyInjectState } from './store/dependency-incject/moto-bike-dependency-inject.state';
@@ -55,11 +55,16 @@ import { LocationBuildersUtils } from './store/utils/location-builders.utils';
 import { DashBoardState } from './store/dash-board/dash-board.state';
 import { StateBuildersUtils } from './store/utils/state-builders.utils';
 import { DynamicModule } from 'ng-dynamic-component';
+import { VehicleBaseStupidComponent } from './components/stupid/vehicle-item/base/vehicle-base-stupid.component';
+import { VehicleBikeStupidComponent } from './components/stupid/vehicle-item/bike/vehicle-bike-stupid.component';
 
 @NgModule({
   declarations: [
     VehicleContainerComponent,
     VehicleItemComponent,
+    VehicleBaseStupidComponent,
+    VehicleBaseStupidComponent,
+    VehicleBikeStupidComponent,
     DashBoardComponent,
     DashBoardStupidComponent,
     VehicleContainerStupidComponent,

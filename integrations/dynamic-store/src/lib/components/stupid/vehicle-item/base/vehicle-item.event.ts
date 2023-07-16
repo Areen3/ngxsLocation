@@ -1,5 +1,5 @@
-import { BaseEventsAbstract } from '../../../model/base/base.event';
-import { VehicleItemModel } from '../../../model/store/vehicle-item.model';
+import { BaseEventsAbstract } from '../../../../model/base/base.event';
+import { VehicleItemModel } from '../../../../model/store/vehicle-item.model';
 
 export enum VehicleItemEventType {
   changeSpeed = 'VehicleModel',
