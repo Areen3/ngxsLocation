@@ -37,6 +37,7 @@
     "@ngxs/storage-plugin": "file:./node_modules/@ngxs/storage-plugin",
     "@ngxs/store": "file:./node_modules/@ngxs/store",
     "@ngxs/websocket-plugin": "file:./node_modules/@ngxs/websocket-plugin",
+    "ng-dynamic-component": "^10.7.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.0"

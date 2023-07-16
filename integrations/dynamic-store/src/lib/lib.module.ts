@@ -54,6 +54,7 @@ import { SelectorBuildersUtils } from './store/utils/selector-builders.utils';
 import { LocationBuildersUtils } from './store/utils/location-builders.utils';
 import { DashBoardState } from './store/dash-board/dash-board.state';
 import { StateBuildersUtils } from './store/utils/state-builders.utils';
+import { DynamicModule } from 'ng-dynamic-component';
 
 @NgModule({
   declarations: [
@@ -65,7 +66,12 @@ import { StateBuildersUtils } from './store/utils/state-builders.utils';
     VehicleItemStupidComponent,
     TabsStupidComponent
   ],
-  imports: [CommonModule, NgxsModule.forFeature([DashBoardState]), FeRouteModule],
+  imports: [
+    CommonModule,
+    NgxsModule.forFeature([DashBoardState]),
+    FeRouteModule,
+    DynamicModule
+  ],
   exports: [
     VehicleContainerComponent,
     VehicleItemComponent,
