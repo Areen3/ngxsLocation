@@ -203,18 +203,7 @@ export class StateFactory implements OnDestroy {
       if (typeof ngDevMode === 'undefined' || ngDevMode) {
         ensureStateClassIsInjectable(stateClass);
       }
-      const injector = this.createCustomInjector(meta);
-      const stateMap: MappedStore = {
-        name,
-        path,
-        isInitialised: false,
-        actions: meta.actions,
-        instance: this._injector.get(stateClass),
-        defaults: StateFactory.cloneDefaults(meta.defaults),
-        context: '',
-        selectors: meta.selectors,
-        injector
-      };
+      const stateMap: MappedStore = this.createStateItem(name, path, stateClass);
 
       // ensure our store hasn't already been added
       // but don't throw since it could be lazy

@@ -140,9 +140,9 @@ export class Store {
   }
 
   private getStoreBoundSelectorFn(selector: any) {
-    const seletorMDModel: SelectorMetaDataModel = getSelectorMetadata(selector);
+    const selectorMDModel: SelectorMetaDataModel = getSelectorMetadata(selector);
     const location: SingleLocation | undefined =
-      seletorMDModel === undefined ? undefined : seletorMDModel.location;
+      selectorMDModel === undefined ? undefined : selectorMDModel.location;
     const makeSelectorFn = getRootSelectorFactory(selector);
     const runtimeContext = this._stateFactory.getRuntimeSelectorContext(location);
     return makeSelectorFn(runtimeContext);
@@ -188,7 +188,7 @@ export class Store {
   /**
    * Select a observable slice of store from specified location
    */
-  selectInContext<T>(selector: any, location: SingleLocation): Observable<T> {
+  selectInContext<T = any>(selector: any, location: SingleLocation): Observable<T> {
     const selectorMDModel: SelectorMetaDataModel =
       StoreValidators.getValidSelectorMeta(selector);
     const containerClass = selectorMDModel.containerClass;
@@ -201,7 +201,7 @@ export class Store {
   }
 
   /** Allows to select one slice of data from the store from specified location */
-  selectOnceInContext<T>(selector: any, filter: SingleLocation): Observable<T> {
+  selectOnceInContext<T = any>(selector: any, filter: SingleLocation): Observable<T> {
     return this.selectInContext<T>(selector, filter).pipe(take(1));
   }
 
@@ -209,7 +209,7 @@ export class Store {
    * Select a snapshot from the state  from specified location
    */
 
-  selectSnapshotInContext<T>(selector: any, location: SingleLocation): T {
+  selectSnapshotInContext<T = any>(selector: any, location: SingleLocation): T {
     const selectorMDModel: SelectorMetaDataModel =
       StoreValidators.getValidSelectorMeta(selector);
     const containerClass = selectorMDModel.containerClass;
