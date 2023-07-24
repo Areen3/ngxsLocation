@@ -29,6 +29,7 @@ import { take } from 'rxjs/operators';
 import { DependencyInjectedVehicleAppServiceState } from '../dependency-incject/dependency-injected-vehicle-app-service.state';
 import { SingleResponsibilityVehicleAppServiceState } from '../single-responsibility/app-services/single-responsibility-vehicle-app-service.state';
 import { DynamicVehicleAppServiceState } from '../dynamic/dynamic-vehicle-app-service.state';
+import { CarDependencyInjectState } from '../dependency-incject/car-dependency-inject.state';
 
 @State<DashBoardStateModel>({
   name: StateNamesEnum.dashBoard,
@@ -36,7 +37,8 @@ import { DynamicVehicleAppServiceState } from '../dynamic/dynamic-vehicle-app-se
     model: { lastId: 0, id: 0, simulate: false },
     elements: { items: [] },
     view: { dropDown: Object.values(VehicleContainerEnum), remove: false }
-  }
+  },
+  children: [CarDependencyInjectState]
 })
 @Injectable()
 export class DashBoardState implements NgxsOnInit {
