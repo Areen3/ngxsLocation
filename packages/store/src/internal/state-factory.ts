@@ -1,21 +1,21 @@
 import {
+  Inject,
   Injectable,
   Injector,
-  Optional,
-  SkipSelf,
-  Inject,
+  isDevMode,
   OnDestroy,
-  isDevMode
+  Optional,
+  SkipSelf
 } from '@angular/core';
 import {
   forkJoin,
   from,
+  isObservable,
   Observable,
   of,
-  throwError,
-  Subscription,
   Subject,
-  isObservable
+  Subscription,
+  throwError
 } from 'rxjs';
 import { ELocationKind, RangeLocations } from './../common/selectLocation';
 import { ActionKind } from './../common/declaration';
@@ -29,25 +29,25 @@ import {
   shareReplay,
   takeUntil
 } from 'rxjs/operators';
-import { INITIAL_STATE_TOKEN, PlainObjectOf, memoize } from '@ngxs/store/internals';
+import { INITIAL_STATE_TOKEN, memoize, PlainObjectOf } from '@ngxs/store/internals';
 
 import { META_KEY, NgxsConfig } from '../symbols';
 import {
   buildGraph,
   findFullParentPath,
+  getStoreMetadata,
   isObject,
   MappedStore,
   MetaDataModel,
   nameToState,
   propGetter,
+  RuntimeSelectorContext,
+  SharedSelectorOptions,
   StateClassInternal,
   StateKeyGraph,
   StatesAndDefaults,
   StatesByName,
-  topologicalSort,
-  RuntimeSelectorContext,
-  SharedSelectorOptions,
-  getStoreMetadata
+  topologicalSort
 } from './internals';
 import {
   getActionTypeFromInstance,
@@ -283,6 +283,7 @@ export class StateFactory implements OnDestroy {
     this.states.push(mappedStore);
     return [mappedStore];
   }
+
   /**
    * Remove child to store in given location and retrun new state wihtout removed elements
    */
@@ -454,37 +455,59 @@ export class StateFactory implements OnDestroy {
    * Function returns array SingleLocation matched with RangeLocations
    * array has all paths to slice of state thad dulfill all conditions results from RangeLocations
    * */
-  getLocations(location: RangeLocations): SingleLocation[] {
+  getLocations(
+    location: RangeLocations,
+    eventArray: NgxsAction[]
+  ): { loc: SingleLocation; events: NgxsAction[] }[] {
     const tab: MappedStore[] = [];
     switch (location.locationKind) {
       case ELocationKind.byName:
         tab.push(...this.states.filter(p => p.name === location.name));
         break;
       case ELocationKind.byLocation:
-        return [SingleLocation.getLocation(location.path)];
+        return [{ loc: SingleLocation.getLocation(location.path), events: eventArray }];
       case ELocationKind.byContext:
         tab.push(
           ...this.states.filter(
-            p => p.context === location.context && p.name === location.name
+            p =>
+              p.context === location.context &&
+              (location.name === '' || p.name === location.name)
           )
         );
         break;
       case ELocationKind.byContextInPath:
         tab.push(
           ...this.states
-            .filter(p => p.path.startsWith(location.path) && p.name === location.name)
+            .filter(
+              p =>
+                p.path.startsWith(location.path) &&
+                (location.name === '' || p.name === location.name)
+            )
             .filter(p => p.context === location.context)
         );
         break;
       case ELocationKind.byPathTree:
         tab.push(
           ...this.states.filter(
-            p => p.path.startsWith(location.path) && p.name === location.name
+            p =>
+              p.path.startsWith(location.path) &&
+              (location.name === '' || p.name === location.name)
           )
         );
         break;
     }
-    return tab.map(item => SingleLocation.getLocation(item.path));
+    return tab
+      .map(p => {
+        const filterEvents = eventArray.filter(
+          ev => p.actions[getActionTypeFromInstance(ev)!]
+        );
+        return { state: p, events: [...filterEvents] };
+      })
+      .filter(p => p.events.length > 0)
+      .map(item => ({
+        loc: SingleLocation.getLocation(item.state.path),
+        events: item.events
+      }));
   }
 
   private addToStatesMap(stateClasses: StateClassInternal[]): {
@@ -553,6 +576,7 @@ export class StateFactory implements OnDestroy {
     };
     return stateMap;
   }
+
   /**
    * @description
    * the method checks if the state has already been added to the tree

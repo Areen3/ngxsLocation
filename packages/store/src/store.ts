@@ -5,8 +5,8 @@ import {
   catchError,
   distinctUntilChanged,
   map,
-  switchMap,
   shareReplay,
+  switchMap,
   take
 } from 'rxjs/operators';
 import { INITIAL_STATE_TOKEN, PlainObject, StateClass } from '@ngxs/store/internals';
@@ -169,16 +169,24 @@ export class Store {
     event: NgxsAction | NgxsAction[],
     location: SingleLocation | RangeLocations
   ): Observable<any> {
-    const locationsToSend: SingleLocation[] =
-      location instanceof RangeLocations
-        ? this._stateFactory.getLocations(<RangeLocations>(<unknown>location))
-        : [<SingleLocation>(<unknown>location)];
     const eventArray = Array.isArray(event) ? [...event] : [event];
-    const eventToSend: NgxsAction[] = eventArray
-      .map((eventItem): NgxsAction[] =>
-        locationsToSend.map(
-          (locationItem): NgxsAction =>
-            Object.assign(Object.create(eventItem), { ...eventItem, location: locationItem })
+    if (location instanceof SingleLocation) {
+      return this._internalStateOperations
+        .getRootStateOperations()
+        .dispatch(
+          eventArray.map(eventItem =>
+            Object.assign(Object.create(eventItem), { ...eventItem, location })
+          )
+        );
+    }
+    const locationsToSend = this._stateFactory.getLocations(
+      <RangeLocations>location,
+      eventArray
+    );
+    const eventToSend = locationsToSend
+      .map(item =>
+        item.events.map(eventItem =>
+          Object.assign(Object.create(eventItem), { ...eventItem, location: item.loc })
         )
       )
       .reduce((acc, curr) => [...acc, ...curr], []);

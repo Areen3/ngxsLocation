@@ -57,6 +57,7 @@ export class VehicleContainerComponent implements OnInit {
   }
 
   outputEvents(event: VehicleContainerEvents): void {
+    //const loc = SingleLocation.getLocation(this.elements!.location);
     switch (event.eventType) {
       case VehicleContainerEventType.addVehicle:
         const addEvent = <VehicleContainerAddVehicleEvent>event;
@@ -65,7 +66,9 @@ export class VehicleContainerComponent implements OnInit {
             container: this.elements!,
             vehicle: addEvent.data
           }),
-          RangeLocations.filterByContext(this.elements!.type, this.elements!.type)
+          //RangeLocations.filterByContext(this.elements!.type, this.elements!.type)
+          RangeLocations.filterByContext(this.elements!.type)
+          //RangeLocations.filterByPathTree(StateNamesEnum.dashBoard)
         );
         break;
       case VehicleContainerEventType.removeContainer:

@@ -66,10 +66,10 @@ export class RangeLocations {
     const loc: string = name === undefined ? path : `${path}.${name}`;
     return new RangeLocations('', '', loc, false);
   }
-  static filterByContext(context: string, name: string): RangeLocations {
+  static filterByContext(context: string, name = ''): RangeLocations {
     return new RangeLocations(context, name, '', false);
   }
-  static filterByPathTree(path: string, name: string): RangeLocations {
+  static filterByPathTree(path: string, name = ''): RangeLocations {
     return new RangeLocations('', name, path, true);
   }
   static filterByAll(context: string, path: string, name: string): RangeLocations {
@@ -117,27 +117,12 @@ export class RangeLocations {
       this._searchInTree === false
     )
       return ELocationKind.byLocation;
-    if (
-      this._name !== '' &&
-      this._path === '' &&
-      this._context !== '' &&
-      this._searchInTree === false
-    )
+    if (this._path === '' && this._context !== '' && this._searchInTree === false)
       return ELocationKind.byContext;
-    if (
-      this._name !== '' &&
-      this._path !== '' &&
-      this._context === '' &&
-      this._searchInTree === true
-    )
+    if (this._path !== '' && this._context === '' && this._searchInTree === true)
       return ELocationKind.byPathTree;
-    if (
-      this._name !== '' &&
-      this._path !== '' &&
-      this._context !== '' &&
-      this._searchInTree === true
-    )
+    if (this._path !== '' && this._context !== '' && this._searchInTree === true)
       return ELocationKind.byContextInPath;
-    throw new Error('Wrong combination of serarch parametres in RangeLocations');
+    throw new Error('Wrong combination of search parameters in RangeLocations');
   }
 }
