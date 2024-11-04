@@ -34,7 +34,9 @@ export class SingleLocation {
   }
 
   getChildLocation(childName: string): SingleLocation {
-    return SingleLocation.getLocation(`${this._path}.${childName}`);
+    return this._path
+      ? SingleLocation.getLocation(`${this._path}.${childName}`)
+      : SingleLocation.getLocation(childName);
   }
 
   getNeighborLocation(childName: string): SingleLocation {

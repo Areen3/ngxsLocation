@@ -405,7 +405,7 @@ export class Store {
     const storeMetaData = getStoreMetadata(child);
     const currentState = stateOperations.getState();
     const mappedStores: MappedStore[] = [];
-    const path = `${location.path}.${childName}`;
+    const path = location.getChildLocation(childName).path;
 
     const childState = this._stateFactory.addChild(child, childName, location, params);
     mappedStores.push(...childState);
