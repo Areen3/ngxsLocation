@@ -271,7 +271,7 @@ export class StateFactory implements OnDestroy {
     params: { context: string }
   ): MappedStore[] {
     StoreValidators.checkThatStateClassesHaveBeenDecorated([child]);
-    const childPath = `${location.path}.${childName}`;
+    const childPath = location.getChildLocation(childName).path;
     let mappedStore: MappedStore | undefined = this.states.find(s => s.path === childPath);
     if (mappedStore && isDevMode()) {
       console.error(`State name: ${childName} already added in location ${location}`);
@@ -460,6 +460,7 @@ export class StateFactory implements OnDestroy {
     eventArray: NgxsAction[]
   ): { loc: SingleLocation; events: NgxsAction[] }[] {
     const tab: MappedStore[] = [];
+    const commands = eventArray.filter(item => item.kind === ActionKind.akCommand);
     switch (location.locationKind) {
       case ELocationKind.byName:
         tab.push(...this.states.filter(p => p.name === location.name));
@@ -496,7 +497,7 @@ export class StateFactory implements OnDestroy {
         );
         break;
     }
-    return tab
+    const result_tab_action = tab
       .map(p => {
         const filterEvents = eventArray.filter(
           ev => p.actions[getActionTypeFromInstance(ev)!]
@@ -508,6 +509,25 @@ export class StateFactory implements OnDestroy {
         loc: SingleLocation.getLocation(item.state.path),
         events: item.events
       }));
+    commands
+      .map(item => {
+        const type = getActionTypeFromInstance(item)!;
+        const found =
+          result_tab_action
+            .map(item => item.events)
+            .reduce((acc, item) => [...acc, ...item], [])
+            .filter(event => getActionTypeFromInstance(event)! === type).length > 0;
+        return { item, found };
+      })
+      .forEach(item => {
+        if (!item.found)
+          console.error(
+            `For command action ${
+              item.item.constructor.name
+            } not found implementation method: ${JSON.stringify(item.item)}`
+          );
+      });
+    return result_tab_action;
   }
 
   private addToStatesMap(stateClasses: StateClassInternal[]): {

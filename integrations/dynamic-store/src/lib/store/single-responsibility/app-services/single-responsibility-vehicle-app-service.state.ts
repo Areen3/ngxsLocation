@@ -1,7 +1,14 @@
 import { Injectable } from '@angular/core';
 import { forkJoin, from, Observable, of } from 'rxjs';
 import { concatMap, map, switchMap } from 'rxjs/operators';
-import { Action, SingleLocation, State, StateContext, Store } from '@ngxs/store';
+import {
+  Action,
+  RangeLocations,
+  SingleLocation,
+  State,
+  StateContext,
+  Store
+} from '@ngxs/store';
 import { IEmptyObject } from '../../../model/base/base';
 import { StateNamesEnum } from '../../../model/enums/state-names.enum';
 import { VehicleContainerDalService } from '../../../backend/vehicle-container-dal.service';
@@ -158,7 +165,8 @@ export class SingleResponsibilityVehicleAppServiceState extends BaseVehicleAppSe
                 id: data.newLastId,
                 location: data.loc.getChildLocation(data.childName).path
               }),
-              data.loc.getChildLocation(StateNamesEnum.formElements)
+              RangeLocations.filterByPathTree(data.loc.path)
+              // data.loc.getChildLocation(StateNamesEnum.formElements)
             ),
             this.store.dispatchInLocation(
               new UpdateModelAction<Partial<VehicleContainerModelModel>>({
