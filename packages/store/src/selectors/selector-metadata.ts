@@ -22,6 +22,16 @@ export function setupSelectorMetadata<T extends (...args: any[]) => any>(
   creationMetadata: Partial<CreationMetadata> | undefined
 ) {
   const selectorMetaData = ensureSelectorMetadata(originalFn);
+  if (
+    selectorMetaData.__patched &&
+    selectorMetaData.location &&
+    creationMetadata?.location &&
+    selectorMetaData.location.path === creationMetadata.location.path
+  ) {
+    return selectorMetaData;
+  }
+  selectorMetaData.__patched = true;
+
   selectorMetaData.originalFn = originalFn;
   let getExplicitSelectorOptions = () => ({});
   if (creationMetadata) {

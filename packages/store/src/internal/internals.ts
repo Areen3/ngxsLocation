@@ -62,6 +62,7 @@ export interface SelectorMetaDataModel {
   containerClass: any;
   selectorName: string | null;
   location: SingleLocation;
+  __patched: boolean;
   getSelectorOptions: () => SharedSelectorOptions;
 }
 
@@ -131,6 +132,7 @@ export function ensureSelectorMetadata(target: Function): SelectorMetaDataModel 
       containerClass: null,
       selectorName: null,
       location: <any>undefined,
+      __patched: false,
       getSelectorOptions: () => ({})
     };
 
